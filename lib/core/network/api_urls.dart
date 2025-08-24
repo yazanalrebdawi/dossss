@@ -1,29 +1,29 @@
 class ApiUrls {
   ApiUrls._();
-  static const String _baseURl = 'http://192.168.138.185:8010/api'; // للكمبيوتر - IP صحيح
+  static const String _baseURl = 'http://192.168.138.185:8010/api';
 
   // POSTS
   static final String rigester = '$_baseURl/users/register/';
   static final String login = "$_baseURl/users/login/";
-  static final String logout = "$_baseURl/users/logout/"; //profile
+  static final String logout = "$_baseURl/users/logout/";
   static final String profile = "$_baseURl/users/profile/";
   static final String requestOtp = "$_baseURl/users/request-otp/";
   
   // Token refresh
   static final String refreshToken = "$_baseURl/users/refresh/";
   
-  // Verify URLs - منفصلة حسب نوع الـ flow
-  static final String verifyOtp = "$_baseURl/users/verify/"; // للـ signup
-  static final String verifyForgetPasswordOtp = "$_baseURl/users/reset-password/"; // للـ forget password
+  // Verify URLs
+  static final String verifyOtp = "$_baseURl/users/verify/";
+  static final String verifyForgetPasswordOtp = "$_baseURl/users/reset-password/";
   
   static final String resendOtp = "$_baseURl/users/request-otp/";
-  static final String forgetPassword = "$_baseURl/users/forgot-password/"; // لطلب OTP
-  static final String resetPassword = "$_baseURl/users/reset-password/"; // لتغيير كلمة المرور
-  static final String setNewPassword = "$_baseURl/users/set-new-password/"; // للـ forget password - الخطوة الأخيرة
+  static final String forgetPassword = "$_baseURl/users/forgot-password/";
+  static final String resetPassword = "$_baseURl/users/reset-password/";
+  static final String setNewPassword = "$_baseURl/users/set-new-password/";
   
   // Chat URLs
-  static final String chats = "$_baseURl/chats/"; // قائمة الشاتس
-  static final String wsBaseUrl = "ws://192.168.1.219:8020"; // WebSocket base URL
+  static final String chats = "$_baseURl/chats/";
+  static final String wsBaseUrl = "ws://192.168.1.219:8020";
   static final String changePassword = "$_baseURl/users/change-password/";
   static final String updateProfile = "$_baseURl/users/update-profile/";
   static final String updatePassword = "$_baseURl/users/update-password/";
