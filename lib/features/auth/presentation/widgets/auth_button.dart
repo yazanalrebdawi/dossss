@@ -1,41 +1,52 @@
-import 'package:dooss_business_app/core/style/app_colors.dart';
-import 'package:dooss_business_app/core/style/app_texts_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 
 class AuthButton extends StatelessWidget {
   final void Function()? onTap;
   final String buttonText;
-
-
+  final bool isLoading;
 
   const AuthButton({
     super.key,
     required this.onTap,
     required this.buttonText,
-
+    this.isLoading = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      // borderRadius: BorderRadius.circular(10.0),
-      onTap: onTap,
-      child: GestureDetector(
-        child: Container(
-          height: 70.h,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: AppColors.buttonColor,
-            borderRadius: BorderRadius.circular(26.r),
+    print('🔘 AuthButton - isLoading: $isLoading');
+    print('🔘 AuthButton - buttonText: $buttonText');
+    
+    return SizedBox(
+      width: double.infinity,
+      height: 54.h,
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.r),
           ),
-          padding: EdgeInsets.all(10.r),
-          child: Center(
-            child: Text(
-              buttonText,
-              style: AppTextStyles.buttonTextStyleWhiteS22W700,
-            ),
-          ),
+          elevation: 2,
+          padding: EdgeInsets.zero,
+        ),
+        child: Center(
+          child: isLoading
+              ? SizedBox(
+                  width: 24.w,
+                  height: 24.h,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2.w,
+                  ),
+                )
+              : Text(
+                  buttonText,
+                  style: AppTextStyles.buttonTextStyleWhiteS22W700,
+                ),
         ),
       ),
     );

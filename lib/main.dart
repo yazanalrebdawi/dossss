@@ -1,31 +1,59 @@
-import 'package:dooss_business_app/core/routes/app_router.dart';
-import 'package:dooss_business_app/core/style/app_theme.dart';
+import 'package:dooss_business_app/core/style/app_theme.dart';      
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'core/services/locator_service.dart' as di;
+import 'core/routes/app_router.dart';
+import 'features/home/presentaion/manager/car_cubit.dart';
+import 'core/localization/language_cubit.dart';
+import 'core/localization/app_localizations.dart';
+import 'core/services/navigation_service.dart';
 
-import 'core/services/locator_service.dart';
-
-void main() {
-  intialLoclatorService();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(430, 932),
+      designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: MaterialApp.router(
-        theme: AppThemes.lightTheme,
-        debugShowCheckedModeBanner: false,
-        routerConfig: AppRouter.router,
-      ),
+      builder: (context, child) {
+        return BlocProvider(
+          create: (_) => di.sl<CarCubit>(),
+          child: BlocProvider(
+            create: (_) => LanguageCubit(),
+            child: BlocBuilder<LanguageCubit, Locale>(
+              builder: (context, locale) {
+                return MaterialApp.router(
+                  title: 'Dooss Business App',
+                  theme: AppThemes.lightTheme,
+                  routerConfig: AppRouter.router,
+                  debugShowCheckedModeBanner: false,
+                  locale: locale,
+                  supportedLocales: const [
+                    Locale('en'),
+                    Locale('ar'),
+                  ],
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

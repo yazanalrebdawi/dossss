@@ -11,6 +11,7 @@ class SigninParams implements AccountParams {
 
   final FocusNode emailNode = FocusNode();
   final FocusNode passwordNode = FocusNode();
+
   @override
   void paramsDispose() {
     email.dispose();
@@ -19,30 +20,39 @@ class SigninParams implements AccountParams {
     passwordNode.dispose();
   }
 }
-class CreateAccountParams extends SigninParams {
-  final TextEditingController firstName = TextEditingController();
-  final TextEditingController nickName = TextEditingController();
-  String? phoneNumber;
-  String? image;
-  String? dateOfBirth;
 
-  final FocusNode firstnamedNode = FocusNode();
-  final FocusNode lastnameNode = FocusNode();
+class CreateAccountParams extends SigninParams {
+  final TextEditingController userName = TextEditingController();
+  final TextEditingController phoneNumber = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
+  final FocusNode userNameNode = FocusNode();
   final FocusNode phonenumberNode = FocusNode();
-  final FocusNode imageNode = FocusNode();
-  final FocusNode dateNode = FocusNode();
+  final FocusNode confirmPasswordNode = FocusNode();
+  
+  // متغير منفصل لتخزين الرقم الكامل للـ API
+  String fullPhoneNumber = '';
 
   @override
-  paramsDispose() {
+  void paramsDispose() {
     super.paramsDispose();
-    firstName.dispose();
-    nickName.dispose();
-    firstnamedNode.dispose();
-    lastnameNode.dispose();
+    userName.dispose();
+    phoneNumber.dispose();
+    confirmPassword.dispose();
+    userNameNode.dispose();
     phonenumberNode.dispose();
-    imageNode.dispose();
-    dateNode.dispose();
+    confirmPasswordNode.dispose();
   }
 }
-class ForgetPasswordParams extends CreateAccountParams{}
 
+class ForgetPasswordParams extends CreateAccountParams {}
+
+class ResetPasswordParams {
+  final String phoneNumber;
+  final String newPassword;
+  // إزالة code لأن الـ OTP تم التحقق منه في الخطوة السابقة
+
+  ResetPasswordParams({
+    required this.phoneNumber,
+    required this.newPassword,
+  });
+}

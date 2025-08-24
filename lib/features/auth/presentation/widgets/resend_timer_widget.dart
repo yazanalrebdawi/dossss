@@ -5,8 +5,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/style/app_colors.dart';
-import '../../../../core/style/app_texts_styles.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 import '../manager/auth_cubit.dart';
 
 class ResendTimerWidget extends StatefulWidget {
@@ -14,7 +14,7 @@ class ResendTimerWidget extends StatefulWidget {
     super.key,
     required this.phoneNumber,
   });
-  final int phoneNumber;
+  final String phoneNumber;
   @override
   State<ResendTimerWidget> createState() => _ResendTimerWidgetState();
 }
@@ -53,14 +53,14 @@ class _ResendTimerWidgetState extends State<ResendTimerWidget> {
               isTimerFinished = false;
               _timerPeriodec(60, isTimerFinished);
             });
-            context.read<AuthCubit>().resetPassword(widget.phoneNumber);
+            context.read<AuthCubit>().resetPassword(widget.phoneNumber.toString() );
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primaryColor,
+            backgroundColor: AppColors.primary,
           ),
           child: Text(
             "Resend",
-            style: AppTextStyles.BlackS25W700,
+            style: AppTextStyles.blackS25W700,
           ),
         ),
       );
@@ -69,15 +69,14 @@ class _ResendTimerWidgetState extends State<ResendTimerWidget> {
         return Center(
           child: RichText(
             text: TextSpan(
-              text: "Didn’t Receive OTP Number?",
-              style: AppTextStyles.blackS18W400WithOp,
+              text: "Didn’t receive the OTP?",
+              style: AppTextStyles.descriptionS14W400,
               children: <TextSpan>[
                 TextSpan(
                   recognizer: TapGestureRecognizer()..onTap=(){},
                   text: "Resend",
-                  style: AppTextStyles.blackS18W500,
+                  style: AppTextStyles.primaryS14W400,
                 ),
-
               ],
             ),
           ),

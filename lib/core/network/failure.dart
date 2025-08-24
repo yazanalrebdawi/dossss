@@ -30,9 +30,21 @@ class Failure {
           message: "Invalid certificate. Please contact support.",
         );
       case DioExceptionType.badResponse:
+        String errorMessage = "An unknown error occurred. Please try again later.";
+        
+        if (exception.response?.data != null) {
+          if (exception.response!.data is Map<String, dynamic>) {
+            // إذا كان الـ response Map، نبحث عن "error" أو "message"
+            Map<String, dynamic> data = exception.response!.data;
+            errorMessage = data['error'] ?? data['message'] ?? errorMessage;
+          } else if (exception.response!.data is String) {
+            // إذا كان الـ response String مباشرة
+            errorMessage = exception.response!.data;
+          }
+        }
+        
         return Failure(
-          message: exception.response?.data ??
-              "An unknown error occurred. Please try again later.",
+          message: errorMessage,
         );
       case DioExceptionType.cancel:
         return Failure(

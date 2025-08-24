@@ -26,7 +26,7 @@ class AppTypeButton extends StatelessWidget {
             color: buttonColor,
             borderRadius: BorderRadius.circular(12),
           ),
-          padding: EdgeInsets.all(25),
+          // padding: EdgeInsets.all(25),
           child: Center(
             child: Text(
               buttonText,

@@ -1,112 +1,122 @@
-import 'package:dooss_business_app/core/routes/route_names.dart';
-import 'package:dooss_business_app/core/style/app_assets.dart';
-import 'package:dooss_business_app/core/style/app_texts_styles.dart';
-import 'package:dooss_business_app/features/auth/presentation/widgets/custom_floating_action_button.dart';
-import 'package:dooss_business_app/features/auth/presentation/widgets/end_section_on_boarding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import '../../data/models/boarding_model.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
+import '../../../../core/routes/route_names.dart';
 
-class OnBoardingScreen extends StatefulWidget {
-  @override
-  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
-}
+class OnBoardingScreen extends StatelessWidget {
+  const OnBoardingScreen({super.key});
 
-class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            context.go(RouteNames.selectAppTypeScreen);
-          },
-          icon: Icon(Icons.arrow_back_ios_new),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              context.go(RouteNames.loginScreen);
-            },
-            child: Text('Skip', style: AppTextStyles.blackS20W500),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/on_boarding.jpg'),
+            fit: BoxFit.cover,
           ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(height: 125.h),
-            Expanded(
-              child: PageView.builder(
-                onPageChanged: (int index) {
-                  if (index == boardingBodies.length - 1) {
-                    isLast = true;
-                  }
-                  setState(() {
-                    currentPage = index + 1;
-                  });
-                },
-                physics: BouncingScrollPhysics(),
-                controller: boardController,
-                itemCount: boardingBodies.length,
-                itemBuilder: (context, index) {
-                  currentPage = index + 1;
-                  return BuildOnBoarding(boardingBodies[index]);
-                },
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black.withOpacity(0.3),
+                Colors.black.withOpacity(0.7),
+              ],
+            ),
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 142.h),
+                   
+                   // Welcome Text
+                   Text(
+                     'Lets Start\nA New Experience\nWith Dooss.',
+                     style: AppTextStyles.whiteS32W700,
+                   ),
+                   SizedBox(height: 240.h),
+                   Text(
+                     'Discover your next ride with Dooss. we\'re here to make browsing and buying cars easy and enjoyable. Let\'s get started on your journey.',
+                     style: AppTextStyles.whiteS16W400.copyWith(
+                       height: 1.5,
+                     ),
+                   ),
+                   
+                   
+                 
+                SizedBox(height: 20.h),
+                  
+                                     // Page Indicators
+                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                       Container(
+                         width: 32.w,
+                         height: 6.h,
+                         decoration: BoxDecoration(
+                           color: AppColors.white,
+                           borderRadius: BorderRadius.circular(3.r),
+                         ),
+                       ),
+                       SizedBox(width: 8.w),
+                       Container(
+                         width: 16.w,
+                         height: 6.h,
+                         decoration: BoxDecoration(
+                           color: AppColors.white.withOpacity(0.5),
+                           borderRadius: BorderRadius.circular(3.r),
+                         ),
+                       ),
+                     ],
+                   ),
+                   
+                   SizedBox(height: 40.h),
+                  
+                  // Get Started Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.go(RouteNames.loginScreen);
+                      },
+                      style: ElevatedButton.styleFrom(
+                         backgroundColor: AppColors.onboardingButtonColor,
+                         foregroundColor: AppColors.white,
+                         padding: EdgeInsets.symmetric(vertical: 16.h),
+                         shape: RoundedRectangleBorder(
+                           borderRadius: BorderRadius.circular(62.r),
+                         ),
+                         elevation: 0,
+                       ),
+                      child: Text(
+                        'Get Started',
+                        style: AppTextStyles.whiteS16W600,
+                      ),
+                    ),
+                  ),
+                  
+                                     SizedBox(height: 32.h),
+                   
+                   // Home Indicator (for iPhone)
+                 
+                  
+                  SizedBox(height: 8.h),
+                ],
               ),
             ),
-            EndSectionOnBoarding(
-              routeNames: RouteNames.loginScreen,
-              currentPage: currentPage,
-              totalPages: totalPages,
-              controller: boardController,
-              isLast: isLast,
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
-
-  Widget BuildOnBoarding(BoardingModel data) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Image(image: AssetImage(data.img)),
-        SizedBox(height: 80.h),
-        Text(data.headline, style: AppTextStyles.headLineBoardingBlackS25W700),
-        SizedBox(height: 10.h),
-        Text(
-          data.description,
-          style: AppTextStyles.descriptionBoardingBlackS18W500,
-        ),
-
-      ],
-    );
-  }
-
-  PageController boardController = PageController();
-  List<BoardingModel> boardingBodies = [
-    BoardingModel(
-      AppAssets.onBoardingImage1,
-      ' Endless Option',
-      'Choose of hundred of models you won’t find anywhere else. pick it up or get it delivered where you want it.',
-    ),
-    BoardingModel(
-      AppAssets.onBoardingImage2,
-      'Drive Confidently',
-      'Drive Confidently With Your Choice Of Protection Plans. All Plans Include Varying Level Of Insurance From Ibrahim Insurance',
-    ),
-    BoardingModel(
-      AppAssets.onBoardingImage3,
-      '24/7 Support',
-      'Rest Easy Knowing That Everyone In Premium Community Is Screened And Support Road A side Assistance',
-    ),
-  ];
-  int currentPage = 1;
-  int totalPages = 3;
-  bool isLast = false;
 }

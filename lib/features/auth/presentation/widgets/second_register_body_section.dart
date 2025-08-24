@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/style/app_colors.dart';
-import '../../../../core/style/app_texts_styles.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/text_styles.dart';
 import 'drop_down_field.dart';
 
 class SecondRegisterBodySection extends StatefulWidget {
@@ -60,7 +60,7 @@ class _SecondRegisterBodySectionState extends State<SecondRegisterBodySection> {
                 onTap: () {},
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.grayColor),
+                    border: Border.all(color: AppColors.gray),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   height: 38.h,

@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class AuthState {
   final CheckAuthState? checkAuthState;
-
+  final bool isLoading;
   final String? error;
   final String? success;
   final String? resetCode;
@@ -10,6 +10,7 @@ class AuthState {
   final bool? isRememberMe;
   AuthState({
     this.checkAuthState,
+    this.isLoading = false,
     this.error,
     this.success,
     this.isObscurePassword = true,
@@ -20,6 +21,7 @@ class AuthState {
 
   AuthState copyWith({
     CheckAuthState? checkAuthState,
+    bool? isLoading,
     String? error,
     String? success,
     bool? isObscurePassword,
@@ -29,6 +31,7 @@ class AuthState {
   }) {
     return AuthState(
       checkAuthState: checkAuthState ?? CheckAuthState.none,
+      isLoading: isLoading ?? this.isLoading,
       error: error,
       success: success,
       isObscurePassword: isObscurePassword ?? true,
@@ -45,5 +48,7 @@ enum CheckAuthState {
   isLoading,
   success,
   signinSuccess,
+  logoutSuccess,
+  resendOtpSuccess,
   error,
 }

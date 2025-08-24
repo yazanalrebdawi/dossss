@@ -1,7 +1,7 @@
-import 'package:dooss_business_app/core/style/app_assets.dart';
+import 'package:dooss_business_app/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/style/app_colors.dart';
+import '../../../../core/constants/colors.dart';
 
 
 class PickYourProfileImageWidget extends StatefulWidget {
@@ -19,7 +19,7 @@ class _PickYourProfileImageWidgetState extends State<PickYourProfileImageWidget>
       child: Stack(
         children: [
           CircleAvatar(
-            backgroundColor: AppColors.primaryColor,
+            backgroundColor: AppColors.primary,
             radius: 50,
             child: Padding(
               padding: const EdgeInsets.only(top: 10),
@@ -35,7 +35,7 @@ class _PickYourProfileImageWidgetState extends State<PickYourProfileImageWidget>
               },
               child: CircleAvatar(
                 radius: 15,
-                backgroundColor: AppColors.primaryColor,
+                backgroundColor: AppColors.primary,
                 child:Icon(Icons.access_alarm_sharp),
               ),
             ),

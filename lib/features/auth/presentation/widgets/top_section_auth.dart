@@ -1,4 +1,4 @@
-import 'package:dooss_business_app/core/style/app_texts_styles.dart';
+import 'package:dooss_business_app/core/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,13 +12,13 @@ class TopSectionAuth extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(headline,style:AppTextStyles.lableTextStyleBlackS22W500 ,),
+          Text(headline,style:AppTextStyles.headLineBlackS30W600 ,),
           SizedBox(height: 5.h),
           Text(
             description,
-            style:AppTextStyles.descriptionBoardingBlackS18W500,
+            style:AppTextStyles.descriptionS14W400,
           ),
         ],
       ),

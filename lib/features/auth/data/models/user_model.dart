@@ -1,64 +1,70 @@
 class UserModel {
-  final int? id;
-  final String email;
-  final String fullName;
-  final String nickName;
-  final String dateOfBirth;
-  final String phone;
-  final String? profileImage;
+    final int id;
+    final String name;
+    final String phone;
+    final String role;
+    final bool verified;
+    final dynamic latitude;
+    final dynamic longitude;
+    final DateTime createdAt;
 
-  UserModel({
-    required this.id,
-    required this.email,
-    required this.fullName,
-    required this.nickName,
-    required this.dateOfBirth,
-    required this.phone,
-    required this.profileImage,
-  });
 
-  UserModel copyWith({
-    int? id,
-    String? email,
-    String? fullName,
-    String? nickName,
-    String? dateOfBirth,
-    String? phone,
-    String? gender,
-    String? profileImage,
-  }) =>
-      UserModel(
-        id: id ?? this.id,
-        email: email ?? this.email,
-        fullName: fullName ?? this.fullName,
-        nickName: nickName ?? this.nickName,
-        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-        phone: phone ?? this.phone,
+    UserModel({
+        required this.id,
+        required this.name,
+        required this.phone,
+        required this.role,
+        required this.verified,
+        required this.latitude,
+        required this.longitude,
+        required this.createdAt,
+    });
 
-        profileImage: profileImage ?? this.profileImage,
-      );
+    UserModel copyWith({
+        int? id,
+        String? name,
+        String? phone,
+        String? role,
+        bool? verified,
+        dynamic latitude,
+        dynamic longitude,
+        DateTime? createdAt,
+    }) => 
+        UserModel(
+            id: id ?? this.id,
+            name: name ?? this.name,
+            phone: phone ?? this.phone,
+            role: role ?? this.role,
+            verified: verified ?? this.verified,
+            latitude: latitude ?? this.latitude,
+            longitude: longitude ?? this.longitude,
+            createdAt: createdAt ?? this.createdAt,
+        );
+
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
-      'email': email,
-      'full_name': fullName,
-      'nick_name': nickName,
-      'date_of_birth': dateOfBirth,
+      'name': name,
       'phone': phone,
-      'profile_picture': profileImage
+      'role': role,
+      'verified': verified,
+      'latitude': latitude,
+      'longitude': longitude,
+      'created_at': createdAt,
     };
   }
 
   factory UserModel.fromJson(Map<String, dynamic> map) {
     return UserModel(
-      id: map['id'] ,
-      email: map['email'] as String,
-      fullName: map['full_name'] as String,
-      nickName: map['nick_name'] as String,
-      dateOfBirth: map['date_of_birth'],
-      phone: map['phone'] as String,
-      profileImage: map['profile_picture'],
+      id: map['id'] ?? 0,
+      name: map['name'] ?? '',
+      phone: map['phone'] ?? '',
+      role: map['role'] ?? '',
+      verified: map['verified'] ?? false,
+      latitude: map['latitude'],
+      longitude: map['longitude'],
+      createdAt: DateTime.tryParse(map['created_at'] ?? '') ?? DateTime.now(),
     );
   }
-}
+  }

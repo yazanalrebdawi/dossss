@@ -1,34 +1,38 @@
-
-import 'package:dooss_business_app/core/routes/route_names.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../core/style/app_colors.dart';
-import '../../../../core/style/app_texts_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/routes/route_names.dart';
+import '../../../../core/constants/text_styles.dart';
+import '../../../../core/localization/language_cubit.dart';
+import '../../../../core/localization/app_localizations.dart';
 
 class DontHaveAnAccount extends StatelessWidget {
   const DontHaveAnAccount({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          'Didn’t Have Account?',
-          style: AppTextStyles.blackS18W400WithOp,
-        ),
-        const SizedBox(width: 3),
-        InkWell(
-          onTap: () {
-            context.go(RouteNames.rigesterScreen);
-          },
-          child: Text(
-            'Register',
-            style:AppTextStyles.blackS18W700
-          ),
-        ),
-      ],
+    return BlocBuilder<LanguageCubit, Locale>(
+      builder: (context, locale) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              AppLocalizations.of(context)?.translate('dontHaveAccount') ?? "Don't have an account?",
+              style: AppTextStyles.descriptionS14W400,
+            ),
+            const SizedBox(width: 3),
+            InkWell(
+              onTap: () {
+                context.go(RouteNames.rigesterScreen);
+              },
+              child: Text(
+                AppLocalizations.of(context)?.translate('register') ?? 'Sign Up',
+                style: AppTextStyles.primaryS14W400,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 
-import '../../../../core/style/app_texts_styles.dart';
+import '../../../../core/constants/text_styles.dart';
 
 class TimerWidget extends StatefulWidget {
   const TimerWidget({super.key});
@@ -39,7 +39,7 @@ class _TimerWidgetState extends State<TimerWidget> {
     return Center(
         child: Text(
             "00:${seconds.toString().padLeft(2, '0')}",
-            style: AppTextStyles.descriptionBoardingBlackS18W500,
+            style: AppTextStyles.descriptionS18W500,
             ),
       );
    }

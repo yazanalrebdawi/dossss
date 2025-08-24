@@ -12,12 +12,12 @@ class API {
     required this.dio,
   });
 
-  Future<Either<Failure, T>> _handleRequest<T>({required Future<Response> Function() request,
-  }) async {
+  Future<Either<Failure, T>> _handleRequest<T>({required Future<Response> Function() request,}) async {
+    
     try {
       final Response response = await request();
       log(response.statusCode.toString());
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 205) {
         return Right(response.data);
       } else {
         return Left(Failure(message: response.data));

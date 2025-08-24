@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/style/app_colors.dart';
+import '../../../../core/constants/colors.dart';
 
 class DropDownField extends StatefulWidget {
   final String hintText;
@@ -27,7 +27,7 @@ class _DropDownFieldState extends State<DropDownField> {
       height: 70.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.r),
-        color: AppColors.fieldColor,
+        color: AppColors.field,
       ),
       child: DropdownButton<String>(
         underline: const SizedBox(),
@@ -35,7 +35,7 @@ class _DropDownFieldState extends State<DropDownField> {
         icon: const Icon(Icons.keyboard_arrow_down_outlined),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         borderRadius: BorderRadius.circular(20),
-        focusColor: AppColors.whiteColor,
+        focusColor: AppColors.white,
         // value: countrySelected,
         hint:  Text(widget.hintText),
         items: [

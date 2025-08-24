@@ -1,8 +1,8 @@
 
-import 'package:dooss_business_app/core/style/app_colors.dart';
+import 'package:dooss_business_app/core/constants/colors.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/style/app_texts_styles.dart';
+import '../../../../core/constants/text_styles.dart';
 
 SnackBar customAppSnackBar(String message, BuildContext context) {
   return SnackBar(
@@ -12,7 +12,7 @@ SnackBar customAppSnackBar(String message, BuildContext context) {
     padding: const EdgeInsets.all(15),
     content: Container(
       decoration: BoxDecoration(
-        color: AppColors.primaryColor,
+        color: AppColors.primary,
         borderRadius: const BorderRadius.all(
           Radius.circular(12),
         ),

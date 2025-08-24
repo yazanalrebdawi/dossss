@@ -1,27 +1,63 @@
 class ApiUrls {
   ApiUrls._();
-  static const String _baseURl = 'http://94.72.98.154/abdulrahim/public/api';
+  static const String _baseURl = 'http://192.168.138.185:8010/api'; // للكمبيوتر - IP صحيح
 
   // POSTS
-  static final String rigester = '$_baseURl/auth/register-as-provider';
-  static final String login = "$_baseURl/auth/login";
-  static final String logout = "$_baseURl/auth/logout"; //profile
-  static final String profile = "$_baseURl/profile";
+  static final String rigester = '$_baseURl/users/register/';
+  static final String login = "$_baseURl/users/login/";
+  static final String logout = "$_baseURl/users/logout/"; //profile
+  static final String profile = "$_baseURl/users/profile/";
+  static final String requestOtp = "$_baseURl/users/request-otp/";
+  
+  // Token refresh
+  static final String refreshToken = "$_baseURl/users/refresh/";
+  
+  // Verify URLs - منفصلة حسب نوع الـ flow
+  static final String verifyOtp = "$_baseURl/users/verify/"; // للـ signup
+  static final String verifyForgetPasswordOtp = "$_baseURl/users/reset-password/"; // للـ forget password
+  
+  static final String resendOtp = "$_baseURl/users/request-otp/";
+  static final String forgetPassword = "$_baseURl/users/forgot-password/"; // لطلب OTP
+  static final String resetPassword = "$_baseURl/users/reset-password/"; // لتغيير كلمة المرور
+  static final String setNewPassword = "$_baseURl/users/set-new-password/"; // للـ forget password - الخطوة الأخيرة
+  
+  // Chat URLs
+  static final String chats = "$_baseURl/chats/"; // قائمة الشاتس
+  static final String wsBaseUrl = "ws://192.168.1.219:8020"; // WebSocket base URL
+  static final String changePassword = "$_baseURl/users/change-password/";
+  static final String updateProfile = "$_baseURl/users/update-profile/";
+  static final String updatePassword = "$_baseURl/users/update-password/";
 
   // Home
-  static final String statuseWork = "$_baseURl/change-work-status";
-  static final String homeData = "$_baseURl/home-page";
+  static final String statuseWork = "$_baseURl/";
+  static final String homeData = "$_baseURl/";
   
 
-  //  Products
-  static final String products = "$_baseURl/products";
+  //  cars
+  static final String cars = "$_baseURl/cars/";
 
-  //  category
-  static final String categories = "$_baseURl/categories";
+  //  products
+  static final String products = "$_baseURl/products/";
 
   //  services
-  static final String services = "$_baseURl/services";
+  static final String servicesNearby = "$_baseURl/nearby/"; // Using nearby endpoint for services
+ 
+  static final String serviceDetails = "$_baseURl/services/"; // For individual service details
+
+  //  reels
+  static final String reels = "$_baseURl/reels/public/";
+
+  //  dealer profile
+  static final String dealerProfile = "$_baseURl/dealers/"; // Base URL for dealer endpoints
+  static final String dealerProfileWithId = "$_baseURl/dealers/{id}/profile/";
+  static final String dealerReels = "$_baseURl/dealers/{id}/reels/";
+  static final String dealerCars = "$_baseURl/dealers/{id}/cars/";
+  static final String dealerServices = "$_baseURl/dealers/{id}/services/";
+  static final String dealerFollow = "$_baseURl/dealers/{id}/follow/";
+
+  //  category
+  static final String categories = "$_baseURl/";
 
   //  branches
-  static final String branches = "$_baseURl/my-branches";
+  static final String branches = "$_baseURl/";
 }
