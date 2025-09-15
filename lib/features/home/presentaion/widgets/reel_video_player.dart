@@ -20,7 +20,7 @@ class ReelVideoPlayer extends StatelessWidget {
       width: double.infinity,
       height: double.infinity,
       color: AppColors.black,
-      child: isCurrentReel && reel.video.isNotEmpty            
+      child: isCurrentReel && reel.video.isNotEmpty
           ? NativeVideoWidget(
               videoUrl: reel.video,
               width: 1.sw,

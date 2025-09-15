@@ -118,7 +118,7 @@ class MapsService {
       );
     } catch (e) {
       print('❌ MapsService: Exception in getRouteToNearestService: $e');
-      return Left(Failure(message:  'Error getting route to service: $e'));
+      return Left(Failure(message: 'Error getting route to service: $e'));
     }
   }
 

@@ -205,6 +205,8 @@ abstract class AppTextStyles {
   static TextStyle get blackS25W500 => s25w500.copyWith(color: Colors.black);
   static TextStyle get blackS18W500 => s18w500.copyWith(color: Colors.black);
   static TextStyle get blackS16W600 => s16w600.copyWith(color: Colors.black);
+  static TextStyle get blackS12W400 => s12w400.copyWith(color: Colors.black);
+  static TextStyle get blackS12W600 => s12w600.copyWith(color: Colors.black);
   static TextStyle get blackS14W600 => s14w600.copyWith(color: Colors.black);
   static TextStyle get blackS14W500 => s14w500.copyWith(color: Colors.black);
   static TextStyle get blackS20W500 => s20w500.copyWith(color: Colors.black);

@@ -12,6 +12,13 @@ import '../widgets/brand_selector.dart';
 import '../widgets/promotional_banner.dart';
 import '../widgets/search_app_bar.dart';
 import '../widgets/all_cars_header_widget.dart';
+import '../manager/car_cubit.dart';
+import '../manager/car_state.dart';
+import '../widgets/see_all_cars_card.dart';
+import '../widgets/brand_selector.dart';
+import '../widgets/promotional_banner.dart';
+import '../widgets/search_app_bar.dart';
+import '../widgets/all_cars_header_widget.dart';
 
 class AllCarsScreen extends StatelessWidget {
   const AllCarsScreen({super.key});
@@ -35,8 +42,7 @@ class AllCarsScreen extends StatelessWidget {
               previous.isLoadingMore != current.isLoadingMore ||
               previous.isLoading != current.isLoading ||
               previous.error != current.error ||
-              previous.hasMoreCars != current.hasMoreCars ||
-              previous.hasMoreCars != current.hasMoreCars,
+              previous.hasMoreCars != current.hasMoreCars ,
           builder: (context, state) {
             if (state.isLoading) {
               return const Center(

@@ -41,21 +41,18 @@ import 'package:flutter/material.dart';
 class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: RouteNames.onBoardingScreen,
-    routes: _routes,
+    routes: routes,
   );
 
   static GoRouter createRouterWithObserver(NavigatorObserver observer) {
     return GoRouter(
       initialLocation: RouteNames.onBoardingScreen,
       observers: [observer],
-      routes: _routes,
+      routes: routes,
     );
   }
 
-  // Getter to access routes from outside the class
-  static List<RouteBase> get routes => _routes;
-
-  static final List<RouteBase> _routes = [
+  static final List<RouteBase> routes = [
       GoRoute(
         path: RouteNames.onBoardingScreen,
         builder: (context, state) => const OnBoardingScreen(),

@@ -5,59 +5,28 @@ import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/text_styles.dart';
 import '../manager/reel_cubit.dart';
 import '../manager/reel_state.dart';
+import '../pages/reels_viewer_screen.dart';
 import '../../data/models/reel_model.dart';
-import 'reel_card_player.dart';
-import '../manager/reels_cubit.dart';
-/// Horizontal reels section for home screen
-/// Keeps the card-like UI but uses ReelCardPlayer internally
-class HorizontalReelsSection extends StatefulWidget {
-  final VoidCallback? onViewAllPressed;
+import 'reel_preview_player.dart';
 
-  const HorizontalReelsSection({
-    super.key,
-    this.onViewAllPressed,
-  });
+/// Simple reels section for home screen - just previews with exact 120x156 dimensions
+/// Tapping launches full-screen Instagram-style reels experience
+class SimpleReelsSection extends StatefulWidget {
+  const SimpleReelsSection({super.key});
 
   @override
-  State<HorizontalReelsSection> createState() => _HorizontalReelsSectionState();
+  State<SimpleReelsSection> createState() => _SimpleReelsSectionState();
 }
 
-class _HorizontalReelsSectionState extends State<HorizontalReelsSection> {
-  final ScrollController _scrollController = ScrollController();
-  int _currentVisibleIndex = 0;
-
+class _SimpleReelsSectionState extends State<SimpleReelsSection> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
     
     // Load reels when widget initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ReelCubit>().loadReels();
     });
-  }
-
-  void _onScroll() {
-    // Determine which reel is currently in viewport
-    final itemWidth = 216.w; // Card width + margin
-    final scrollOffset = _scrollController.offset;
-    final newVisibleIndex = (scrollOffset / itemWidth).round();
-    
-    if (newVisibleIndex != _currentVisibleIndex && newVisibleIndex >= 0) {
-      setState(() {
-        _currentVisibleIndex = newVisibleIndex;
-      });
-      
-      // Update focused reel in cubit
-      context.read<ReelsCubit>().setFocusedReel(newVisibleIndex);
-    }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
-    super.dispose();
   }
 
   @override
@@ -68,29 +37,16 @@ class _HorizontalReelsSectionState extends State<HorizontalReelsSection> {
         // Section header
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Market Reels',
-                style: AppTextStyles.blackS18W700,
-              ),
-              if (widget.onViewAllPressed != null)
-                GestureDetector(
-                  onTap: widget.onViewAllPressed,
-                  child: Text(
-                    'View All',
-                    style: AppTextStyles.primaryS16W600,
-                  ),
-                ),
-            ],
+          child: Text(
+            'Market Reels',
+            style: AppTextStyles.blackS18W700,
           ),
         ),
         SizedBox(height: 16.h),
         
         // Horizontal reels list
         SizedBox(
-          height: 300.h,
+          height: 200.h, // 156h for card + 44h for title and spacing
           child: BlocBuilder<ReelCubit, ReelState>(
             buildWhen: (previous, current) =>
                 previous.reels != current.reels ||
@@ -119,62 +75,36 @@ class _HorizontalReelsSectionState extends State<HorizontalReelsSection> {
 
   Widget _buildReelsList(List<ReelModel> reels) {
     return ListView.builder(
-      controller: _scrollController,
       scrollDirection: Axis.horizontal,
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       itemCount: reels.length,
       itemBuilder: (context, index) {
         final reel = reels[index];
-        final isInViewport = index == _currentVisibleIndex;
         
         return Container(
           margin: EdgeInsets.only(right: 16.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Reel video card
-              ReelCardPlayer(
-                reelUrl: reel.video,
-                reelId: reel.id,
-                thumbnailUrl: reel.thumbnail,
-                isInViewport: isInViewport,
-                onTap: () => _onReelTap(context, reel, index),
+              // Reel preview card with exact dimensions
+              GestureDetector(
+                onTap: () => _onReelTap(context, reels, index),
+                child: ReelPreviewPlayer(
+                  reelUrl: reel.video,
+                  thumbnailUrl: reel.thumbnail,
+                ),
               ),
               
               SizedBox(height: 8.h),
               
-              // Reel info
+              // Reel title (under the card)
               SizedBox(
-                width: 200.w,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      reel.title,
-                      style: AppTextStyles.blackS14W600,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 4.h),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person,
-                          color: AppColors.gray,
-                          size: 14.sp,
-                        ),
-                        SizedBox(width: 4.w),
-                        Expanded(
-                          child: Text(
-                            reel.dealerUsername ?? 'Unknown',
-                            style: AppTextStyles.grayS12W400,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                width: 120.w,
+                child: Text(
+                  reel.title,
+                  style: AppTextStyles.blackS12W600,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -224,6 +154,10 @@ class _HorizontalReelsSectionState extends State<HorizontalReelsSection> {
           SizedBox(height: 16.h),
           ElevatedButton(
             onPressed: () => context.read<ReelCubit>().loadReels(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.white,
+            ),
             child: Text('Retry'),
           ),
         ],
@@ -256,16 +190,17 @@ class _HorizontalReelsSectionState extends State<HorizontalReelsSection> {
     );
   }
 
-  void _onReelTap(BuildContext context, ReelModel reel, int index) {
-    print('🎬 HorizontalReelsSection: Reel tapped - ${reel.title}');
+  void _onReelTap(BuildContext context, List<ReelModel> reels, int index) {
+    print('🎬 SimpleReelsSection: Tapped reel ${reels[index].title} at index $index');
     
-    // Update focused reel
-    context.read<ReelsCubit>().setFocusedReel(reel.id);
-    
-    // Enable auto-play for this reel
-    context.read<ReelsCubit>().enableAutoPlay();
-    
-    // TODO: Navigate to full-screen viewer if needed
-    // context.push('/reels/${reel.id}');
+    // Navigate to full-screen reels viewer, passing the entire list and index
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ReelsViewerScreen(
+          reelsList: reels,
+          initialIndex: index,
+        ),
+      ),
+    );
   }
 }

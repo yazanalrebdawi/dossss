@@ -85,10 +85,10 @@ class _ReelsAppWrapperState extends State<ReelsAppWrapper> {
   }
 
   GoRouter _createRouterWithObserver() {
-    return GoRouter(  
+    return GoRouter(
       initialLocation: RouteNames.onBoardingScreen,
       observers: [_lifecycleManager], // Add lifecycle manager as observer
-      routes: AppRouter.routes, // Fixed: Use public getter
+      routes: AppRouter.routes,
     );
   }
 }

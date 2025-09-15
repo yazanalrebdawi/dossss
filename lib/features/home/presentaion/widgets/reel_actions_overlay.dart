@@ -26,7 +26,7 @@ class ReelActionsOverlay extends StatelessWidget {
       child: Column(
         children: [
           _buildActionButton(
-            icon: reel.liked ? Icons.favorite : Icons.favorite_border,    
+            icon: reel.liked ? Icons.favorite : Icons.favorite_border,  
             label: _formatCount(reel.likesCount),
             onTap: onLike,
             iconColor: reel.liked ? Colors.red : AppColors.white,

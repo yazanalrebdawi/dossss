@@ -218,7 +218,7 @@ Future<void> init() async {
   // FINAL VERIFICATION
   // =================================================================
   print('🔍 DI: Final verification...');
-  print('📊 DI: Total registered services: ${sl.allReady()}'); 
+  print('📊 DI: Total registered services: ${ sl.allReady()}');  
   print('🎬 DI: ReelRemoteDataSource registered: ${sl.isRegistered<ReelRemoteDataSource>()}');
   print('🎬 DI: ReelsPlaybackCubit registered: ${sl.isRegistered<ReelsPlaybackCubit>()}');
   
