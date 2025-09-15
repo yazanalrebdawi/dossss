@@ -205,9 +205,15 @@ abstract class AppTextStyles {
   static TextStyle get blackS25W500 => s25w500.copyWith(color: Colors.black);
   static TextStyle get blackS18W500 => s18w500.copyWith(color: Colors.black);
   static TextStyle get blackS16W600 => s16w600.copyWith(color: Colors.black);
+  static TextStyle get blackS14W600 => s14w600.copyWith(color: Colors.black);
   static TextStyle get blackS14W500 => s14w500.copyWith(color: Colors.black);
   static TextStyle get blackS20W500 => s20w500.copyWith(color: Colors.black);
   static TextStyle get blackS24W600 => s24w600.copyWith(color: Colors.black);
+
+  static TextStyle get grayS12W400 => s12w400.copyWith(color: AppColors.gray);
+  static TextStyle get grayS14W400 => s14w400.copyWith(color: AppColors.gray);
+  static TextStyle get grayS16W600 => s16w600.copyWith(color: AppColors.gray);
+
   static TextStyle get headLineBoardingBlackS25W700 => s25w700.copyWith(color: Colors.black);
   static TextStyle get lableTextStyleBlackS22W500 => s22w500.copyWith(color: Colors.black);
   static TextStyle get headLineBoardingBlackS22W700 => s22w700.copyWith(color: Colors.black);

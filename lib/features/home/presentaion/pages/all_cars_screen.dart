@@ -26,7 +26,7 @@ class AllCarsScreen extends StatelessWidget {
           title: 'All Cars',
         ),
         body: BlocBuilder<CarCubit, CarState>(
-          buildWhen: (previous, current) =>
+          buildWhen: (previous, current) => 
               previous.cars != current.cars ||
               previous.allCars != current.allCars ||
               previous.selectedBrand != current.selectedBrand ||
@@ -35,8 +35,8 @@ class AllCarsScreen extends StatelessWidget {
               previous.isLoadingMore != current.isLoadingMore ||
               previous.isLoading != current.isLoading ||
               previous.error != current.error ||
+              previous.hasMoreCars != current.hasMoreCars ||
               previous.hasMoreCars != current.hasMoreCars,
-          
           builder: (context, state) {
             if (state.isLoading) {
               return const Center(

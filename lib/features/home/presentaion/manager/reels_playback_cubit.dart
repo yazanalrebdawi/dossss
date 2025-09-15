@@ -64,7 +64,7 @@ class ReelsPlaybackCubit extends OptimizedCubit<ReelsPlaybackState> {
     if (_isDisposed || state.currentReel == null) return;
     
     final reel = state.currentReel!;
-    if (reel.video.isEmpty) {
+    if (reel.video.isEmpty) {  
       print('❌ ReelsPlaybackCubit: No video URL for reel ${reel.id}');
       return;
     }

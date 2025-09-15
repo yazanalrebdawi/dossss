@@ -1,9 +1,8 @@
 // BULLETPROOF DEPENDENCY INJECTION CONFIGURATION
 // NO COMPROMISES, NO SHORTCUTS, GUARANTEED TO WORK
 
-import 'dart:async';
-
-  import 'package:get_it/get_it.dart';
+import 'package:get_it/get_it.dart';
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -33,6 +32,7 @@ import 'package:dooss_business_app/features/home/presentaion/manager/service_cub
 import 'package:dooss_business_app/features/home/data/data_source/reel_remote_data_source.dart';
 import 'package:dooss_business_app/features/home/data/data_source/reel_remote_data_source_imp.dart';
 import 'package:dooss_business_app/features/home/presentaion/manager/reel_cubit.dart';
+import 'package:dooss_business_app/features/home/presentaion/manager/reels_cubit.dart';
 import 'package:dooss_business_app/features/home/presentaion/manager/reels_playback_cubit.dart';
 
 // Other Cubits
@@ -169,11 +169,15 @@ Future<void> init() async {
   );
   print('✅ DI: ServiceCubit registered');
   
-  // Reel Cubit (Old one)
+  // Reel Cubit (Old one for data loading)
   sl.registerFactory<ReelCubit>(
     () => ReelCubit(dataSource: sl<ReelRemoteDataSource>())
   );
   print('✅ DI: ReelCubit registered');
+  
+  // 🎬 NEW LIGHTWEIGHT REELS CUBIT - GLOBAL PLAYBACK STATE
+  sl.registerLazySingleton<ReelsCubit>(() => ReelsCubit());
+  print('✅ DI: ReelsCubit (lightweight) registered');
   
   // 🎬 REELS PLAYBACK CUBIT - THE CRITICAL SINGLETON
   print('🎬 DI: About to register ReelsPlaybackCubit...');
@@ -214,9 +218,9 @@ Future<void> init() async {
   // FINAL VERIFICATION
   // =================================================================
   print('🔍 DI: Final verification...');
-    print('📊 DI: Total registered services: ${sl.allReady()}'); // Fixed: Use await sl.allReady()
-  print('🎬 DI: ReelRemoteDataSource registered: ${sl.isRegistered<ReelRemoteDataSource>()}'); // Fixed: Use await sl.isRegistered<ReelRemoteDataSource>()
-  print('🎬 DI: ReelsPlaybackCubit registered: ${sl.isRegistered<ReelsPlaybackCubit>()}'); // Fixed: Use await sl.isRegistered<ReelsPlaybackCubit>()  
+  print('📊 DI: Total registered services: ${sl.allReady()}'); 
+  print('🎬 DI: ReelRemoteDataSource registered: ${sl.isRegistered<ReelRemoteDataSource>()}');
+  print('🎬 DI: ReelsPlaybackCubit registered: ${sl.isRegistered<ReelsPlaybackCubit>()}');
   
   print('🎯 DI: BULLETPROOF DEPENDENCY INJECTION COMPLETE!');
 }

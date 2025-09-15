@@ -52,6 +52,9 @@ class AppRouter {
     );
   }
 
+  // Getter to access routes from outside the class
+  static List<RouteBase> get routes => _routes;
+
   static final List<RouteBase> _routes = [
       GoRoute(
         path: RouteNames.onBoardingScreen,
