@@ -87,59 +87,51 @@ class ProductRemoteDataSourceImp implements ProductRemoteDataSource {
 
   @override
   Future<Either<Failure, List<ProductModel>>> fetchRelatedProducts(int productId) async {
-    try {
-      print('Fetching related products from API...');
-      final response = await api.get(
-        apiRequest: ApiRequest(url: '${ApiUrls.products}$productId/related/'),
-      );
-      print('API response: $response');
-      return response.fold(
-        (failure) {
-          print('Failure: ${failure.message}');
-          return <ProductModel>[];
-        },
-        (data) {
-          print('Data received: $data');
-          if (data is List) {
-            return data.map((e) => ProductModel.fromJson(e)).toList();
-          } else {
-            print('Invalid data format received from API');
-            return <ProductModel>[];
-          }
-        },
-      );
-    } catch (e) {
-      print('ProductRemoteDataSource fetchRelatedProducts error: $e');
-      return <ProductModel>[];
-    }
+    print('Fetching related products from API...');
+    final response = await api.get(
+      apiRequest: ApiRequest(url: '${ApiUrls.products}$productId/related/'),
+    );
+    print('API response: $response');
+    return response.fold(
+      (failure) {
+        print('Failure: ${failure.message}');
+        return Left(failure);
+      },
+      (data) {
+        print('Data received: $data');
+        if (data is List) {
+          final products = data.map((e) => ProductModel.fromJson(e)).toList();
+          return Right(products);
+        } else {
+          print('Invalid data format received from API');
+          return Left(Failure(message: 'Invalid data format received from API'));
+        }
+      },
+    );
   }
 
   @override
   Future<Either<Failure, List<Map<String, dynamic>>>> fetchProductReviews(int productId) async {
-    try {
-      print('Fetching product reviews from API...');
-      final response = await api.get(
-        apiRequest: ApiRequest(url: '${ApiUrls.products}$productId/reviews/'),
-      );
-      print('API response: $response');
-      return response.fold(
-        (failure) {
-          print('Failure: ${failure.message}');
-          return <Map<String, dynamic>>[];
-        },
-        (data) {
-          print('Data received: $data');
-          if (data is List) {
-            return data.cast<Map<String, dynamic>>();
-          } else {
-            print('Invalid data format received from API');
-            return <Map<String, dynamic>>[];
-          }
-        },
-      );
-    } catch (e) {
-      print('ProductRemoteDataSource fetchProductReviews error: $e');
-      return <Map<String, dynamic>>[];
-    }
+    print('Fetching product reviews from API...');
+    final response = await api.get(
+      apiRequest: ApiRequest(url: '${ApiUrls.products}$productId/reviews/'),
+    );
+    print('API response: $response');
+    return response.fold(
+      (failure) {
+        print('Failure: ${failure.message}');
+        return Left(failure);
+      },
+      (data) {
+        print('Data received: $data');
+        if (data is List) {
+          final reviews = data.cast<Map<String, dynamic>>();
+          return Right(reviews);
+        } else {
+          print('Invalid data format received from API');
+          return Left(Failure(message: 'Invalid data format received from API'));
+        }
+      },
+    );
   }
 }

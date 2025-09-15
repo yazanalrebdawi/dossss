@@ -1,6 +1,6 @@
 class ApiUrls {
   ApiUrls._();
-  static const String _baseURl = 'http://192.168.138.185:8010/api';
+  static const String _baseURl = 'http://192.168.145.185:8010/api';
 
   // POSTS
   static final String rigester = '$_baseURl/users/register/';

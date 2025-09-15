@@ -13,6 +13,15 @@ class CarsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CarCubit, CarState>(
+      buildWhen: (previous, current) =>
+          previous.cars != current.cars ||
+          previous.allCars != current.allCars ||
+          previous.selectedBrand != current.selectedBrand ||
+          previous.currentPage != current.currentPage ||
+          previous.hasMoreCars != current.hasMoreCars ||
+          previous.isLoadingMore != current.isLoadingMore ||
+          previous.isLoading != current.isLoading ||
+          previous.error != current.error,
       builder: (context, state) {
         return GridView.builder(
           shrinkWrap: true,

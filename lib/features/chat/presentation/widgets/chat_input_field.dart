@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/text_styles.dart';
-import '../../../../core/utils/app_logger.dart';
 
-class ChatInputField extends StatefulWidget {
+class ChatInputField extends StatelessWidget {
   final TextEditingController controller;
   final Function(String) onSendMessage;
 
@@ -13,31 +12,6 @@ class ChatInputField extends StatefulWidget {
     required this.controller,
     required this.onSendMessage,
   });
-
-  @override
-  State<ChatInputField> createState() => _ChatInputFieldState();
-}
-
-class _ChatInputFieldState extends State<ChatInputField> {
-  bool _hasText = false;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.controller.addListener(_onTextChanged);
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(_onTextChanged);
-    super.dispose();
-  }
-
-  void _onTextChanged() {
-    setState(() {
-      _hasText = widget.controller.text.trim().isNotEmpty;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +32,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
             // Attachment Button
             IconButton(
               onPressed: () {
-                AppLogger.info('Attachment button pressed', 'ChatInputField');
+                // TODO: Implement attachment functionality
               },
               icon: Icon(
                 Icons.attach_file,
@@ -75,7 +49,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   borderRadius: BorderRadius.circular(24.r),
                 ),
                 child: TextField(
-                  controller: widget.controller,
+                  controller: controller,
                   decoration: InputDecoration(
                     hintText: 'Type a message...',
                     hintStyle: AppTextStyles.s14w400.copyWith(
@@ -91,11 +65,8 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   textCapitalization: TextCapitalization.sentences,
                   onSubmitted: (value) {
                     if (value.trim().isNotEmpty) {
-                      widget.onSendMessage(value.trim());
-                      widget.controller.clear();
-                      setState(() {
-                        _hasText = false;
-                      });
+                      onSendMessage(value.trim());
+                      controller.clear();
                     }
                   },
                 ),
@@ -107,7 +78,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
             // Voice Button
             IconButton(
               onPressed: () {
-                AppLogger.info('Voice message button pressed', 'ChatInputField');
+                // TODO: Implement voice message functionality
               },
               icon: Icon(
                 Icons.mic,
@@ -119,32 +90,35 @@ class _ChatInputFieldState extends State<ChatInputField> {
             SizedBox(width: 8.w),
             
             // Send Button
-            Container(
-              width: 40.w,
-              height: 40.w,
-              decoration: BoxDecoration(
-                color: _hasText ? AppColors.primary : AppColors.gray.withOpacity(0.3),
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                onPressed: _hasText
-                    ? () {
-                        if (widget.controller.text.trim().isNotEmpty) {
-                          widget.onSendMessage(widget.controller.text.trim());
-                          widget.controller.clear();
-                          setState(() {
-                            _hasText = false;
-                          });
-                        }
-                      }
-                    : null,
-                icon: Icon(
-                  Icons.send,
-                  color: _hasText ? AppColors.white : AppColors.gray,
-                  size: 18.sp,
-                ),
-                padding: EdgeInsets.zero,
-              ),
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: controller,
+              builder: (context, value, child) {
+                final hasText = value.text.trim().isNotEmpty;
+                return Container(
+                  width: 40.w,
+                  height: 40.w,
+                  decoration: BoxDecoration(
+                    color: hasText ? AppColors.primary : AppColors.gray.withOpacity(0.3),
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    onPressed: hasText
+                        ? () {
+                            if (controller.text.trim().isNotEmpty) {
+                              onSendMessage(controller.text.trim());
+                              controller.clear();
+                            }
+                          }
+                        : null,
+                    icon: Icon(
+                      Icons.send,
+                      color: hasText ? AppColors.white : AppColors.gray,
+                      size: 18.sp,
+                    ),
+                    padding: EdgeInsets.zero,
+                  ),
+                );
+              },
             ),
           ],
         ),

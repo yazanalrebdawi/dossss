@@ -25,6 +25,11 @@ abstract class AppTextStyles {
     fontWeight: FontWeight.w400,
     color: Colors.black,
   );
+  static TextStyle get s12w600 => _baseStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    color: Colors.black,
+  );
 
   static TextStyle get s14w400 => _baseStyle(
     fontSize: 14,
@@ -35,6 +40,11 @@ abstract class AppTextStyles {
   static TextStyle get s14w500 => _baseStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
+    color: Colors.black,
+  );
+  static TextStyle get s14w600 => _baseStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
     color: Colors.black,
   );
 
@@ -65,6 +75,11 @@ abstract class AppTextStyles {
   static TextStyle get s18w500 => _baseStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
+    color: Colors.black,
+  );
+  static TextStyle get s18w600 => _baseStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
     color: Colors.black,
   );
 
@@ -140,8 +155,13 @@ abstract class AppTextStyles {
   // White Styles
   static TextStyle get whiteS16W400 => s16w400.copyWith(color: Colors.white);
   static TextStyle get whiteS16W600 => s16w600.copyWith(color: Colors.white);
+  static TextStyle get whiteS18W600 => s18w600.copyWith(color: Colors.white);
   static TextStyle get whiteS18W700 => s18w700.copyWith(color: Colors.white);
   static TextStyle get whiteS22W700 => s22w700.copyWith(color: Colors.white);
+  static TextStyle get whiteS12W400 => s12w400.copyWith(color: Colors.white);
+  static TextStyle get whiteS12W600 => s12w600.copyWith(color: Colors.white);
+  static TextStyle get whiteS14W600 => s14w600.copyWith(color: Colors.white);
+  static TextStyle get whiteS14W400 => s14w400.copyWith(color: Colors.white);
   static TextStyle get whiteS32W700 => _baseStyle(
     fontSize: 32,
     fontWeight: FontWeight.w700,
