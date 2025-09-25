@@ -7,7 +7,7 @@ import '../../../../core/services/token_service.dart';
 
 class ChatCubit extends OptimizedCubit<ChatState> {
   final ChatRemoteDataSource dataSource;
-  final WebSocketService _webSocketService = di.sl<WebSocketService>();
+  final WebSocketService _webSocketService = di.appLocator<WebSocketService>();
   
   ChatCubit(this.dataSource) : super(const ChatState()) {
     print('ChatCubit - Initialized');

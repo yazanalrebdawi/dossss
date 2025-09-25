@@ -24,7 +24,6 @@ class HomeScreenInitializer extends StatelessWidget {
   Widget build(BuildContext context) {
     final uri = Uri.parse(GoRouterState.of(context).uri.toString());
     final tabParam = uri.queryParameters['tab'];
-    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (tabParam == 'messages') {
         context.read<HomeCubit>().updateCurrentIndex(3);
@@ -68,8 +67,8 @@ class HomeBottomNavigationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
-      buildWhen: (previous, current) =>
-          previous.currentIndex != current.currentIndex,
+      buildWhen:
+          (previous, current) => previous.currentIndex != current.currentIndex,
       builder: (context, homeState) {
         return HomeBottomNavigation(
           currentIndex: homeState.currentIndex,

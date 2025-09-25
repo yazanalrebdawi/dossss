@@ -249,7 +249,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     final currentProductId = widget.productId;
     return BlocProvider(
-      create: (_) => di.sl<ProductCubit>()..loadProductDetails(widget.productId),
+      create: (_) => di.appLocator<ProductCubit>()..loadProductDetails(widget.productId),
       child: Scaffold(
         backgroundColor: AppColors.white,
         appBar: null,

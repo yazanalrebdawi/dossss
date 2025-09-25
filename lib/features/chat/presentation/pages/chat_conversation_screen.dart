@@ -28,7 +28,7 @@ class ChatConversationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => di.sl<ChatCubit>()..loadMessages(chatId),
+      create: (context) => di.appLocator<ChatCubit>()..loadMessages(chatId),
       child: Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(

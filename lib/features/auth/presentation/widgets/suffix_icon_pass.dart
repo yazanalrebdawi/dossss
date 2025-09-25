@@ -10,6 +10,7 @@ class SuffixIconPass extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
+      buildWhen: (previous, current) => previous.isObscurePassword != current.isObscurePassword,
       builder: (context, state) {
         return InkWell(
           onTap: () => context.read<AuthCubit>().togglePasswordVisibility(),

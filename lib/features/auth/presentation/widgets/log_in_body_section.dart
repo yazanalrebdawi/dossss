@@ -33,21 +33,29 @@ class _LogInBodySectionState extends State<LogInBodySection> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<AuthCubit>(),
+      create: (context) => appLocator<AuthCubit>(),
       child: BlocConsumer<AuthCubit, AuthState>(
+        listenWhen:
+            (previous, current) =>
+                previous.checkAuthState != current.checkAuthState ||
+                previous.error != current.error ||
+                previous.success != current.success,
         listener: (context, state) {
           print('🔍 Login - Auth State: ${state.checkAuthState}');
           print('🔍 Login - Loading: ${state.isLoading}');
           print('🔍 Login - Error: ${state.error}');
           print('🔍 Login - Success: ${state.success}');
-          
+
           if (state.checkAuthState == CheckAuthState.signinSuccess) {
             print('✅ Login Success - Navigating to Home');
-            ScaffoldMessenger.of(context).showSnackBar(customAppSnackBar(
-              AppLocalizations.of(context)?.translate('loginSuccess') ?? "Login successful!", 
-              context
-            ));
-            
+            ScaffoldMessenger.of(context).showSnackBar(
+              customAppSnackBar(
+                AppLocalizations.of(context)?.translate('loginSuccess') ??
+                    "Login successful!",
+                context,
+              ),
+            );
+
             // تأخير قصير ثم الانتقال إلى Home
             Future.delayed(const Duration(milliseconds: 500), () {
               context.go(RouteNames.homeScreen);
@@ -55,12 +63,24 @@ class _LogInBodySectionState extends State<LogInBodySection> {
           }
           if (state.checkAuthState == CheckAuthState.error) {
             print('❌ Login Error: ${state.error}');
-            ScaffoldMessenger.of(context).showSnackBar(customAppSnackBar(
-              state.error ?? AppLocalizations.of(context)?.translate('operationFailed') ?? "Operation failed", 
-              context,
-            ));
+            ScaffoldMessenger.of(context).showSnackBar(
+              customAppSnackBar(
+                state.error ??
+                    AppLocalizations.of(
+                      context,
+                    )?.translate('operationFailed') ??
+                    "Operation failed",
+                context,
+              ),
+            );
           }
         },
+        buildWhen:
+            (previous, current) =>
+                previous.isLoading != current.isLoading ||
+                previous.checkAuthState != current.checkAuthState ||
+                previous.error != current.error ||
+                previous.success != current.success,
         builder: (context, state) {
           return Form(
             key: _params.formState,
@@ -104,7 +124,9 @@ class _LogInBodySectionState extends State<LogInBodySection> {
           style: AppTextStyles.s16w400,
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.email_outlined, color: AppColors.primary),
-            hintText: AppLocalizations.of(context)?.translate('enterEmail') ?? "Enter your email",
+            hintText:
+                AppLocalizations.of(context)?.translate('enterEmail') ??
+                "Enter your email",
             hintStyle: AppTextStyles.hintTextStyleWhiteS20W400,
             border: OutlineInputBorder(
               borderSide: const BorderSide(color: AppColors.gray, width: 1),
@@ -130,9 +152,7 @@ class _LogInBodySectionState extends State<LogInBodySection> {
             fillColor: AppColors.white,
           ),
           validator: (value) => Validator.emailValidation(value),
-          onChanged: (value) {
-            
-          },
+          onChanged: (value) {},
           onFieldSubmitted: (value) {
             FocusScope.of(context).requestFocus(_params.passwordNode);
           },
@@ -168,7 +188,9 @@ class _LogInBodySectionState extends State<LogInBodySection> {
                 });
               },
             ),
-            hintText: AppLocalizations.of(context)?.translate('enterPassword') ?? "Enter your password",
+            hintText:
+                AppLocalizations.of(context)?.translate('enterPassword') ??
+                "Enter your password",
             hintStyle: AppTextStyles.hintTextStyleWhiteS20W400,
             border: OutlineInputBorder(
               borderSide: const BorderSide(color: AppColors.gray, width: 1),
@@ -194,9 +216,7 @@ class _LogInBodySectionState extends State<LogInBodySection> {
             fillColor: AppColors.white,
           ),
           validator: (value) => Validator.notNullValidation(value),
-          onChanged: (value) {
-            
-          },
+          onChanged: (value) {},
         ),
       ],
     );
@@ -207,18 +227,21 @@ class _LogInBodySectionState extends State<LogInBodySection> {
       width: double.infinity,
       height: 54.h,
       child: ElevatedButton(
-        onPressed: state.isLoading ? null : () {
-          print('🔘 Login Button Pressed');
-          print('📧 Email: ${_params.email.text}');
-          print('🔑 Password: ${_params.password.text}');
-          
-          if (_params.formState.currentState!.validate()) {
-            print('✅ Form validation passed, calling signIn');
-            context.read<AuthCubit>().signIn(_params);
-          } else {
-            print('❌ Form validation failed');
-          }
-        },
+        onPressed:
+            state.isLoading
+                ? null
+                : () {
+                  print('🔘 Login Button Pressed');
+                  print('📧 Email: ${_params.email.text}');
+                  print('🔑 Password: ${_params.password.text}');
+
+                  if (_params.formState.currentState!.validate()) {
+                    print('✅ Form validation passed, calling signIn');
+                    context.read<AuthCubit>().signIn(_params);
+                  } else {
+                    print('❌ Form validation failed');
+                  }
+                },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           shape: RoundedRectangleBorder(
@@ -228,19 +251,21 @@ class _LogInBodySectionState extends State<LogInBodySection> {
           padding: EdgeInsets.zero,
         ),
         child: Center(
-          child: state.isLoading
-              ? SizedBox(
-                  width: 24.w,
-                  height: 24.h,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2.w,
+          child:
+              state.isLoading
+                  ? SizedBox(
+                    width: 24.w,
+                    height: 24.h,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2.w,
+                    ),
+                  )
+                  : Text(
+                    AppLocalizations.of(context)?.translate('login') ??
+                        'Sign In',
+                    style: AppTextStyles.buttonTextStyleWhiteS22W700,
                   ),
-                )
-              : Text(
-                  AppLocalizations.of(context)?.translate('login') ?? 'Sign In',
-                  style: AppTextStyles.buttonTextStyleWhiteS22W700,
-                ),
         ),
       ),
     );
@@ -260,7 +285,8 @@ class _LogInBodySectionState extends State<LogInBodySection> {
               activeColor: AppColors.primary,
             ),
             Text(
-              AppLocalizations.of(context)?.translate('rememberMe') ?? 'Remember me',
+              AppLocalizations.of(context)?.translate('rememberMe') ??
+                  'Remember me',
               style: AppTextStyles.descriptionS18W400,
             ),
           ],
@@ -270,7 +296,8 @@ class _LogInBodySectionState extends State<LogInBodySection> {
             context.go(RouteNames.forgetPasswordPage);
           },
           child: Text(
-            AppLocalizations.of(context)?.translate('forgetPassword') ?? 'Forgot password?',
+            AppLocalizations.of(context)?.translate('forgetPassword') ??
+                'Forgot password?',
             style: AppTextStyles.descriptionS18W400,
           ),
         ),
@@ -278,5 +305,3 @@ class _LogInBodySectionState extends State<LogInBodySection> {
     );
   }
 }
-
-

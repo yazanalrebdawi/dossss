@@ -26,7 +26,7 @@ class AllCarsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => di.sl<CarCubit>()..loadAllCars(),
+      create: (_) => di.appLocator<CarCubit>()..loadAllCars(),
       child: Scaffold(
         backgroundColor: AppColors.white,
         appBar: const SearchAppBar(

@@ -12,10 +12,7 @@ import 'auth_button.dart';
 class RegisterScreenButtonsSection extends StatelessWidget {
   final CreateAccountParams params;
 
-  const RegisterScreenButtonsSection({
-    super.key,
-    required this.params,
-  });
+  const RegisterScreenButtonsSection({super.key, required this.params});
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +21,22 @@ class RegisterScreenButtonsSection extends StatelessWidget {
         SizedBox(height: 18.h),
         // Sign Up Button
         BlocBuilder<AuthCubit, AuthState>(
+          buildWhen:
+              (previous, current) =>
+                  previous.isLoading != current.isLoading ||
+                  previous.checkAuthState != current.checkAuthState ||
+                  previous.error != current.error ||
+                  previous.success != current.success,
           builder: (context, state) {
-            
-            print('🔍 RegisterScreenButtonsSection - isLoading: ${state.isLoading}');
-            print('🔍 RegisterScreenButtonsSection - checkAuthState: ${state.checkAuthState}');
-            
+            print(
+              '🔍 RegisterScreenButtonsSection - isLoading: ${state.isLoading}',
+            );
+            print(
+              '🔍 RegisterScreenButtonsSection - checkAuthState: ${state.checkAuthState}',
+            );
+
             return AuthButton(
-              onTap:  () {
+              onTap: () {
                 print('🔘 Register Button Pressed');
                 if (params.formState.currentState!.validate()) {
                   print('✅ Form validation passed, calling register');
@@ -39,7 +45,9 @@ class RegisterScreenButtonsSection extends StatelessWidget {
                   print('❌ Form validation failed');
                 }
               },
-              buttonText: AppLocalizations.of(context)?.translate('signUp') ?? 'Sign Up',
+              buttonText:
+                  AppLocalizations.of(context)?.translate('signUp') ??
+                  'Sign Up',
               isLoading: state.isLoading,
             );
           },
@@ -60,8 +68,8 @@ class RegisterScreenButtonsSection extends StatelessWidget {
           ],
         ),
         SizedBox(height: 40.h),
-        AlreadyHaveAccount()
+        AlreadyHaveAccount(),
       ],
     );
   }
-} 
+}

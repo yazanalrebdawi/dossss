@@ -18,7 +18,7 @@ class AllProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => di.sl<ProductCubit>()..loadAllProducts(),
+      create: (_) => di.appLocator<ProductCubit>()..loadAllProducts(),
       child: Scaffold(
         backgroundColor: AppColors.white,
         appBar: const SearchAppBar(

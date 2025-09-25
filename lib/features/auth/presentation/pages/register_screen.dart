@@ -35,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<AuthCubit>(),
+      create: (context) => appLocator<AuthCubit>(),
       child: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           print('🔍 Register Screen - Auth State: ${state.checkAuthState}');

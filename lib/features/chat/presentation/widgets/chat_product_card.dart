@@ -19,7 +19,7 @@ class ChatProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => di.sl<ProductCubit>()..loadProductDetails(productId),
+      create: (context) => di.appLocator<ProductCubit>()..loadProductDetails(productId),
       child: BlocBuilder<ProductCubit, ProductState>(
         builder: (context, productState) {
           final product = productState.selectedProduct;

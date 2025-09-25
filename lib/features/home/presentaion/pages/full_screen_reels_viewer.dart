@@ -20,7 +20,7 @@ class FullScreenReelsViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: di.sl<ReelsPlaybackCubit>(), // Use existing cubit instance
+      value: di.appLocator<ReelsPlaybackCubit>(), // Use existing cubit instance
       child: const _FullScreenReelsContent(),
     );
   }

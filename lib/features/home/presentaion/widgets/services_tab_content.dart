@@ -10,7 +10,7 @@ class ServicesTabContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ServiceCubit>(
-      create: (context) => di.sl<ServiceCubit>(),
+      create: (context) => di.appLocator<ServiceCubit>(),
       child: const ServicesTabDataLoader(),
     );
   }

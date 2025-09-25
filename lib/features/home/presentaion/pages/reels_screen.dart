@@ -19,7 +19,7 @@ class ReelsScreen extends StatelessWidget {
     final PageController pageController = PageController();
     
     return BlocProvider(
-      create: (_) => di.sl<ReelCubit>()..loadReels(),
+      create: (_) => di.appLocator<ReelCubit>()..loadReels(),
       child: WillPopScope(
         onWillPop: () async {
           // Clean up video resources before navigating back

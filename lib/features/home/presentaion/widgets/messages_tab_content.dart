@@ -10,7 +10,7 @@ class MessagesTabContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ChatCubit>(
-      create: (context) => di.sl<ChatCubit>(),
+      create: (context) => di.appLocator<ChatCubit>(),
       child: const MessagesTabDataLoader(),
     );
   }

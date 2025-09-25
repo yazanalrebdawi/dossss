@@ -50,7 +50,7 @@ class _ChatTestScreenState extends State<ChatTestScreen> {
         centerTitle: true,
       ),
       body: BlocProvider(
-        create: (_) => di.sl<ChatCubit>(),
+        create: (_) => di.appLocator<ChatCubit>(),
         child: BlocConsumer<ChatCubit, ChatState>(
           listener: (context, state) {
             if (state.error != null) {

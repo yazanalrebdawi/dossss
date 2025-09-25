@@ -10,7 +10,7 @@ class HomeTabCarProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ProductCubit>(
-      create: (context) => di.sl<ProductCubit>(),
+      create: (context) => di.appLocator<ProductCubit>(),
       child: const HomeTabProductProvider(),
     );
   }
