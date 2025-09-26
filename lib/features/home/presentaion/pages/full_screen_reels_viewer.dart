@@ -129,26 +129,26 @@ class _FullScreenReelsContentState extends State<_FullScreenReelsContent> {
           ),
         ),
 
-        // Reel counter
-        Positioned(
-          top: MediaQuery.of(context).padding.top + 16.h,
-          right: 16.w,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: AppColors.black.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Text(
-              '${state.currentIndex + 1} / ${state.reels.length}',
-              style: TextStyle(
-                color: AppColors.white,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
+        // // Reel counter
+        // Positioned(
+        //   top: MediaQuery.of(context).padding.top + 16.h,
+        //   right: 16.w,
+        //   child: Container(
+        //     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+        //     decoration: BoxDecoration(
+        //       color: AppColors.black.withOpacity(0.5),
+        //       borderRadius: BorderRadius.circular(20.r),
+        //     ),
+        //     child: Text(
+        //       '${state.currentIndex + 1} / ${state.reels.length}',
+        //       style: TextStyle(
+        //         color: AppColors.white,
+        //         fontSize: 14.sp,
+        //         fontWeight: FontWeight.w500,
+        //       ),
+        //     ),
+        //   ),
+        // ),
 
         // Loading indicator for pagination
         if (state.isLoading && state.reels.isNotEmpty)

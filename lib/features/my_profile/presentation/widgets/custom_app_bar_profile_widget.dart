@@ -2,6 +2,7 @@ import 'package:dooss_business_app/core/constants/colors.dart';
 import 'package:dooss_business_app/core/constants/text_styles.dart';
 import 'package:dooss_business_app/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomAppBarProfileWidget extends StatelessWidget
     implements PreferredSizeWidget {
@@ -20,7 +21,7 @@ class CustomAppBarProfileWidget extends StatelessWidget
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.background,
-      
+
       title: Text(
         AppLocalizations.of(context)?.translate(title) ?? title,
         style: AppTextStyles.blackS18W500.copyWith(
@@ -34,6 +35,7 @@ class CustomAppBarProfileWidget extends StatelessWidget
           showBack
               ? IconButton(
                 onPressed: () {
+                  // context.pop();
                   Navigator.pop(context);
                 },
                 icon: Icon(Icons.arrow_back, color: AppColors.black),

@@ -29,14 +29,20 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatCubit, ChatState>(
+      buildWhen: (previous, current) {
+        return previous.chats != current.chats ||
+            previous.isLoading != current.isLoading ||
+            previous.error != current.error;
+      },
+
       builder: (context, state) {
-        print('ChatsListScreen - State: isLoading=${state.isLoading}, chatsCount=${state.chats.length}, error=${state.error}');
-        
+        print(
+          'ChatsListScreen - State: isLoading=${state.isLoading}, chatsCount=${state.chats.length}, error=${state.error}',
+        );
+
         if (state.isLoading) {
           print('ChatsListScreen - Showing loading indicator');
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (state.error != null) {

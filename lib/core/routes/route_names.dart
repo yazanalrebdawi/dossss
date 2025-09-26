@@ -35,7 +35,7 @@ class RouteNames {
   // my profile & settings
   static const String changeLanguageScreen = '/changeLanguageScreen';
   static const String changePasswordScreen = '/ChangePasswordScreen';
-  static const String editProfileScreen = '/editProfileScreen';
+  static const String editProfileScreen = '/edit-profile';
   static const String profileScreen = '/profileScreen';
   static const String savedItemsScreen = '/savedItemsScreen';
   static const String settingsNotificationsScreen =

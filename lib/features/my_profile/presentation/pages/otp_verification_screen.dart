@@ -14,6 +14,7 @@ import 'package:dooss_business_app/core/utils/response_status_enum.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/manager/my_profile_cubit.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/manager/my_profile_state.dart';
 import 'package:dooss_business_app/core/constants/colors.dart';
+import 'package:go_router/go_router.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String phoneNumber;
@@ -86,6 +87,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   void _cancelOtp() {
     context.read<MyProfileCubit>().cancelPhoneUpdate();
     Navigator.pop(context);
+    // context.pop();
   }
 
   Widget _buildOtpFields() {
@@ -172,6 +174,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           );
           context.read<MyProfileCubit>().getInfoUser();
           Navigator.pop(context);
+          // context.pop();
         } else if (state.statusConfirmPhone == ResponseStatusEnum.failure &&
             state.errorConfirmPhone != null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -189,6 +192,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             ),
           );
           Navigator.pop(context, false);
+          // context.pop(false);
         } else if (state.statusCancelPhone == ResponseStatusEnum.failure &&
             state.errorCancelPhone != null) {
           ScaffoldMessenger.of(

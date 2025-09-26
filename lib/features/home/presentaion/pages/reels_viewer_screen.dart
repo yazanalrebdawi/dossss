@@ -103,25 +103,25 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
           ),
 
           // Reel counter (top right)
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 16.h,
-            right: 16.w,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                color: AppColors.black.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Text(
-                '${_currentIndex + 1} / ${widget.reelsList.length}',
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: MediaQuery.of(context).padding.top + 16.h,
+          //   right: 16.w,
+          //   child: Container(
+          //     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+          //     decoration: BoxDecoration(
+          //       color: AppColors.black.withOpacity(0.5),
+          //       borderRadius: BorderRadius.circular(20.r),
+          //     ),
+          //     child: Text(
+          //       '${_currentIndex + 1} / ${widget.reelsList.length}',
+          //       style: TextStyle(
+          //         color: AppColors.white,
+          //         fontSize: 14.sp,
+          //         fontWeight: FontWeight.w500,
+          //       ),
+          //     ),
+          //   ),
+          // ),
 
           // Scroll indicator (right edge)
           Positioned(

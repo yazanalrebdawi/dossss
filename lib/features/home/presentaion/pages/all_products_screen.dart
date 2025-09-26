@@ -21,15 +21,18 @@ class AllProductsScreen extends StatelessWidget {
       create: (_) => di.appLocator<ProductCubit>()..loadAllProducts(),
       child: Scaffold(
         backgroundColor: AppColors.white,
-        appBar: const SearchAppBar(
-          title: 'All Products',
-        ),
+        appBar: const SearchAppBar(title: 'All Products'),
         body: BlocBuilder<ProductCubit, ProductState>(
+          buildWhen:
+              (previous, current) =>
+                  previous.isLoading != current.isLoading ||
+                  previous.displayedProducts != current.displayedProducts ||
+                  previous.error != current.error ||
+                  previous.isLoadingMore != current.isLoadingMore,
+
           builder: (context, state) {
             if (state.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (state.error != null) {
@@ -45,12 +48,16 @@ class AllProductsScreen extends StatelessWidget {
                     SizedBox(height: 16.h),
                     Text(
                       'Error loading products',
-                      style: AppTextStyles.s16w500.copyWith(color: AppColors.gray),
+                      style: AppTextStyles.s16w500.copyWith(
+                        color: AppColors.gray,
+                      ),
                     ),
                     SizedBox(height: 8.h),
                     Text(
                       state.error!,
-                      style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+                      style: AppTextStyles.s14w400.copyWith(
+                        color: AppColors.gray,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -63,16 +70,24 @@ class AllProductsScreen extends StatelessWidget {
               children: [
                 // Product Count
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 8.h,
+                  ),
                   child: Text(
                     '${state.totalProductsCount} products',
-                    style: AppTextStyles.s16w500.copyWith(color: AppColors.gray),
+                    style: AppTextStyles.s16w500.copyWith(
+                      color: AppColors.gray,
+                    ),
                   ),
                 ),
-                
+
                 // Category Filter
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 8.h,
+                  ),
                   child: CategoryFilter(
                     selectedCategory: state.selectedCategory,
                     onCategorySelected: (category) {
@@ -80,75 +95,89 @@ class AllProductsScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                
-                                 // Products Grid
-                 Expanded(
-                   child: Column(
-                     children: [
-                       Expanded(
-                         child: GridView.builder(
-                           padding: EdgeInsets.all(16.w),
-                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                             crossAxisCount: 2,
-                             childAspectRatio: 173 / 240, // من الصورة
-                             crossAxisSpacing: 12.w,
-                             mainAxisSpacing: 12.h,
-                           ),
-                           itemCount: state.displayedProducts.length,
-                           itemBuilder: (context, index) {
-                             return GestureDetector(
-                               onTap: () {
-                                 // Navigate to product details
-                                 final product = state.displayedProducts[index];
-                                 print('Product tapped: ${product.name} with ID: ${product.id}');
-                                 context.push('${RouteNames.productDetailsScreen}/${product.id}');
-                               },
-                               child: AllProductsCard(
-                                 product: state.displayedProducts[index],
-                               ),
-                             );
-                           },
-                         ),
-                       ),
-                       // Load More Button
-                       if (state.hasMoreProducts)
-                         Padding(
-                           padding: EdgeInsets.all(16.w),
-                           child: SizedBox(
-                             width: double.infinity,
-                             height: 48.h,
-                             child: ElevatedButton(
-                               onPressed: state.isLoadingMore
-                                   ? null
-                                   : () {
-                                       context.read<ProductCubit>().loadMoreProducts();
-                                     },
-                               style: ElevatedButton.styleFrom(
-                                 backgroundColor: AppColors.primary,
-                                 foregroundColor: AppColors.white,
-                                 shape: RoundedRectangleBorder(
-                                   borderRadius: BorderRadius.circular(8.r),
-                                 ),
-                               ),
-                               child: state.isLoadingMore
-                                   ? SizedBox(
-                                       width: 20.w,
-                                       height: 20.h,
-                                       child: CircularProgressIndicator(
-                                         strokeWidth: 2,
-                                         valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                                       ),
-                                     )
-                                   : Text(
-                                       'Load More Products',
-                                       style: AppTextStyles.s16w600.copyWith(color: AppColors.white),
-                                     ),
-                             ),
-                           ),
-                         ),
-                     ],
-                   ),
-                 ),
+
+                // Products Grid
+                Expanded(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: GridView.builder(
+                          padding: EdgeInsets.all(16.w),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 173 / 240, // من الصورة
+                                crossAxisSpacing: 12.w,
+                                mainAxisSpacing: 12.h,
+                              ),
+                          itemCount: state.displayedProducts.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                // Navigate to product details
+                                final product = state.displayedProducts[index];
+                                print(
+                                  'Product tapped: ${product.name} with ID: ${product.id}',
+                                );
+                                context.push(
+                                  '${RouteNames.productDetailsScreen}/${product.id}',
+                                );
+                              },
+                              child: AllProductsCard(
+                                product: state.displayedProducts[index],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      // Load More Button
+                      if (state.hasMoreProducts)
+                        Padding(
+                          padding: EdgeInsets.all(16.w),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 48.h,
+                            child: ElevatedButton(
+                              onPressed:
+                                  state.isLoadingMore
+                                      ? null
+                                      : () {
+                                        context
+                                            .read<ProductCubit>()
+                                            .loadMoreProducts();
+                                      },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                foregroundColor: AppColors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                              ),
+                              child:
+                                  state.isLoadingMore
+                                      ? SizedBox(
+                                        width: 20.w,
+                                        height: 20.h,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                AppColors.white,
+                                              ),
+                                        ),
+                                      )
+                                      : Text(
+                                        'Load More Products',
+                                        style: AppTextStyles.s16w600.copyWith(
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ],
             );
           },

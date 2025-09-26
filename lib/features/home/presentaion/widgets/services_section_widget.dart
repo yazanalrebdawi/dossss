@@ -18,28 +18,30 @@ class ServicesSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ServiceCubit, ServiceState>(
+      buildWhen: (previous, current) {
+        return previous.services != current.services ||
+            previous.filteredServices != current.filteredServices ||
+            previous.isLoading != current.isLoading ||
+            previous.error != current.error ||
+            previous.selectedFilter != current.selectedFilter;
+      },
       builder: (context, state) {
         if (state.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
-        
+
         if (state.error != null) {
           // Check if error is related to location permission
-          if (state.error!.contains('location') || state.error!.contains('permission')) {
-            return Center(
-              child: _buildLocationPermissionWidget(context),
-            );
+          if (state.error!.contains('location') ||
+              state.error!.contains('permission')) {
+            return Center(child: _buildLocationPermissionWidget(context));
           }
-          
+
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.error_outline,
-                  color: AppColors.gray,
-                  size: 48.sp,
-                ),
+                Icon(Icons.error_outline, color: AppColors.gray, size: 48.sp),
                 SizedBox(height: 16.h),
                 Text(
                   'Error: ${state.error}',
@@ -51,9 +53,10 @@ class ServicesSectionWidget extends StatelessWidget {
           );
         }
 
-                 final services = state.selectedFilter == 'all' || state.selectedFilter == 'All'
-             ? state.services 
-             : state.filteredServices;
+        final services =
+            state.selectedFilter == 'all' || state.selectedFilter == 'All'
+                ? state.services
+                : state.filteredServices;
 
         if (services.isEmpty) {
           return Center(
@@ -90,9 +93,9 @@ class ServicesSectionWidget extends StatelessWidget {
                 context.read<ServiceCubit>().filterServices(filter);
               },
             ),
-            
+
             SizedBox(height: 16.h),
-            
+
             // Services List
             Expanded(
               child: ListView.builder(
@@ -100,30 +103,34 @@ class ServicesSectionWidget extends StatelessWidget {
                 itemCount: services.length,
                 itemBuilder: (context, index) {
                   final service = services[index];
-                                     return ServiceCardWidget(
-                     service: service,
-                                           onViewDetails: () {
-                        // Navigate to service details
-                        print('🔍 ServicesSection: View Details pressed for service: ${service.name}');
-                        print('🔍 ServicesSection: Service ID: ${service.id}');
-                        print('🔍 ServicesSection: Service location: ${service.lat}, ${service.lon}');
-                        context.push('/service-details', extra: service);
-                      },
-                     onMaps: () async {
-                       // Launch maps
-                       final url = service.mapsUrl;
-                       if (await canLaunchUrl(Uri.parse(url))) {
-                         await launchUrl(Uri.parse(url));
-                       }
-                     },
-                     onCall: () async {
-                       // Launch call
-                       final url = service.callUrl;
-                       if (await canLaunchUrl(Uri.parse(url))) {
-                         await launchUrl(Uri.parse(url));
-                       }
-                     },
-                   );
+                  return ServiceCardWidget(
+                    service: service,
+                    onViewDetails: () {
+                      // Navigate to service details
+                      print(
+                        '🔍 ServicesSection: View Details pressed for service: ${service.name}',
+                      );
+                      print('🔍 ServicesSection: Service ID: ${service.id}');
+                      print(
+                        '🔍 ServicesSection: Service location: ${service.lat}, ${service.lon}',
+                      );
+                      context.push('/service-details', extra: service);
+                    },
+                    onMaps: () async {
+                      // Launch maps
+                      final url = service.mapsUrl;
+                      if (await canLaunchUrl(Uri.parse(url))) {
+                        await launchUrl(Uri.parse(url));
+                      }
+                    },
+                    onCall: () async {
+                      // Launch call
+                      final url = service.callUrl;
+                      if (await canLaunchUrl(Uri.parse(url))) {
+                        await launchUrl(Uri.parse(url));
+                      }
+                    },
+                  );
                 },
               ),
             ),
@@ -139,36 +146,41 @@ class ServicesSectionWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.location_off,
-            color: AppColors.gray,
-            size: 64.sp,
-          ),
+          Icon(Icons.location_off, color: AppColors.gray, size: 64.sp),
           SizedBox(height: 16.h),
-                     Text(
-             AppLocalizations.of(context)!.translate('locationPermissionRequired'),
-             style: AppTextStyles.blackS18W700,
-             textAlign: TextAlign.center,
-           ),
+          Text(
+            AppLocalizations.of(
+              context,
+            )!.translate('locationPermissionRequired'),
+            style: AppTextStyles.blackS18W700,
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: 8.h),
-                     Text(
-             AppLocalizations.of(context)!.translate('locationPermissionMessage'),
-             style: AppTextStyles.secondaryS14W400,
-             textAlign: TextAlign.center,
-           ),
+          Text(
+            AppLocalizations.of(
+              context,
+            )!.translate('locationPermissionMessage'),
+            style: AppTextStyles.secondaryS14W400,
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: 24.h),
           ElevatedButton(
             onPressed: () async {
               // Request location permission
-              bool hasPermission = await LocationService.requestLocationPermission();
+              bool hasPermission =
+                  await LocationService.requestLocationPermission();
               if (hasPermission) {
                 context.read<ServiceCubit>().loadServices();
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                                   SnackBar(
-                   content: Text(AppLocalizations.of(context)!.translate('locationPermissionMessage')),
-                   backgroundColor: Colors.orange,
-                 ),
+                  SnackBar(
+                    content: Text(
+                      AppLocalizations.of(
+                        context,
+                      )!.translate('locationPermissionMessage'),
+                    ),
+                    backgroundColor: Colors.orange,
+                  ),
                 );
               }
             },
@@ -179,13 +191,13 @@ class ServicesSectionWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.r),
               ),
             ),
-                         child: Text(
-               AppLocalizations.of(context)!.translate('allowLocationAccess'),
-               style: AppTextStyles.secondaryS14W400.copyWith(
-                 color: AppColors.white,
-                 fontWeight: FontWeight.w600,
-               ),
-             ),
+            child: Text(
+              AppLocalizations.of(context)!.translate('allowLocationAccess'),
+              style: AppTextStyles.secondaryS14W400.copyWith(
+                color: AppColors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ],
       ),

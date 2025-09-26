@@ -97,6 +97,11 @@ class AppManagerCubit extends Cubit<AppManagerState> {
 
   //?-------  Them  ---------------------------------------------------------------------------
 
+  //* update Temp Theme
+  void setTempTheme(bool isTrue) {
+    emit(state.copyWith(tempThem: isTrue));
+  }
+
   //* Toggle Them
   void toggleTheme() {
     final newTheme =

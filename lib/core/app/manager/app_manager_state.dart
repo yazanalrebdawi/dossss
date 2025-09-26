@@ -14,9 +14,11 @@ class AppManagerState {
 
   //! Them
   final AppThemeEnum themeMode;
+  final bool tempThem;
   //?-------------------------------------------------------------------
 
   AppManagerState({
+    this.tempThem = true,
     this.themeMode = AppThemeEnum.light,
     this.user,
     this.locale = const Locale('en'),
@@ -24,6 +26,7 @@ class AppManagerState {
   });
   //?-------------------------------------------------------------------
   AppManagerState copyWith({
+    bool? tempThem,
     UserModel? user,
     AppThemeEnum? themeMode,
     Locale? locale,
@@ -32,6 +35,7 @@ class AppManagerState {
     return AppManagerState(
       themeMode: themeMode ?? this.themeMode,
       user: user ?? this.user,
+      tempThem: tempThem ?? this.tempThem,
       locale: locale ?? this.locale,
       lastApply: lastApply,
     );

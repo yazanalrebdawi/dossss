@@ -38,10 +38,7 @@ class ChatConversationScreen extends StatelessWidget {
             icon: Icon(Icons.arrow_back, color: AppColors.black, size: 24.sp),
             onPressed: () => context.go('/home?tab=messages'),
           ),
-          title: Text(
-            participantName,
-            style: AppTextStyles.blackS18W700,
-          ),
+          title: Text(participantName, style: AppTextStyles.blackS18W700),
           centerTitle: true,
           actions: [
             IconButton(
@@ -54,10 +51,16 @@ class ChatConversationScreen extends StatelessWidget {
           children: [
             // Product Card (if productId is provided)
             if (productId != null) ChatProductCard(productId: productId!),
-            
+
             // Messages List
             Expanded(
               child: BlocBuilder<ChatCubit, ChatState>(
+                buildWhen: (previous, current) {
+                  return previous.messages != current.messages ||
+                      previous.isLoadingMessages != current.isLoadingMessages ||
+                      previous.error != current.error;
+                },
+
                 builder: (context, state) {
                   if (state.isLoading) {
                     return const Center(child: CircularProgressIndicator());
@@ -68,16 +71,24 @@ class ChatConversationScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.error_outline, size: 64.sp, color: AppColors.gray),
+                          Icon(
+                            Icons.error_outline,
+                            size: 64.sp,
+                            color: AppColors.gray,
+                          ),
                           SizedBox(height: 16.h),
                           Text(
                             'Error loading messages',
-                            style: AppTextStyles.s16w500.copyWith(color: AppColors.gray),
+                            style: AppTextStyles.s16w500.copyWith(
+                              color: AppColors.gray,
+                            ),
                           ),
                           SizedBox(height: 8.h),
                           Text(
                             state.error!,
-                            style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+                            style: AppTextStyles.s14w400.copyWith(
+                              color: AppColors.gray,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -90,16 +101,24 @@ class ChatConversationScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.chat_bubble_outline, size: 64.sp, color: AppColors.gray),
+                          Icon(
+                            Icons.chat_bubble_outline,
+                            size: 64.sp,
+                            color: AppColors.gray,
+                          ),
                           SizedBox(height: 16.h),
                           Text(
                             'No messages yet',
-                            style: AppTextStyles.s16w500.copyWith(color: AppColors.gray),
+                            style: AppTextStyles.s16w500.copyWith(
+                              color: AppColors.gray,
+                            ),
                           ),
                           SizedBox(height: 8.h),
                           Text(
                             'Start a conversation with $participantName',
-                            style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+                            style: AppTextStyles.s14w400.copyWith(
+                              color: AppColors.gray,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -112,17 +131,20 @@ class ChatConversationScreen extends StatelessWidget {
                     itemCount: state.messages.length,
                     itemBuilder: (context, index) {
                       final message = state.messages[index];
-                      return MessageBubble(
-                        message: message,
-                      );
+                      return MessageBubble(message: message);
                     },
                   );
                 },
               ),
             ),
-            
+
             // Chat Input
             BlocBuilder<ChatCubit, ChatState>(
+              buildWhen: (previous, current) {
+                return previous.isWebSocketConnected !=
+                    current.isWebSocketConnected;
+              },
+
               builder: (context, chatState) {
                 return ChatInputField(
                   controller: TextEditingController(),
@@ -130,7 +152,9 @@ class ChatConversationScreen extends StatelessWidget {
                     if (message.trim().isNotEmpty) {
                       // Use WebSocket if connected, otherwise fallback to API
                       if (chatState.isWebSocketConnected) {
-                        context.read<ChatCubit>().sendMessageViaWebSocket(message.trim());
+                        context.read<ChatCubit>().sendMessageViaWebSocket(
+                          message.trim(),
+                        );
                       } else {
                         context.read<ChatCubit>().sendMessage(message.trim());
                       }

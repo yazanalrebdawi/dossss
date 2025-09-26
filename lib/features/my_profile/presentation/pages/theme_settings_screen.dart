@@ -25,7 +25,7 @@ class ThemeSettingsScreen extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
           child: Column(
-            spacing: 5.h,
+            spacing: 15.h,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -34,120 +34,120 @@ class ThemeSettingsScreen extends StatelessWidget {
                 style: AppTextStyles.s16w500.copyWith(color: Color(0xff111827)),
               ),
               SelectedThemWidget(),
-              ContainerBaseWidget(
-                height: 102,
-                width: 358,
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  spacing: 5.h,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppLocalizations.of(
-                            context,
-                          )?.translate("Auto Dark Mode") ??
-                          "Auto Dark Mode",
-                      style: AppTextStyles.s16w500.copyWith(
-                        color: Color(0xff111827),
-                      ),
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            AppLocalizations.of(context)?.translate(
-                                  "Switch automatically based on system settings",
-                                ) ??
-                                "Switch automatically based on system settings",
-                            style: AppTextStyles.s14w400.copyWith(
-                              color: Color(0xff4B5563),
-                            ),
-                          ),
-                        ),
-                        CustomSwitchWidget(initialValue: false),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 11.h),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppLocalizations.of(
-                          context,
-                        )?.translate("Display Preferences") ??
-                        "Display Preferences",
-                    style: AppTextStyles.s16w500.copyWith(
-                      color: Color(0xff111827),
-                    ),
-                  ),
-                  ProgressCardWidget(
-                    initialPercentage: 0.6,
-                    onPercentageChanged: (newValue) {
-                      log("القيمة الجديدة: $newValue");
-                    },
-                  ),
-                ],
-              ),
-              ContainerBaseWidget(
-                height: 98,
-                width: 358,
-                padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      spacing: 4.h,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppLocalizations.of(
-                                context,
-                              )?.translate("Font Size") ??
-                              "Font Size",
-                          style: AppTextStyles.s16w500.copyWith(
-                            color: Color(0xff111827),
-                          ),
-                        ),
-                        Text(
-                          AppLocalizations.of(context)?.translate(
-                                "Adjust text size for better\nreadability",
-                              ) ??
-                              "Adjust text size for better\nreadability",
-                          style: AppTextStyles.s14w400.copyWith(
-                            color: Color(0xff4B5563),
-                          ),
-                        ),
-                      ],
-                    ),
-                    FontSizeDropdown(
-                      initialValue: "Small",
-                      onChanged: (value) {
-                        log("Selected: $value");
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 20.h, bottom: 10.h),
-                child: CustomButtonWidget(
-                  width: 358,
-                  height: 56,
-                  text: "Apply Theme Settings",
-                  icon: Icons.check,
-                  textStyle: AppTextStyles.s16w500.copyWith(
-                    color: AppColors.buttonText,
-                  ),
-                  onPressed: () {
-                    log("apply");
-                  },
-                ),
-              ),
+              // ContainerBaseWidget(
+              //   height: 102,
+              //   width: 358,
+              //   padding: EdgeInsets.all(15),
+              //   child: Column(
+              //     spacing: 5.h,
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     mainAxisAlignment: MainAxisAlignment.start,
+              //     children: [
+              //       Text(
+              //         AppLocalizations.of(
+              //               context,
+              //             )?.translate("Auto Dark Mode") ??
+              //             "Auto Dark Mode",
+              //         style: AppTextStyles.s16w500.copyWith(
+              //           color: Color(0xff111827),
+              //         ),
+              //       ),
+              //       Row(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           Expanded(
+              //             child: Text(
+              //               AppLocalizations.of(context)?.translate(
+              //                     "Switch automatically based on system settings",
+              //                   ) ??
+              //                   "Switch automatically based on system settings",
+              //               style: AppTextStyles.s14w400.copyWith(
+              //                 color: Color(0xff4B5563),
+              //               ),
+              //             ),
+              //           ),
+              //           CustomSwitchWidget(initialValue: false),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // SizedBox(height: 11.h),
+              // Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     Text(
+              //       AppLocalizations.of(
+              //             context,
+              //           )?.translate("Display Preferences") ??
+              //           "Display Preferences",
+              //       style: AppTextStyles.s16w500.copyWith(
+              //         color: Color(0xff111827),
+              //       ),
+              //     ),
+              //     ProgressCardWidget(
+              //       initialPercentage: 0.6,
+              //       onPercentageChanged: (newValue) {
+              //         log("القيمة الجديدة: $newValue");
+              //       },
+              //     ),
+              //   ],
+              // ),
+              // ContainerBaseWidget(
+              //   height: 98,
+              //   width: 358,
+              //   padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Column(
+              //         spacing: 4.h,
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           Text(
+              //             AppLocalizations.of(
+              //                   context,
+              //                 )?.translate("Font Size") ??
+              //                 "Font Size",
+              //             style: AppTextStyles.s16w500.copyWith(
+              //               color: Color(0xff111827),
+              //             ),
+              //           ),
+              //           Text(
+              //             AppLocalizations.of(context)?.translate(
+              //                   "Adjust text size for better\nreadability",
+              //                 ) ??
+              //                 "Adjust text size for better\nreadability",
+              //             style: AppTextStyles.s14w400.copyWith(
+              //               color: Color(0xff4B5563),
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //       FontSizeDropdown(
+              //         initialValue: "Small",
+              //         onChanged: (value) {
+              //           log("Selected: $value");
+              //         },
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: 20.h, bottom: 10.h),
+              //   child: CustomButtonWidget(
+              //     width: 358,
+              //     height: 56,
+              //     text: "Apply Theme Settings",
+              //     icon: Icons.check,
+              //     textStyle: AppTextStyles.s16w500.copyWith(
+              //       color: AppColors.buttonText,
+              //     ),
+              //     onPressed: () {
+              //       log("apply");
+              //     },
+              //   ),
+              // ),
             ],
           ),
         ),

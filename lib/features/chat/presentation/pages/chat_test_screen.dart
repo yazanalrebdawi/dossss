@@ -43,15 +43,16 @@ class _ChatTestScreenState extends State<ChatTestScreen> {
           icon: Icon(Icons.arrow_back, color: AppColors.black, size: 24.sp),
           onPressed: () => context.pop(),
         ),
-        title: Text(
-          'Chat System Test',
-          style: AppTextStyles.blackS18W700,
-        ),
+        title: Text('Chat System Test', style: AppTextStyles.blackS18W700),
         centerTitle: true,
       ),
       body: BlocProvider(
         create: (_) => di.appLocator<ChatCubit>(),
         child: BlocConsumer<ChatCubit, ChatState>(
+          listenWhen: (previous, current) {
+            return previous.error != current.error && current.error != null;
+          },
+
           listener: (context, state) {
             if (state.error != null) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -62,6 +63,13 @@ class _ChatTestScreenState extends State<ChatTestScreen> {
               );
             }
           },
+          buildWhen: (previous, current) {
+            return previous.chats != current.chats ||
+                previous.isLoading != current.isLoading ||
+                previous.isCreatingChat != current.isCreatingChat ||
+                previous.isWebSocketConnected != current.isWebSocketConnected;
+          },
+
           builder: (context, state) {
             return Padding(
               padding: EdgeInsets.all(16.w),
@@ -80,7 +88,9 @@ class _ChatTestScreenState extends State<ChatTestScreen> {
                       children: [
                         Text(
                           'System Status:',
-                          style: AppTextStyles.s16w600.copyWith(color: AppColors.black),
+                          style: AppTextStyles.s16w600.copyWith(
+                            color: AppColors.black,
+                          ),
                         ),
                         SizedBox(height: 8.h),
                         Row(
@@ -89,7 +99,10 @@ class _ChatTestScreenState extends State<ChatTestScreen> {
                               width: 12.w,
                               height: 12.w,
                               decoration: BoxDecoration(
-                                color: state.isWebSocketConnected ? Colors.green : Colors.red,
+                                color:
+                                    state.isWebSocketConnected
+                                        ? Colors.green
+                                        : Colors.red,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -97,7 +110,10 @@ class _ChatTestScreenState extends State<ChatTestScreen> {
                             Text(
                               'WebSocket: ${state.isWebSocketConnected ? 'Connected' : 'Disconnected'}',
                               style: AppTextStyles.s14w400.copyWith(
-                                color: state.isWebSocketConnected ? Colors.green : Colors.red,
+                                color:
+                                    state.isWebSocketConnected
+                                        ? Colors.green
+                                        : Colors.red,
                               ),
                             ),
                           ],
@@ -105,23 +121,29 @@ class _ChatTestScreenState extends State<ChatTestScreen> {
                         SizedBox(height: 4.h),
                         Text(
                           'Chats: ${state.chats.length}',
-                          style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+                          style: AppTextStyles.s14w400.copyWith(
+                            color: AppColors.gray,
+                          ),
                         ),
                         if (state.selectedChatId != null)
                           Text(
                             'Selected Chat: ${state.selectedChatId}',
-                            style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+                            style: AppTextStyles.s14w400.copyWith(
+                              color: AppColors.gray,
+                            ),
                           ),
                       ],
                     ),
                   ),
-                  
+
                   SizedBox(height: 24.h),
-                  
+
                   // Create Chat Section
                   Text(
                     'Create New Chat:',
-                    style: AppTextStyles.s16w600.copyWith(color: AppColors.black),
+                    style: AppTextStyles.s16w600.copyWith(
+                      color: AppColors.black,
+                    ),
                   ),
                   SizedBox(height: 12.h),
                   Row(
@@ -140,42 +162,55 @@ class _ChatTestScreenState extends State<ChatTestScreen> {
                       ),
                       SizedBox(width: 12.w),
                       ElevatedButton(
-                        onPressed: state.isCreatingChat
-                            ? null
-                            : () {
-                                final dealerId = int.tryParse(_dealerIdController.text);
-                                if (dealerId != null) {
-                                  context.read<ChatCubit>().createChat(dealerId);
-                                }
-                              },
+                        onPressed:
+                            state.isCreatingChat
+                                ? null
+                                : () {
+                                  final dealerId = int.tryParse(
+                                    _dealerIdController.text,
+                                  );
+                                  if (dealerId != null) {
+                                    context.read<ChatCubit>().createChat(
+                                      dealerId,
+                                    );
+                                  }
+                                },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
-                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 12.h,
+                          ),
                         ),
-                        child: state.isCreatingChat
-                            ? SizedBox(
-                                width: 16.w,
-                                height: 16.w,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: AppColors.white,
+                        child:
+                            state.isCreatingChat
+                                ? SizedBox(
+                                  width: 16.w,
+                                  height: 16.w,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: AppColors.white,
+                                  ),
+                                )
+                                : Text(
+                                  'Create Chat',
+                                  style: AppTextStyles.s16w600.copyWith(
+                                    color: AppColors.white,
+                                  ),
                                 ),
-                              )
-                                                         : Text(
-                                 'Create Chat',
-                                 style: AppTextStyles.s16w600.copyWith(color: AppColors.white),
-                               ),
                       ),
                     ],
                   ),
-                  
+
                   SizedBox(height: 24.h),
-                  
+
                   // Send Message Section
                   if (state.isWebSocketConnected) ...[
                     Text(
                       'Send Message:',
-                      style: AppTextStyles.s16w600.copyWith(color: AppColors.black),
+                      style: AppTextStyles.s16w600.copyWith(
+                        color: AppColors.black,
+                      ),
                     ),
                     SizedBox(height: 12.h),
                     Row(
@@ -193,79 +228,111 @@ class _ChatTestScreenState extends State<ChatTestScreen> {
                         ),
                         SizedBox(width: 12.w),
                         ElevatedButton(
-                          onPressed: _messageController.text.trim().isEmpty
-                              ? null
-                              : () {
-                                  context.read<ChatCubit>().sendMessageViaWebSocket(_messageController.text.trim());
-                                  _messageController.clear();
-                                },
+                          onPressed:
+                              _messageController.text.trim().isEmpty
+                                  ? null
+                                  : () {
+                                    context
+                                        .read<ChatCubit>()
+                                        .sendMessageViaWebSocket(
+                                          _messageController.text.trim(),
+                                        );
+                                    _messageController.clear();
+                                  },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
-                            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 12.h,
+                            ),
                           ),
-                                                     child: Text(
-                             'Send',
-                             style: AppTextStyles.s16w600.copyWith(color: AppColors.white),
-                           ),
+                          child: Text(
+                            'Send',
+                            style: AppTextStyles.s16w600.copyWith(
+                              color: AppColors.white,
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ],
-                  
+
                   SizedBox(height: 24.h),
-                  
+
                   // Chats List
                   Text(
                     'Chats List:',
-                    style: AppTextStyles.s16w600.copyWith(color: AppColors.black),
+                    style: AppTextStyles.s16w600.copyWith(
+                      color: AppColors.black,
+                    ),
                   ),
                   SizedBox(height: 12.h),
                   Expanded(
-                    child: state.isLoading
-                        ? Center(child: CircularProgressIndicator(color: AppColors.primary))
-                        : state.chats.isEmpty
+                    child:
+                        state.isLoading
                             ? Center(
-                                child: Text(
-                                  'No chats yet. Create a chat to get started.',
-                                  style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+                              child: CircularProgressIndicator(
+                                color: AppColors.primary,
+                              ),
+                            )
+                            : state.chats.isEmpty
+                            ? Center(
+                              child: Text(
+                                'No chats yet. Create a chat to get started.',
+                                style: AppTextStyles.s14w400.copyWith(
+                                  color: AppColors.gray,
                                 ),
-                              )
+                              ),
+                            )
                             : ListView.builder(
-                                itemCount: state.chats.length,
-                                itemBuilder: (context, index) {
-                                  final chat = state.chats[index];
-                                  return Card(
-                                    margin: EdgeInsets.only(bottom: 8.h),
-                                    child: ListTile(
-                                                                             title: Text(
-                                         chat.dealer,
-                                         style: AppTextStyles.s16w600,
-                                       ),
-                                      subtitle: Text(
-                                        chat.lastMessage?.text ?? 'No messages',
-                                        style: AppTextStyles.s12w400.copyWith(color: AppColors.gray),
+                              itemCount: state.chats.length,
+                              itemBuilder: (context, index) {
+                                final chat = state.chats[index];
+                                return Card(
+                                  margin: EdgeInsets.only(bottom: 8.h),
+                                  child: ListTile(
+                                    title: Text(
+                                      chat.dealer,
+                                      style: AppTextStyles.s16w600,
+                                    ),
+                                    subtitle: Text(
+                                      chat.lastMessage?.text ?? 'No messages',
+                                      style: AppTextStyles.s12w400.copyWith(
+                                        color: AppColors.gray,
                                       ),
-                                      trailing: chat.userUnreadCount > 0
-                                          ? Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                    ),
+                                    trailing:
+                                        chat.userUnreadCount > 0
+                                            ? Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 6.w,
+                                                vertical: 2.h,
+                                              ),
                                               decoration: BoxDecoration(
                                                 color: AppColors.primary,
                                                 shape: BoxShape.circle,
                                               ),
                                               child: Text(
                                                 '${chat.userUnreadCount}',
-                                                style: AppTextStyles.s12w400.copyWith(color: AppColors.white),
+                                                style: AppTextStyles.s12w400
+                                                    .copyWith(
+                                                      color: AppColors.white,
+                                                    ),
                                               ),
                                             )
-                                          : null,
-                                      onTap: () {
-                                        context.read<ChatCubit>().loadMessages(chat.id);
-                                        context.go('/chat-conversation/${chat.id}');
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
+                                            : null,
+                                    onTap: () {
+                                      context.read<ChatCubit>().loadMessages(
+                                        chat.id,
+                                      );
+                                      context.go(
+                                        '/chat-conversation/${chat.id}',
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
                   ),
                 ],
               ),

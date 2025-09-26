@@ -14,6 +14,7 @@ import 'package:dooss_business_app/features/home/presentaion/pages/all_cars_scre
 import 'package:dooss_business_app/features/home/presentaion/pages/all_products_screen.dart';
 import 'package:dooss_business_app/features/home/presentaion/pages/product_details_screen.dart';
 import 'package:dooss_business_app/features/home/presentaion/pages/car_details_screen.dart';
+import 'package:dooss_business_app/features/my_profile/presentation/manager/my_profile_cubit.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/pages/change_language_screen.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/pages/change_password_screen.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/pages/edit_profile_screen.dart';
@@ -152,11 +153,20 @@ class AppRouter {
     ),
     GoRoute(
       path: '/car-details/:id',
+      name: 'carDetailsScreen',
       builder: (context, state) {
         final carId = int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
         return CarDetailsScreen(carId: carId);
       },
     ),
+
+    // GoRoute(
+    //   path: '/car-details/:id',
+    //   builder: (context, state) {
+    //     final carId = int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
+    //     return CarDetailsScreen(carId: carId);
+    //   },
+    // ),
     GoRoute(
       path: '/dealer-profile/:id',
       builder: (context, state) {
@@ -367,12 +377,20 @@ class AppRouter {
 
     GoRoute(
       path: RouteNames.changePasswordScreen,
-      builder: (context, state) => ChangePasswordScreen(),
+      builder:
+          (context, state) => BlocProvider.value(
+            value: BlocProvider.of<MyProfileCubit>(context),
+            child: ChangePasswordScreen(),
+          ),
     ),
 
     GoRoute(
       path: RouteNames.editProfileScreen,
-      builder: (context, state) => EditProfileScreen(),
+      builder:
+          (context, state) => BlocProvider.value(
+            value: BlocProvider.of<MyProfileCubit>(context),
+            child: EditProfileScreen(),
+          ),
     ),
 
     GoRoute(
@@ -382,7 +400,11 @@ class AppRouter {
 
     GoRoute(
       path: RouteNames.savedItemsScreen,
-      builder: (context, state) => SavedItemsScreen(),
+      builder:
+          (context, state) => BlocProvider.value(
+            value: BlocProvider.of<MyProfileCubit>(context),
+            child: SavedItemsScreen(),
+          ),
     ),
 
     GoRoute(
@@ -394,11 +416,16 @@ class AppRouter {
       path: RouteNames.themeSettingsScreen,
       builder: (context, state) => ThemeSettingsScreen(),
     ),
+
     GoRoute(
-      path: RouteNames.otpVerificationPhoneScreen,
+      path: '/otp-verification',
+      name: RouteNames.otpVerificationPhoneScreen,
       builder: (context, state) {
-        final phoneNumber = state.extra as String?;
-        return OtpVerificationScreen(phoneNumber: phoneNumber ?? '');
+        final phone = state.extra as String;
+        return BlocProvider.value(
+          value: BlocProvider.of<MyProfileCubit>(context),
+          child: OtpVerificationScreen(phoneNumber: phone),
+        );
       },
     ),
   ];

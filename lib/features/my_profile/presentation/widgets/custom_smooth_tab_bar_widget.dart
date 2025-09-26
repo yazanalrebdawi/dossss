@@ -1,6 +1,9 @@
 import 'dart:developer';
 import 'package:dooss_business_app/core/localization/app_localizations.dart';
+import 'package:dooss_business_app/core/routes/route_names.dart';
 import 'package:dooss_business_app/core/utils/response_status_enum.dart';
+import 'package:dooss_business_app/features/home/presentaion/pages/car_details_screen.dart';
+import 'package:dooss_business_app/features/home/presentaion/pages/product_details_screen.dart';
 import 'package:dooss_business_app/features/my_profile/data/models/favorite_model.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/widgets/favorite_item_skeleton_widget.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/widgets/favorite_item_widget.dart';
@@ -11,6 +14,7 @@ import 'package:dooss_business_app/core/constants/colors.dart';
 import 'package:dooss_business_app/core/constants/text_styles.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/manager/my_profile_cubit.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/manager/my_profile_state.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomSmoothTabBarWidget extends StatefulWidget {
   const CustomSmoothTabBarWidget({super.key});
@@ -166,7 +170,37 @@ class _CustomSmoothTabBarWidgetState extends State<CustomSmoothTabBarWidget> {
                       );
                       await context.read<MyProfileCubit>().getFavorites();
                     },
-                    onDetails: () {},
+                    onDetails: () {
+                      if (favItem.targetType == "product") {
+                        // context.pushNamed(
+                        //   RouteNames.productDetailsScreen,
+                        //   pathParameters: {'id': favItem.targetId.toString()},
+                        // );
+                        context.push('/product-details/${favItem.targetId}');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => ProductDetailsScreen(
+                                  productId: favItem.targetId,
+                                ),
+                          ),
+                        );
+                      } else {
+                        // context.pushNamed(
+                        //   'carDetailsScreen', // الاسم مو path
+                        //   pathParameters: {'id': favItem.targetId.toString()},
+                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) =>
+                                    CarDetailsScreen(carId: favItem.targetId),
+                          ),
+                        );
+                      }
+                    },
                   );
                 },
               ),

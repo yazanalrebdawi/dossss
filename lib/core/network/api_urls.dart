@@ -5,9 +5,9 @@ class ApiUrls {
   // IP الكمبيوتر على Wi-Fi
 
   //192.168.1.105
-  static const String _baseURl = 'http://192.168.1.101:8010/api';
+  static const String _baseURl = 'http://192.168.1.105:8010/api';
   static const String _baseMediaUrl =
-      'http://192.168.1.101:8010'; //! للصور و الفيديو
+      'http://192.168.1.105:8010'; //! للصور و الفيديو
   // 🟢 Getter عام للصور
   static String media(String path) => '$_baseMediaUrl$path';
   // POSTS
