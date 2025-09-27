@@ -1,6 +1,11 @@
+import 'dart:developer';
+
+import 'package:dooss_business_app/core/routes/route_names.dart';
+import 'package:dooss_business_app/features/home/presentaion/manager/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/text_styles.dart';
 import '../../../../core/services/native_video_service.dart';
@@ -11,6 +16,7 @@ import 'reel_video_player.dart';
 import 'reel_actions_overlay.dart';
 import 'reel_info_overlay.dart';
 
+//? هي الكاملة ريلززززز
 class ReelsScreenContent extends StatelessWidget {
   final PageController pageController;
   final int? initialReelId;
@@ -26,11 +32,12 @@ class ReelsScreenContent extends StatelessWidget {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BlocBuilder<ReelCubit, ReelState>(
-      buildWhen: (previous, current) =>
-          previous.reels != current.reels ||
-          previous.isLoading != current.isLoading ||
-          previous.error != current.error ||
-          previous.currentReelIndex != current.currentReelIndex,
+      buildWhen:
+          (previous, current) =>
+              previous.reels != current.reels ||
+              previous.isLoading != current.isLoading ||
+              previous.error != current.error ||
+              previous.currentReelIndex != current.currentReelIndex,
       builder: (context, state) {
         if (state.isLoading && state.reels.isEmpty) {
           return _buildLoadingState(isDark);
@@ -63,9 +70,7 @@ class ReelsScreenContent extends StatelessWidget {
     return Container(
       color: isDark ? AppColors.black : AppColors.white,
       child: const Center(
-        child: CircularProgressIndicator(
-          color: AppColors.primary,
-        ),
+        child: CircularProgressIndicator(color: AppColors.primary),
       ),
     );
   }
@@ -79,15 +84,13 @@ class ReelsScreenContent extends StatelessWidget {
           children: [
             Icon(
               Icons.error_outline,
-              color: isDark ? AppColors.white : AppColors.black,
+              color: AppColors.white,
               size: 64.sp,
             ),
             SizedBox(height: 16.h),
             Text(
               'Failed to load reels',
-              style: AppTextStyles.whiteS18W600.copyWith(
-                color: isDark ? AppColors.white : AppColors.black,
-              ),
+              style: AppTextStyles.whiteS18W600,
             ),
             SizedBox(height: 8.h),
             Text(
@@ -127,9 +130,7 @@ class ReelsScreenContent extends StatelessWidget {
             SizedBox(height: 16.h),
             Text(
               'No reels available',
-              style: AppTextStyles.whiteS18W600.copyWith(
-                color: isDark ? AppColors.white : AppColors.black,
-              ),
+              style: AppTextStyles.whiteS18W600,
             ),
             SizedBox(height: 8.h),
             Text(
@@ -177,8 +178,8 @@ class ReelsScreenContent extends StatelessWidget {
           reel: reel,
           isCurrentReel: isCurrentReel,
         ),
-
-        // Gradient overlay
+        
+        // Gradient overlay for better text readability
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
@@ -202,7 +203,18 @@ class ReelsScreenContent extends StatelessWidget {
           top: MediaQuery.of(context).padding.top + 16.h,
           left: 16.w,
           child: GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () {
+              // 1️⃣ أول شي تنتقل لـ HomeScreen
+              context.go(RouteNames.homeScreen);
+
+              // 2️⃣ بعدها تغيّر التاب المطلوب
+              context.read<HomeCubit>().updateCurrentIndex(
+                0,
+              ); // غيّر الرقم حسب التاب المطلوب
+
+              log("🔥🔥🔥");
+              //todo يمكن الانتقال بدو عن طريق كيوبت
+            },
             child: Container(
               width: 40.w,
               height: 40.h,
@@ -231,7 +243,9 @@ class ReelsScreenContent extends StatelessWidget {
         ),
 
         // Loading more indicator
-        if (index == state.reels.length - 3 && state.hasNextPage && !state.isLoading)
+        if (index == state.reels.length - 3 &&
+            state.hasNextPage &&
+            !state.isLoading)
           Positioned(
             bottom: 16.h,
             left: 16.w,
@@ -255,9 +269,7 @@ class ReelsScreenContent extends StatelessWidget {
                   SizedBox(width: 8.w),
                   Text(
                     'Loading more...',
-                    style: AppTextStyles.whiteS12W400.copyWith(
-                      color: isDark ? AppColors.white : AppColors.black,
-                    ),
+                    style: AppTextStyles.whiteS12W400,
                   ),
                 ],
               ),
