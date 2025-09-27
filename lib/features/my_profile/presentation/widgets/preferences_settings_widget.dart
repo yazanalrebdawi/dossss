@@ -10,7 +10,6 @@ import 'package:dooss_business_app/features/my_profile/presentation/widgets/lang
 import 'package:dooss_business_app/features/my_profile/presentation/widgets/settings_switch_row_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesSettingsWidget extends StatelessWidget {
   const PreferencesSettingsWidget({super.key});

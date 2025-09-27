@@ -5,8 +5,12 @@ import '../../../../core/constants/colors.dart';
 import '../../data/models/reel_model.dart';
 import '../widgets/full_screen_reel_player.dart';
 
+//? هي الجزئية ريلززز
+
 /// Full-screen Instagram-style reels viewer
-/// Vertical PageView with proper video lifecycle management
+/// Vertical PageView with proper video lifecycle
+///
+///
 class ReelsViewerScreen extends StatefulWidget {
   final List<ReelModel> reelsList;
   final int initialIndex;
@@ -30,20 +34,22 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
     super.initState();
     _currentIndex = widget.initialIndex;
     _pageController = PageController(initialPage: widget.initialIndex);
-    
+
     // Set full-screen immersive mode
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    
-    print('🎬 ReelsViewerScreen: Initialized with ${widget.reelsList.length} reels, starting at index ${widget.initialIndex}');
+
+    print(
+      '🎬 ReelsViewerScreen: Initialized with ${widget.reelsList.length} reels, starting at index ${widget.initialIndex}',
+    );
   }
 
   @override
   void dispose() {
     print('🗑️ ReelsViewerScreen: Disposing page controller and restoring UI');
-    
+
     // Restore system UI
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    
+
     _pageController.dispose();
     super.dispose();
   }
@@ -70,9 +76,11 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
             itemBuilder: (context, index) {
               final reel = widget.reelsList[index];
               final isCurrentReel = index == _currentIndex;
-              
+
               return FullScreenReelPlayer(
-                key: Key('reel_${reel.id}'), // Important for disposal when scrolling
+                key: Key(
+                  'reel_${reel.id}',
+                ), // Important for disposal when scrolling
                 reel: reel,
                 isCurrentReel: isCurrentReel,
                 onTap: () => print('Tapped reel ${reel.id}'),
@@ -146,9 +154,10 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final indicatorHeight = constraints.maxHeight / widget.reelsList.length;
+          final indicatorHeight =
+              constraints.maxHeight / widget.reelsList.length;
           final currentPosition = _currentIndex * indicatorHeight;
-          
+
           return Stack(
             children: [
               Positioned(

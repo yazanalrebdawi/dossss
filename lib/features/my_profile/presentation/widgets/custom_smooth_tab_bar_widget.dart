@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:dooss_business_app/core/localization/app_localizations.dart';
-import 'package:dooss_business_app/core/routes/route_names.dart';
 import 'package:dooss_business_app/core/utils/response_status_enum.dart';
 import 'package:dooss_business_app/features/home/presentaion/pages/car_details_screen.dart';
 import 'package:dooss_business_app/features/home/presentaion/pages/product_details_screen.dart';
 import 'package:dooss_business_app/features/my_profile/data/models/favorite_model.dart';
+import 'package:dooss_business_app/features/my_profile/presentation/widgets/custom_button_widget.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/widgets/favorite_item_skeleton_widget.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/widgets/favorite_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -149,6 +149,15 @@ class _CustomSmoothTabBarWidgetState extends State<CustomSmoothTabBarWidget> {
                       ),
                       textAlign: TextAlign.center,
                     ),
+                    SizedBox(height: 100.h),
+                    CustomButtonWidget(
+                      width: 300,
+                      height: 40,
+                      text: "Refresh",
+                      onPressed: () async {
+                        context.read<MyProfileCubit>().getFavorites();
+                      },
+                    ),
                   ],
                 ),
               );
@@ -164,7 +173,6 @@ class _CustomSmoothTabBarWidgetState extends State<CustomSmoothTabBarWidget> {
                     onDelete: () async {
                       log('Deleting favoriteId : ${favItem.id}');
                       log('Deleting targetId : ${favItem.target.id}');
-
                       await context.read<MyProfileCubit>().deleteFavorite(
                         favItem.id,
                       );

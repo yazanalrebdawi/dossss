@@ -1,13 +1,7 @@
-import 'dart:developer';
 import 'package:dooss_business_app/core/constants/colors.dart';
 import 'package:dooss_business_app/core/constants/text_styles.dart';
 import 'package:dooss_business_app/core/localization/app_localizations.dart';
-import 'package:dooss_business_app/features/my_profile/presentation/widgets/container_base_widget.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/widgets/custom_app_bar_profile_widget.dart';
-import 'package:dooss_business_app/features/my_profile/presentation/widgets/custom_button_widget.dart';
-import 'package:dooss_business_app/features/my_profile/presentation/widgets/custom_switch_widget.dart';
-import 'package:dooss_business_app/features/my_profile/presentation/widgets/font_size_dropdown.dart';
-import 'package:dooss_business_app/features/my_profile/presentation/widgets/progress_card_widget.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/widgets/selected_them_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:dooss_business_app/core/app/manager/app_manager_cubit.dart';
-import 'package:dooss_business_app/core/app/source/local/user_storage_service.dart';
 import 'package:dooss_business_app/core/constants/colors.dart';
 import 'package:dooss_business_app/core/network/app_dio.dart';
 import 'package:dooss_business_app/core/routes/route_names.dart';
 import 'package:dooss_business_app/core/services/locator_service.dart';
 import 'package:dooss_business_app/features/auth/data/models/auth_response_model.dart';
-import 'package:dooss_business_app/features/auth/data/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:dooss_business_app/core/services/storage/secure_storage/secure_storage_service.dart';
 import 'package:dooss_business_app/core/services/storage/shared_preferances/shared_preferences_service.dart';
-import 'package:dooss_business_app/core/services/token_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 

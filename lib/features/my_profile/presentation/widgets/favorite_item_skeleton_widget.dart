@@ -45,6 +45,7 @@ class FavoriteItemSkeletonWidget extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min, // ✨ مهم لتجنب flex غير محدد
               children: [
                 Shimmer.fromColors(
                   baseColor: AppColors.primary.withOpacity(0.15),
@@ -65,7 +66,7 @@ class FavoriteItemSkeletonWidget extends StatelessWidget {
                     color: Colors.grey[300],
                   ),
                 ),
-                const Spacer(),
+                SizedBox(height: 16.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

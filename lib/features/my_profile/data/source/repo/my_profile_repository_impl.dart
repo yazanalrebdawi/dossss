@@ -122,8 +122,8 @@ class MyProfileRepositoryImpl implements MyProfileRepository {
           },
           (data) async {
             if (data.isEmpty) {
-              final localFavorites = local.getCarsListFavoritesLocal();
-              return Right(localFavorites);
+              // final localFavorites = local.getCarsListFavoritesLocal();
+              return Right([]);
             } else {
               await local.saveCarsListFavoritesLocal(data);
               return Right(data);

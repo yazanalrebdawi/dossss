@@ -11,7 +11,6 @@ import '../widgets/dealer_profile_app_bar.dart';
 import '../widgets/dealer_profile_header.dart';
 import '../widgets/dealer_profile_tabs.dart';
 import '../widgets/dealer_content_grid.dart';
-import '../widgets/tab_content_loader_widget.dart';
 import '../../data/models/content_type.dart';
 
 class DealerProfileScreen extends StatefulWidget {

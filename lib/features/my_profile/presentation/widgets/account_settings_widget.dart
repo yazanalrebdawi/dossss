@@ -1,4 +1,3 @@
-import 'package:dooss_business_app/core/routes/route_names.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/manager/my_profile_cubit.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/pages/change_password_screen.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/pages/edit_profile_screen.dart';
@@ -7,7 +6,6 @@ import 'package:dooss_business_app/features/my_profile/presentation/widgets/sett
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class AccountSettingsWidget extends StatelessWidget {
   const AccountSettingsWidget({super.key});

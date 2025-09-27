@@ -2,7 +2,6 @@ import 'package:dooss_business_app/core/constants/colors.dart';
 import 'package:dooss_business_app/core/constants/text_styles.dart';
 import 'package:dooss_business_app/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class CustomAppBarProfileWidget extends StatelessWidget
     implements PreferredSizeWidget {

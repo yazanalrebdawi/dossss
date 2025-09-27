@@ -14,7 +14,6 @@ import 'package:dooss_business_app/core/utils/response_status_enum.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/manager/my_profile_cubit.dart';
 import 'package:dooss_business_app/features/my_profile/presentation/manager/my_profile_state.dart';
 import 'package:dooss_business_app/core/constants/colors.dart';
-import 'package:go_router/go_router.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String phoneNumber;

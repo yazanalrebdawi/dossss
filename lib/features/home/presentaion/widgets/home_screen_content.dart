@@ -39,10 +39,17 @@ class HomeScreenLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: const HomeAppBar(),
-      body: const HomeScreenBody(),
+    return BlocSelector<HomeCubit, HomeState, int>(
+      selector: (state) {
+        return state.currentIndex;
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: state == 2 ? null : const HomeAppBar(),
+          body: const HomeScreenBody(),
+        );
+      },
     );
   }
 }
@@ -70,12 +77,14 @@ class HomeBottomNavigationWrapper extends StatelessWidget {
       buildWhen:
           (previous, current) => previous.currentIndex != current.currentIndex,
       builder: (context, homeState) {
-        return HomeBottomNavigation(
-          currentIndex: homeState.currentIndex,
-          onTap: (index) {
-            context.read<HomeCubit>().updateCurrentIndex(index);
-          },
-        );
+        return homeState.currentIndex == 2
+            ? const SizedBox.shrink()
+            : HomeBottomNavigation(
+              currentIndex: homeState.currentIndex,
+              onTap: (index) {
+                context.read<HomeCubit>().updateCurrentIndex(index);
+              },
+            );
       },
     );
   }
