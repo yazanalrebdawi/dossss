@@ -14,7 +14,7 @@ class HomeTabContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CarCubit>(
-      create: (context) => di.appLocator<CarCubit>(),
+      create: (context) => di.sl<CarCubit>(),
       child: const HomeTabCarProvider(),
     );
   }

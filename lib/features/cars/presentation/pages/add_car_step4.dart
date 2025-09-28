@@ -1,3 +1,4 @@
+import 'package:dooss_business_app/core/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/localization/app_localizations.dart';
@@ -9,6 +10,8 @@ class AddCarStep4 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+                  final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       child: Column(
@@ -17,10 +20,10 @@ class AddCarStep4 extends StatelessWidget {
           SizedBox(height: 8.h),
           Text(
             AppLocalizations.of(context)?.translate('reviewSubmit') ?? 'Review & Submit',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp).withThemeColor(context),
           ),
           SizedBox(height: 32.h),
-          Text(AppLocalizations.of(context)?.translate('pleaseReviewCarDetails') ?? 'Please review your car details before submitting.', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500)),
+          Text(AppLocalizations.of(context)?.translate('pleaseReviewCarDetails') ?? 'Please review your car details before submitting.', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500).withThemeColor(context)),
           SizedBox(height: 18.h),
           // هنا يمكن عرض ملخص البيانات المدخلة
           Expanded(
@@ -28,7 +31,7 @@ class AddCarStep4 extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color:  isDark ? Colors.white :Colors.grey[100],
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: Text(AppLocalizations.of(context)?.translate('carSummaryGoesHere') ?? 'Car summary goes here...'),

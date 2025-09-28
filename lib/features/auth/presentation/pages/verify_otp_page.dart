@@ -53,13 +53,8 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => appLocator<AuthCubit>(),
+      create: (context) => sl<AuthCubit>(),
       child: BlocConsumer<AuthCubit, AuthState>(
-        listenWhen:
-            (previous, current) =>
-                previous.checkAuthState != current.checkAuthState ||
-                previous.error != current.error ||
-                previous.success != current.success,
         listener: (context, state) {
           print('🔍 Verify OTP - Auth State: ${state.checkAuthState}');
           print('🔍 Verify OTP - Loading: ${state.isLoading}');
@@ -69,12 +64,11 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
           // التعامل مع نجاح التحقق من OTP
           if (state.checkAuthState == CheckAuthState.success) {
             print('✅ OTP Verification Success');
-            ScaffoldMessenger.of(context).showSnackBar(
-              customAppSnackBar(
-                AppLocalizations.of(context)?.translate('otpVerified') ??
-                    "OTP verified successfully!",
-                context,
-              ),
+
+            sl<ToastNotification>().showSuccessMessage(
+              context,
+              AppLocalizations.of(context)?.translate('otpVerified') ??
+                  "OTP verified successfully!",
             );
 
             // تأخير قصير ثم الانتقال حسب نوع الـ flow
@@ -82,12 +76,9 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
               if (widget.isResetPassword) {
                 // إذا كان reset password، انتقل إلى صفحة إنشاء كلمة المرور الجديدة
                 print(
-                  '🔄 Reset Password Flow - Navigating to Create New Password',
-                );
-                context.go(
-                  RouteNames.createNewPasswordPage,
-                  extra: widget.phoneNumber,
-                );
+                    '🔄 Reset Password Flow - Navigating to Create New Password');
+                context.go(RouteNames.createNewPasswordPage,
+                    extra: widget.phoneNumber);
               } else {
                 // إذا كان register، انتقل إلى Home
                 print('🔄 Register Flow - Navigating to Home');
@@ -99,40 +90,29 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
           // التعامل مع نجاح إعادة إرسال OTP
           if (state.checkAuthState == CheckAuthState.resendOtpSuccess) {
             print('✅ Resend OTP Success');
-            ScaffoldMessenger.of(context).showSnackBar(
-              customAppSnackBar(
-                state.success ??
-                    AppLocalizations.of(context)?.translate('otpResent') ??
-                    "OTP resent successfully!",
-                context,
-              ),
+
+            sl<ToastNotification>().showSuccessMessage(
+              context,
+              state.success ??
+                  AppLocalizations.of(context)?.translate('otpResent') ??
+                  "OTP resent successfully!",
             );
           }
 
           // التعامل مع الأخطاء
           if (state.checkAuthState == CheckAuthState.error) {
             print('❌ OTP Operation Error: ${state.error}');
-            ScaffoldMessenger.of(context).showSnackBar(
-              customAppSnackBar(
-                state.error ??
-                    AppLocalizations.of(
-                      context,
-                    )?.translate('operationFailed') ??
-                    "Operation failed",
-                context,
-              ),
+
+            sl<ToastNotification>().showErrorMessage(
+              context,
+              state.error ??
+                  AppLocalizations.of(context)?.translate('operationFailed') ??
+                  "Operation failed",
             );
           }
         },
-        buildWhen:
-            (previous, current) =>
-                previous.isLoading != current.isLoading ||
-                previous.checkAuthState != current.checkAuthState ||
-                previous.error != current.error ||
-                previous.success != current.success,
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: AppColors.background,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -150,7 +130,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                     children: [
                       SizedBox(height: 40.h),
                       // Header Section
-                      _buildHeaderSection(),
+                      _buildHeaderSection(context),
                       SizedBox(height: 40.h),
                       // OTP Input Section
                       _buildOtpInputSection(),
@@ -171,7 +151,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
     );
   }
 
-  Widget _buildHeaderSection() {
+  Widget _buildHeaderSection(BuildContext ctx) {
     return Column(
       children: [
         // Icon
@@ -240,10 +220,9 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color:
-              _otpFocusNodes[index].hasFocus
-                  ? AppColors.primary
-                  : AppColors.gray,
+          color: _otpFocusNodes[index].hasFocus
+              ? AppColors.primary
+              : AppColors.gray,
           width: 1.5,
         ),
       ),
@@ -278,36 +257,33 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
       width: double.infinity,
       height: 54.h,
       child: ElevatedButton(
-        onPressed:
-            state.isLoading
-                ? null
-                : () {
-                  print('🔘 Verify OTP Button Pressed');
-                  print('📱 Phone Number: ${widget.phoneNumber}');
-                  print('🔢 OTP Code: $_otpCode');
+        onPressed: state.isLoading
+            ? null
+            : () {
+                print('🔘 Verify OTP Button Pressed');
+                print('📱 Phone Number: ${widget.phoneNumber}');
+                print('🔢 OTP Code: $_otpCode');
 
-                  if (_otpCode.length == 6) {
-                    print('✅ OTP length is correct, calling verifyOtp');
-                    final params = VerifycodeParams(
-                      phoneNumber: widget.phoneNumber,
-                      otp: _otpCode,
-                      isResetPassword:
-                          widget.isResetPassword, // إرسال نوع الـ flow
-                    );
-                    context.read<AuthCubit>().verifyOtp(params);
-                  } else {
-                    print('❌ OTP length is incorrect: ${_otpCode.length}');
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      customAppSnackBar(
-                        AppLocalizations.of(
-                              context,
-                            )?.translate('enterCompleteOtp') ??
-                            "Please enter the complete 6-digit code",
-                        context,
-                      ),
-                    );
-                  }
-                },
+                if (_otpCode.length == 6) {
+                  print('✅ OTP length is correct, calling verifyOtp');
+                  final params = VerifycodeParams(
+                    phoneNumber: widget.phoneNumber,
+                    otp: _otpCode,
+                    isResetPassword:
+                        widget.isResetPassword, // إرسال نوع الـ flow
+                  );
+                  context.read<AuthCubit>().verifyOtp(params);
+                } else {
+                  print('❌ OTP length is incorrect: ${_otpCode.length}');
+
+                  sl<ToastNotification>().showErrorMessage(
+                    context,
+                    AppLocalizations.of(context)
+                            ?.translate('enterCompleteOtp') ??
+                        "Please enter the complete 6-digit code",
+                  );
+                }
+              },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           shape: RoundedRectangleBorder(
@@ -317,21 +293,19 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
           padding: EdgeInsets.zero,
         ),
         child: Center(
-          child:
-              state.isLoading
-                  ? SizedBox(
-                    width: 24.w,
-                    height: 24.h,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2.w,
-                    ),
-                  )
-                  : Text(
-                    AppLocalizations.of(context)?.translate('verify') ??
-                        'Verify',
-                    style: AppTextStyles.buttonTextStyleWhiteS22W700,
+          child: state.isLoading
+              ? SizedBox(
+                  width: 24.w,
+                  height: 24.h,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2.w,
                   ),
+                )
+              : Text(
+                  AppLocalizations.of(context)?.translate('verify') ?? 'Verify',
+                  style: AppTextStyles.buttonTextStyleWhiteS22W700,
+                ),
         ),
       ),
     );
@@ -349,32 +323,28 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
             ),
             SizedBox(height: 8.h),
             TextButton(
-              onPressed:
-                  state.isLoading
-                      ? null
-                      : () {
-                        print(
-                          '🔄 Resend OTP requested for: ${widget.phoneNumber}',
-                        );
-                        context.read<AuthCubit>().resendOtp(widget.phoneNumber);
-                      },
-              child:
-                  state.isLoading
-                      ? SizedBox(
-                        width: 16.w,
-                        height: 16.h,
-                        child: CircularProgressIndicator(
-                          color: AppColors.primary,
-                          strokeWidth: 2.w,
-                        ),
-                      )
-                      : Text(
-                        AppLocalizations.of(context)?.translate('resendOtp') ??
-                            'Resend OTP',
-                        style: AppTextStyles.s16w600.copyWith(
-                          color: AppColors.primary,
-                        ),
+              onPressed: state.isLoading
+                  ? null
+                  : () {
+                      print(
+                          '🔄 Resend OTP requested for: ${widget.phoneNumber}');
+                      context.read<AuthCubit>().resendOtp(widget.phoneNumber);
+                    },
+              child: state.isLoading
+                  ? SizedBox(
+                      width: 16.w,
+                      height: 16.h,
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary,
+                        strokeWidth: 2.w,
                       ),
+                    )
+                  : Text(
+                      AppLocalizations.of(context)?.translate('resendOtp') ??
+                          'Resend OTP',
+                      style: AppTextStyles.s16w600
+                          .copyWith(color: AppColors.primary),
+                    ),
             ),
           ],
         );

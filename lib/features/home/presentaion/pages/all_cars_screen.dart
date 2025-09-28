@@ -25,15 +25,16 @@ class AllCarsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocProvider(
-      create: (_) => di.appLocator<CarCubit>()..loadAllCars(),
+      create: (_) => di.sl<CarCubit>()..loadAllCars(),
       child: Scaffold(
-        backgroundColor: AppColors.white,
         appBar: const SearchAppBar(
           title: 'All Cars',
         ),
         body: BlocBuilder<CarCubit, CarState>(
-          buildWhen: (previous, current) => 
+          buildWhen: (previous, current) =>
               previous.cars != current.cars ||
               previous.allCars != current.allCars ||
               previous.selectedBrand != current.selectedBrand ||
@@ -42,7 +43,7 @@ class AllCarsScreen extends StatelessWidget {
               previous.isLoadingMore != current.isLoadingMore ||
               previous.isLoading != current.isLoading ||
               previous.error != current.error ||
-              previous.hasMoreCars != current.hasMoreCars ,
+              previous.hasMoreCars != current.hasMoreCars,
           builder: (context, state) {
             if (state.isLoading) {
               return const Center(
@@ -58,17 +59,19 @@ class AllCarsScreen extends StatelessWidget {
                     Icon(
                       Icons.error_outline,
                       size: 64.sp,
-                      color: AppColors.gray,
+                      color: isDark ? Colors.white : AppColors.gray,
                     ),
                     SizedBox(height: 16.h),
                     Text(
                       'Error loading cars',
-                      style: AppTextStyles.s16w500.copyWith(color: AppColors.gray),
+                      style: AppTextStyles.s16w500.copyWith(
+                          color: isDark ? Colors.white : AppColors.gray),
                     ),
                     SizedBox(height: 8.h),
                     Text(
                       state.error!,
-                      style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+                      style: AppTextStyles.s14w400.copyWith(
+                          color: isDark ? Colors.white : AppColors.gray),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -82,7 +85,7 @@ class AllCarsScreen extends StatelessWidget {
                 children: [
                   // Header Section
                   const AllCarsHeaderWidget(),
-                  
+
                   // Brand Selector
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -93,9 +96,9 @@ class AllCarsScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  
+
                   SizedBox(height: 16.h),
-                  
+
                   // Cars List
                   ListView.builder(
                     shrinkWrap: true,
@@ -108,7 +111,8 @@ class AllCarsScreen extends StatelessWidget {
                           padding: EdgeInsets.all(16.w),
                           child: Center(
                             child: state.isLoadingMore
-                                ? CircularProgressIndicator(color: AppColors.primary)
+                                ? CircularProgressIndicator(
+                                    color: AppColors.primary)
                                 : ElevatedButton(
                                     onPressed: () {
                                       context.read<CarCubit>().loadMoreCars();
@@ -122,21 +126,23 @@ class AllCarsScreen extends StatelessWidget {
                           ),
                         );
                       }
-                      
+
                       // Car Item
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.w, vertical: 8.h),
                         child: SeeAllCarsCard(
                           car: state.cars[index],
                           onTap: () {
                             // Navigate to car details
-                            context.push('/car-details/${state.cars[index].id}');
+                            context
+                                .push('/car-details/${state.cars[index].id}');
                           },
                         ),
                       );
                     },
                   ),
-                  
+
                   SizedBox(height: 20.h),
                 ],
               ),

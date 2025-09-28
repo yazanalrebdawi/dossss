@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
-class AppManagerCubit extends Cubit<Locale> {
-  AppManagerCubit() : super(const Locale('en'));
+class LanguageCubit extends Cubit<Locale> {
+  LanguageCubit() : super(const Locale('en'));
 
   void toArabic() => emit(const Locale('ar'));
   void toEnglish() => emit(const Locale('en'));

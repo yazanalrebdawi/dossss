@@ -21,18 +21,24 @@ class SellerInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final backgroundColor = isDark ? Colors.grey[900]! : AppColors.white;
+    final cardColor = isDark ? Colors.grey[800]! : AppColors.white;
+    final textColor = isDark ? Colors.white : AppColors.black;
+    final secondaryTextColor = isDark ? Colors.white70 : AppColors.gray;
+    final iconColor = AppColors.primary;
+
     return Container(
       padding: EdgeInsets.all(20.w),
-      color: AppColors.white,
+      color: backgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Section Title
           Text(
             'Seller Information',
-            style: AppTextStyles.s18w700.copyWith(
-              color: AppColors.black,
-            ),
+            style: AppTextStyles.s18w700.copyWith(color: textColor),
           ),
           SizedBox(height: 16.h),
           
@@ -40,7 +46,7 @@ class SellerInfoSection extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: cardColor,
               borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
                 color: AppColors.gray.withOpacity(0.2),
@@ -48,7 +54,9 @@ class SellerInfoSection extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: isDark
+                      ? Colors.black.withOpacity(0.5)
+                      : Colors.black.withOpacity(0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -64,7 +72,7 @@ class SellerInfoSection extends StatelessWidget {
                       width: 60.w,
                       height: 60.w,
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: iconColor.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: sellerImage.isNotEmpty
@@ -76,7 +84,7 @@ class SellerInfoSection extends StatelessWidget {
                                   return Icon(
                                     Icons.person,
                                     size: 30.sp,
-                                    color: AppColors.primary,
+                                    color: iconColor,
                                   );
                                 },
                               ),
@@ -84,7 +92,7 @@ class SellerInfoSection extends StatelessWidget {
                           : Icon(
                               Icons.person,
                               size: 30.sp,
-                              color: AppColors.primary,
+                              color: iconColor,
                             ),
                     ),
                     SizedBox(width: 16.w),
@@ -97,14 +105,14 @@ class SellerInfoSection extends StatelessWidget {
                           Text(
                             sellerName,
                             style: AppTextStyles.s16w600.copyWith(
-                              color: AppColors.black,
+                              color: textColor,
                             ),
                           ),
                           SizedBox(height: 4.h),
                           Text(
                             sellerType,
                             style: AppTextStyles.s14w400.copyWith(
-                              color: AppColors.gray,
+                              color: secondaryTextColor,
                             ),
                           ),
                         ],

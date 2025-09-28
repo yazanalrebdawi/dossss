@@ -14,15 +14,20 @@ class ServiceListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? Colors.grey[850]! : AppColors.white;
+    final textBlack = isDark ? Colors.white : AppColors.black;
+    final textGray = isDark ? Colors.white70 : AppColors.gray;
+
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: bgColor,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: isDark ? Colors.black26 : Colors.black.withOpacity(0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -57,7 +62,7 @@ class ServiceListItem extends StatelessWidget {
                     Text(
                       service.name,
                       style: AppTextStyles.s16w600.copyWith(
-                        color: AppColors.black,
+                        color: textBlack,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -66,13 +71,13 @@ class ServiceListItem extends StatelessWidget {
                         Icon(
                           Icons.location_on,
                           size: 16.sp,
-                          color: AppColors.gray,
+                          color: textGray,
                         ),
                         SizedBox(width: 4.w),
                         Text(
                           service.location,
                           style: AppTextStyles.s14w400.copyWith(
-                            color: AppColors.gray,
+                            color: textGray,
                           ),
                         ),
                       ],
@@ -80,7 +85,6 @@ class ServiceListItem extends StatelessWidget {
                   ],
                 ),
               ),
-              // Info Icon
               Icon(
                 Icons.info_outline,
                 size: 20.sp,
@@ -112,7 +116,7 @@ class ServiceListItem extends StatelessWidget {
                 Text(
                   '• Closes at ${service.closingTime}',
                   style: AppTextStyles.s14w400.copyWith(
-                    color: AppColors.gray,
+                    color: textGray,
                   ),
                 ),
               ],
@@ -123,7 +127,7 @@ class ServiceListItem extends StatelessWidget {
           Text(
             service.description,
             style: AppTextStyles.s14w400.copyWith(
-              color: AppColors.black,
+              color: textBlack,
             ),
           ),
           SizedBox(height: 12.h),
@@ -136,7 +140,7 @@ class ServiceListItem extends StatelessWidget {
                   Text(
                     service.rating.toString(),
                     style: AppTextStyles.s14w500.copyWith(
-                      color: AppColors.black,
+                      color: textBlack,
                     ),
                   ),
                   SizedBox(width: 4.w),
@@ -171,13 +175,13 @@ class ServiceListItem extends StatelessWidget {
                     width: 40.w,
                     height: 40.w,
                     decoration: BoxDecoration(
-                      color: AppColors.gray.withOpacity(0.1),
+                      color: textGray.withOpacity(0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.phone,
                       size: 20.sp,
-                      color: AppColors.gray,
+                      color: textGray,
                     ),
                   ),
                   SizedBox(width: 8.w),

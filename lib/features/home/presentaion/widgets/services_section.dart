@@ -7,6 +7,7 @@ import 'package:dooss_business_app/core/constants/text_styles.dart';
 import 'package:dooss_business_app/features/home/presentaion/widgets/empty_section.dart';
 import 'package:dooss_business_app/features/home/data/models/service_model.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:dooss_business_app/core/constants/colors.dart';
 
 class ServicesSection extends StatelessWidget {
   final List<ServiceModel> services;
@@ -23,26 +24,27 @@ class ServicesSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Nearby Car Services',
-                style: AppTextStyles.blackS18W700,
+                style: AppTextStyles.blackS18W700.copyWith(color: AppColors.black),
               ),
-              
-               TextButton(
-                  onPressed: () {
-                    context.push(RouteNames.nearbyServicesScreen);
-                  },
-                  child: Text(
-                    'View All',
-                    style: AppTextStyles.primaryS16W600,
-                  ),
+              TextButton(
+                onPressed: () {
+                  context.push(RouteNames.nearbyServicesScreen);
+                },
+                child: Text(
+                  'View All',
+                  style: AppTextStyles.primaryS16W600.copyWith(color: AppColors.primary),
                 ),
+              ),
             ],
           ),
           SizedBox(height: 16.h),
+          
           // Services List
           if (services.isEmpty)
             EmptySection(message: 'No services available')
@@ -52,20 +54,17 @@ class ServicesSection extends StatelessWidget {
                 ServiceCardWidget(
                   service: service,
                   onViewDetails: () {
-                    // Navigate to service details
                     print('🔍 ServicesSection: View Details pressed for service: ${service.name}');
                     print('🔍 ServicesSection: Service ID: ${service.id}');
                     context.push('/service-details', extra: service);
                   },
                   onMaps: () async {
-                    // Launch maps
                     final url = service.mapsUrl;
                     if (await canLaunchUrl(Uri.parse(url))) {
                       await launchUrl(Uri.parse(url));
                     }
                   },
                   onCall: () async {
-                    // Launch call
                     final url = service.callUrl;
                     if (await canLaunchUrl(Uri.parse(url))) {
                       await launchUrl(Uri.parse(url));

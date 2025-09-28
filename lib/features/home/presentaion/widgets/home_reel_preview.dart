@@ -24,6 +24,8 @@ class HomeReelPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocBuilder<ReelsPlaybackCubit, ReelsPlaybackState>(
       buildWhen: (previous, current) =>
           previous.currentReel != current.currentReel ||
@@ -32,19 +34,19 @@ class HomeReelPreview extends StatelessWidget {
           previous.error != current.error,
       builder: (context, state) {
         if (state.isLoading && state.reels.isEmpty) {
-          return _buildLoadingPreview();
+          return _buildLoadingPreview(isDark);
         }
 
         if (state.reels.isEmpty) {
-          return _buildEmptyPreview();
+          return _buildEmptyPreview(isDark);
         }
 
-        return _buildReelPreview(context, state);
+        return _buildReelPreview(context, state, isDark);
       },
     );
   }
 
-  Widget _buildReelPreview(BuildContext context, ReelsPlaybackState state) {
+  Widget _buildReelPreview(BuildContext context, ReelsPlaybackState state, bool isDark) {
     return Container(
       height: height.h,
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -66,7 +68,7 @@ class HomeReelPreview extends StatelessWidget {
               ),
             ),
 
-            // Gradient overlay for better text visibility
+            // Gradient overlay
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
@@ -144,13 +146,13 @@ class HomeReelPreview extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadingPreview() {
+  Widget _buildLoadingPreview(bool isDark) {
     return Container(
       height: height.h,
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
-        color: AppColors.gray.withOpacity(0.1),
+        color: isDark ? Colors.black : AppColors.gray.withOpacity(0.1),
       ),
       child: const Center(
         child: CircularProgressIndicator(
@@ -160,13 +162,13 @@ class HomeReelPreview extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyPreview() {
+  Widget _buildEmptyPreview(bool isDark) {
     return Container(
       height: height.h,
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
-        color: AppColors.gray.withOpacity(0.1),
+        color: isDark ? Colors.black : AppColors.gray.withOpacity(0.1),
       ),
       child: Center(
         child: Column(
@@ -174,14 +176,14 @@ class HomeReelPreview extends StatelessWidget {
           children: [
             Icon(
               Icons.video_library_outlined,
-              color: AppColors.gray,
+              color: isDark ? Colors.white70 : AppColors.gray,
               size: 48.sp,
             ),
             SizedBox(height: 8.h),
             Text(
               'No reels available',
               style: TextStyle(
-                color: AppColors.gray,
+                color: isDark ? Colors.white70 : AppColors.gray,
                 fontSize: 14.sp,
               ),
             ),
@@ -193,10 +195,10 @@ class HomeReelPreview extends StatelessWidget {
 
   void _onReelTap(BuildContext context) {
     print('🎬 HomeReelPreview: Reel tapped - launching full-screen viewer');
-    
+
     // Enter full-screen mode in cubit
     context.read<ReelsPlaybackCubit>().enterFullScreen();
-    
+
     // Navigate to full-screen reels viewer
     context.push(RouteNames.reelsScreen);
   }

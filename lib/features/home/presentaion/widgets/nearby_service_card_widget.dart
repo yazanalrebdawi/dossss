@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/text_styles.dart';
 import '../../data/models/service_model.dart';
-import '../../../../core/services/location_service.dart';
 import '../../../../core/localization/app_localizations.dart';
 
 class NearbyServiceCardWidget extends StatelessWidget {
@@ -20,8 +19,7 @@ class NearbyServiceCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMechanic =
-        service.type.toLowerCase().contains('mechanic') ||
+    final isMechanic = service.type.toLowerCase().contains('mechanic') ||
         service.name.toLowerCase().contains('garage') ||
         service.name.toLowerCase().contains('repair');
 
@@ -42,12 +40,12 @@ class NearbyServiceCardWidget extends StatelessWidget {
         ],
       ),
       child: Column(
-        // mainAxisSize: MainAxisSize.min,
         children: [
-          // Service Icon - مطابق للتصميم
+          // Top row: icon, info, status
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Service Icon
               Container(
                 width: 56.w,
                 height: 56.h,
@@ -61,60 +59,74 @@ class NearbyServiceCardWidget extends StatelessWidget {
                   size: 28.sp,
                 ),
               ),
+              SizedBox(width: 12.w),
+
+              // Service Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      service.name,
+                      style: AppTextStyles.blackS16W600.copyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      '${_calculateDistance()} ${AppLocalizations.of(context)!.translate('kmAway')}',
+                      style: AppTextStyles.secondaryS14W400.copyWith(
+                        color: AppColors.gray,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      service.type,
+                      style: AppTextStyles.secondaryS12W400.copyWith(
+                        color: AppColors.gray,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Open/Closed Status
               Column(
                 children: [
                   Text(
-                    service.name,
-                    style: AppTextStyles.blackS16W600.copyWith(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-
-                  Text(
-                    '${_calculateDistance()} ${AppLocalizations.of(context)!.translate('kmAway')}',
-                    style: AppTextStyles.secondaryS14W400.copyWith(
-                      color: AppColors.gray,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                  Text(
-                    service.type,
+                    service.openNow
+                        ? AppLocalizations.of(context)!.translate('open')
+                        : AppLocalizations.of(context)!.translate('closed'),
                     style: AppTextStyles.secondaryS12W400.copyWith(
-                      color: AppColors.gray,
+                      color: service.openNow ? Colors.green : Colors.red,
                       fontSize: 12.sp,
                     ),
                   ),
+                  SizedBox(height: 4.h),
+                  Container(
+                    width: 8.w,
+                    height: 8.h,
+                    decoration: BoxDecoration(
+                      color: service.openNow ? Colors.green : Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
                 ],
-              ),
-              Text(
-                service.openNow
-                    ? AppLocalizations.of(context)!.translate('open')
-                    : AppLocalizations.of(context)!.translate('closed'),
-                style: AppTextStyles.secondaryS12W400.copyWith(
-                  color: service.openNow ? Colors.green : Colors.red,
-                  fontSize: 12.sp,
-                ),
-              ),
-
-              Container(
-                width: 8.w,
-                height: 8.h,
-                decoration: BoxDecoration(
-                  color: service.openNow ? Colors.green : Colors.red,
-                  shape: BoxShape.circle,
-                ),
               ),
             ],
           ),
 
           Spacer(),
+
+          // Bottom row: action buttons
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Show on Map Button
               SizedBox(
                 width: 120.w,
                 height: 35.h,
@@ -139,10 +151,7 @@ class NearbyServiceCardWidget extends StatelessWidget {
                   ),
                 ),
               ),
-
               SizedBox(width: 8.w),
-
-              // More Details Button
               SizedBox(
                 width: 120.w,
                 height: 35.h,
@@ -178,8 +187,7 @@ class NearbyServiceCardWidget extends StatelessWidget {
   }
 
   String _calculateDistance() {
-    // For now, return a mock distance
-    // In real implementation, calculate distance from user location to service location
+    // Mock distance for now
     final distances = ['1.2', '2.1', '3.5', '4.2', '0.8', '1.9'];
     final randomIndex = service.id % distances.length;
     return distances[randomIndex];

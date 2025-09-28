@@ -20,6 +20,8 @@ class ReelControlsOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocBuilder<ReelsPlaybackCubit, ReelsPlaybackState>(
       buildWhen: (previous, current) =>
           previous.playbackState != current.playbackState ||
@@ -32,20 +34,21 @@ class ReelControlsOverlay extends StatelessWidget {
         return Stack(
           children: [
             // Center play/pause button
-            _buildCenterPlayButton(context, state),
-            
+            _buildCenterPlayButton(context, state, isDark),
+
             // Bottom controls
-            _buildBottomControls(context, state),
-            
+            _buildBottomControls(context, state, isDark),
+
             // Top right mute button
-            _buildMuteButton(context, state),
+            _buildMuteButton(context, state, isDark),
           ],
         );
       },
     );
   }
 
-  Widget _buildCenterPlayButton(BuildContext context, ReelsPlaybackState state) {
+  Widget _buildCenterPlayButton(
+      BuildContext context, ReelsPlaybackState state, bool isDark) {
     if (state.playbackState == ReelPlaybackState.playing) {
       return const SizedBox.shrink(); // Hide when playing
     }
@@ -82,7 +85,9 @@ class ReelControlsOverlay extends StatelessWidget {
           width: 80.w,
           height: 80.h,
           decoration: BoxDecoration(
-            color: AppColors.black.withOpacity(0.6),
+            color: isDark
+                ? AppColors.darkCard.withOpacity(0.6)
+                : AppColors.black.withOpacity(0.6),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -95,7 +100,8 @@ class ReelControlsOverlay extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomControls(BuildContext context, ReelsPlaybackState state) {
+  Widget _buildBottomControls(
+      BuildContext context, ReelsPlaybackState state, bool isDark) {
     if (state.duration == null || state.position == null) {
       return const SizedBox.shrink();
     }
@@ -107,9 +113,9 @@ class ReelControlsOverlay extends StatelessWidget {
       child: Column(
         children: [
           // Progress bar
-          _buildProgressBar(context, state),
+          _buildProgressBar(context, state, isDark),
           SizedBox(height: 8.h),
-          
+
           // Time display
           _buildTimeDisplay(state),
         ],
@@ -117,7 +123,8 @@ class ReelControlsOverlay extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressBar(BuildContext context, ReelsPlaybackState state) {
+  Widget _buildProgressBar(
+      BuildContext context, ReelsPlaybackState state, bool isDark) {
     final progress = state.duration!.inMilliseconds > 0
         ? state.position!.inMilliseconds / state.duration!.inMilliseconds
         : 0.0;
@@ -171,7 +178,8 @@ class ReelControlsOverlay extends StatelessWidget {
     );
   }
 
-  Widget _buildMuteButton(BuildContext context, ReelsPlaybackState state) {
+  Widget _buildMuteButton(
+      BuildContext context, ReelsPlaybackState state, bool isDark) {
     return Positioned(
       top: 50.h,
       right: 16.w,
@@ -181,7 +189,9 @@ class ReelControlsOverlay extends StatelessWidget {
           width: 40.w,
           height: 40.h,
           decoration: BoxDecoration(
-            color: AppColors.black.withOpacity(0.5),
+            color: isDark
+                ? AppColors.darkCard.withOpacity(0.5)
+                : AppColors.black.withOpacity(0.5),
             shape: BoxShape.circle,
           ),
           child: Icon(

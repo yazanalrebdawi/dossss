@@ -11,6 +11,16 @@ class CarTagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Original colors
+    const lightTextColor = Color(0xFF863E32);
+    const lightBackgroundColor = Color(0x1A863E32);
+
+    // Dark-mode colors
+    final darkTextColor = Colors.orange.shade200;
+    final darkBackgroundColor = Colors.orange.withOpacity(0.1);
+
     return SizedBox(
       width: 90.w,
       height: 24.h,
@@ -20,16 +30,16 @@ class CarTagChip extends StatelessWidget {
         label: Text(
           tag,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Color(0xFF863E32),
+          style: TextStyle(
+            color: isDark ? darkTextColor : lightTextColor,
             fontSize: 12,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        backgroundColor: const Color(0x1A863E32),
+        backgroundColor: isDark ? darkBackgroundColor : lightBackgroundColor,
         padding: EdgeInsets.symmetric(horizontal: 4.w),
       ),
     );
   }
-} 
+}

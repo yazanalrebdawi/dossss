@@ -47,7 +47,7 @@ class RegisterScreenFormFields extends StatefulWidget {
 class _RegisterScreenFormFieldsState extends State<RegisterScreenFormFields> {
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
-  
+
   // Country selection
   Country _selectedCountry = Country(
     name: 'Syria',
@@ -55,21 +55,31 @@ class _RegisterScreenFormFieldsState extends State<RegisterScreenFormFields> {
     phoneCode: '963',
     isoCode: 'SY',
   );
-  
+
   // Store phone number without country code
   String _phoneNumberWithoutCode = '';
 
   // List of available countries
   final List<Country> _countries = [
     Country(name: 'Syria', flagEmoji: '🇸🇾', phoneCode: '963', isoCode: 'SY'),
-    Country(name: 'Saudi Arabia', flagEmoji: '🇸🇦', phoneCode: '966', isoCode: 'SA'),
-    Country(name: 'United Arab Emirates', flagEmoji: '🇦🇪', phoneCode: '971', isoCode: 'AE'),
+    Country(
+        name: 'Saudi Arabia',
+        flagEmoji: '🇸🇦',
+        phoneCode: '966',
+        isoCode: 'SA'),
+    Country(
+        name: 'United Arab Emirates',
+        flagEmoji: '🇦🇪',
+        phoneCode: '971',
+        isoCode: 'AE'),
     Country(name: 'Kuwait', flagEmoji: '🇰🇼', phoneCode: '965', isoCode: 'KW'),
     Country(name: 'Qatar', flagEmoji: '🇶🇦', phoneCode: '974', isoCode: 'QA'),
-    Country(name: 'Bahrain', flagEmoji: '🇧🇭', phoneCode: '973', isoCode: 'BH'),
+    Country(
+        name: 'Bahrain', flagEmoji: '🇧🇭', phoneCode: '973', isoCode: 'BH'),
     Country(name: 'Oman', flagEmoji: '🇴🇲', phoneCode: '968', isoCode: 'OM'),
     Country(name: 'Jordan', flagEmoji: '🇯🇴', phoneCode: '962', isoCode: 'JO'),
-    Country(name: 'Lebanon', flagEmoji: '🇱🇧', phoneCode: '961', isoCode: 'LB'),
+    Country(
+        name: 'Lebanon', flagEmoji: '🇱🇧', phoneCode: '961', isoCode: 'LB'),
     Country(name: 'Iraq', flagEmoji: '🇮🇶', phoneCode: '964', isoCode: 'IQ'),
     Country(name: 'Egypt', flagEmoji: '🇪🇬', phoneCode: '20', isoCode: 'EG'),
     Country(name: 'Turkey', flagEmoji: '🇹🇷', phoneCode: '90', isoCode: 'TR'),
@@ -77,6 +87,7 @@ class _RegisterScreenFormFieldsState extends State<RegisterScreenFormFields> {
 
   void _showCountryPicker(BuildContext context) {
     showModalBottomSheet(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       context: context,
       builder: (BuildContext context) {
         return Container(
@@ -86,7 +97,7 @@ class _RegisterScreenFormFieldsState extends State<RegisterScreenFormFields> {
             children: [
               Text(
                 'Select Country',
-                style: AppTextStyles.s16w600,
+                style: AppTextStyles.s16w600.withThemeColor(context),
               ),
               SizedBox(height: 16.h),
               Expanded(
@@ -97,23 +108,24 @@ class _RegisterScreenFormFieldsState extends State<RegisterScreenFormFields> {
                     return ListTile(
                       leading: Text(
                         country.flagEmoji,
-                        style: AppTextStyles.s20w400,
+                        style: AppTextStyles.s20w400.withThemeColor(context),
                       ),
                       title: Text(
                         country.name,
-                        style: AppTextStyles.s16w400,
+                        style: AppTextStyles.s16w400.withThemeColor(context),
                       ),
                       subtitle: Text(
                         '+${country.phoneCode}',
-                        style: AppTextStyles.s14w400,
+                        style: AppTextStyles.s14w400.withThemeColor(context),
                       ),
                       onTap: () {
                         setState(() {
                           _selectedCountry = country;
                         });
-                        
+
                         if (_phoneNumberWithoutCode.isNotEmpty) {
-                          String fullPhoneNumber = '+${country.phoneCode}$_phoneNumberWithoutCode';
+                          String fullPhoneNumber =
+                              '+${country.phoneCode}$_phoneNumberWithoutCode';
                           print('📱 Updated phone number: $fullPhoneNumber');
                           widget.onPhoneChanged(fullPhoneNumber);
                         }
@@ -141,8 +153,7 @@ class _RegisterScreenFormFieldsState extends State<RegisterScreenFormFields> {
           style: AppTextStyles.s16w400,
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.person_outline, color: AppColors.primary),
-            hintText:
-                AppLocalizations.of(context)?.translate('username') ??
+            hintText: AppLocalizations.of(context)?.translate('username') ??
                 'Username',
             hintStyle: AppTextStyles.hintTextStyleWhiteS20W400,
             border: OutlineInputBorder(
@@ -193,7 +204,8 @@ class _RegisterScreenFormFieldsState extends State<RegisterScreenFormFields> {
               GestureDetector(
                 onTap: () => _showCountryPicker(context),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -216,14 +228,14 @@ class _RegisterScreenFormFieldsState extends State<RegisterScreenFormFields> {
                   ),
                 ),
               ),
-              
+
               // Divider
               Container(
                 height: 40.h,
                 width: 1,
                 color: AppColors.gray,
               ),
-              
+
               // Phone Number Input
               Expanded(
                 child: TextFormField(
@@ -231,31 +243,42 @@ class _RegisterScreenFormFieldsState extends State<RegisterScreenFormFields> {
                   focusNode: widget.params.phonenumberNode,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return AppLocalizations.of(context)?.translate('phoneRequired') ?? 'Phone number is required';
+                      return AppLocalizations.of(context)
+                              ?.translate('phoneRequired') ??
+                          'Phone number is required';
                     }
                     if (value.length < 9) {
-                      return AppLocalizations.of(context)?.translate('phoneInvalid') ?? 'Phone number is too short';
+                      return AppLocalizations.of(context)
+                              ?.translate('phoneInvalid') ??
+                          'Phone number is too short';
                     }
                     return null;
                   },
                   keyboardType: TextInputType.phone,
                   style: AppTextStyles.s16w400,
                   decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context)?.translate('phoneNumber') ?? 'Phone Number',
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: AppLocalizations.of(context)
+                            ?.translate('phoneNumber') ??
+                        'Phone Number',
                     hintStyle: AppTextStyles.hintTextStyleWhiteS20W400,
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
                   ),
                   onChanged: (value) {
                     print('📱 Phone field changed: $value');
                     _phoneNumberWithoutCode = value;
-                    String fullPhoneNumber = '+${_selectedCountry.phoneCode}$value';
+                    String fullPhoneNumber =
+                        '+${_selectedCountry.phoneCode}$value';
                     print('📱 Full phone number: $fullPhoneNumber');
                     print('📱 Calling onPhoneChanged callback');
                     widget.onPhoneChanged(fullPhoneNumber);
                   },
                   onFieldSubmitted: (value) {
-                    FocusScope.of(context).requestFocus(widget.params.passwordNode);
+                    FocusScope.of(context)
+                        .requestFocus(widget.params.passwordNode);
                   },
                 ),
               ),
@@ -282,8 +305,7 @@ class _RegisterScreenFormFieldsState extends State<RegisterScreenFormFields> {
                 });
               },
             ),
-            hintText:
-                AppLocalizations.of(context)?.translate('password') ??
+            hintText: AppLocalizations.of(context)?.translate('password') ??
                 'Password',
             hintStyle: AppTextStyles.hintTextStyleWhiteS20W400,
             border: OutlineInputBorder(
@@ -314,7 +336,8 @@ class _RegisterScreenFormFieldsState extends State<RegisterScreenFormFields> {
             widget.onPasswordChanged!(value);
           },
           onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(widget.params.confirmPasswordNode);
+            FocusScope.of(context)
+                .requestFocus(widget.params.confirmPasswordNode);
           },
         ),
         SizedBox(height: 18.h),
@@ -341,7 +364,7 @@ class _RegisterScreenFormFieldsState extends State<RegisterScreenFormFields> {
             ),
             hintText:
                 AppLocalizations.of(context)?.translate('confirmPassword') ??
-                'Confirm Password',
+                    'Confirm Password',
             hintStyle: AppTextStyles.hintTextStyleWhiteS20W400,
             border: OutlineInputBorder(
               borderSide: const BorderSide(color: AppColors.gray, width: 1),

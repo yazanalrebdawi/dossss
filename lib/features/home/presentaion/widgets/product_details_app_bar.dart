@@ -9,26 +9,28 @@ class ProductDetailsAppBar extends StatelessWidget implements PreferredSizeWidge
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AppBar(
-      backgroundColor: const Color(0xFF2C2C2C), // Dark grey header
+      backgroundColor: isDark ? AppColors.darkCard : AppColors.white,
       elevation: 0,
       title: Text(
         'Product Details',
         style: AppTextStyles.s16w500.copyWith(
-          color: AppColors.white,
+          color: isDark ? AppColors.white : AppColors.black,
         ),
       ),
       centerTitle: false,
       leading: Container(
         margin: EdgeInsets.all(8.w),
         decoration: BoxDecoration(
-          color: const Color(0xFFE0E0E0), // Light grey circle
+          color: isDark ? AppColors.gray.withOpacity(0.2) : AppColors.white,
           shape: BoxShape.circle,
         ),
         child: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: AppColors.black,
+            color: isDark ? AppColors.white : AppColors.black,
             size: 20.sp,
           ),
           onPressed: () => context.pop(),
@@ -38,22 +40,20 @@ class ProductDetailsAppBar extends StatelessWidget implements PreferredSizeWidge
         IconButton(
           icon: Icon(
             Icons.favorite_border,
-            color: AppColors.white,
+            color: isDark ? AppColors.white : AppColors.black,
             size: 24.sp,
           ),
           onPressed: () {
-            
             print('Add to favorites');
           },
         ),
         IconButton(
           icon: Icon(
             Icons.share,
-            color: AppColors.white,
+            color: isDark ? AppColors.white : AppColors.black,
             size: 24.sp,
           ),
           onPressed: () {
-            
             print('Share product');
           },
         ),

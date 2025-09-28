@@ -21,9 +21,11 @@ class CarOverviewSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(20.w),
-      color: AppColors.white,
+      color: isDark ? const Color(0xFF2A2A2A) : AppColors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -31,11 +33,11 @@ class CarOverviewSection extends StatelessWidget {
           Text(
             carName,
             style: AppTextStyles.s18w700.copyWith(
-              color: AppColors.black,
+              color: isDark ? Colors.white : AppColors.black,
             ),
           ),
           SizedBox(height: 8.h),
-          
+
           // Price
           Text(
             '${price.toStringAsFixed(0)} USD',
@@ -44,7 +46,7 @@ class CarOverviewSection extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
-          
+
           // Key Attributes
           Row(
             children: [
@@ -54,23 +56,26 @@ class CarOverviewSection extends StatelessWidget {
                   icon: Icons.star,
                   text: 'New',
                   iconColor: AppColors.primary,
+                  isDark: isDark,
                 ),
                 SizedBox(width: 16.w),
               ],
-              
+
               // Location
               _buildAttributeItem(
                 icon: Icons.location_on,
                 text: location,
                 iconColor: AppColors.gray,
+                isDark: isDark,
               ),
               SizedBox(width: 16.w),
-              
+
               // Mileage
               _buildAttributeItem(
                 icon: Icons.directions_car,
                 text: mileage,
                 iconColor: AppColors.gray,
+                isDark: isDark,
               ),
             ],
           ),
@@ -83,6 +88,7 @@ class CarOverviewSection extends StatelessWidget {
     required IconData icon,
     required String text,
     required Color iconColor,
+    required bool isDark,
   }) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -96,7 +102,7 @@ class CarOverviewSection extends StatelessWidget {
         Text(
           text,
           style: AppTextStyles.s12w400.copyWith(
-            color: AppColors.gray,
+            color: isDark ? Colors.white70 : AppColors.gray,
           ),
         ),
       ],

@@ -16,39 +16,48 @@ class NearbyServicesFilterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final filters = [AppLocalizations.of(context)!.translate('all'), AppLocalizations.of(context)!.translate('mechanics'), AppLocalizations.of(context)!.translate('petrol'), AppLocalizations.of(context)!.translate('openNow')];
-    
-         return Container(
-       height: 45.h,
-       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-       child: ListView.builder(
+    final filters = [
+      AppLocalizations.of(context)!.translate('all'),
+      AppLocalizations.of(context)!.translate('mechanics'),
+      AppLocalizations.of(context)!.translate('petrol'),
+      AppLocalizations.of(context)!.translate('openNow'),
+    ];
+
+    return SizedBox(
+      height: 45.h,
+      child: ListView.separated(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         scrollDirection: Axis.horizontal,
         itemCount: filters.length,
+        separatorBuilder: (_, __) => SizedBox(width: 12.w),
         itemBuilder: (context, index) {
           final filter = filters[index];
           final isSelected = selectedFilter == filter;
-          
-          return Container(
-            margin: EdgeInsets.only(right: 12.w),
-            child: GestureDetector(
-              onTap: () => onFilterChanged(filter),
-              child: Container(
-                                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                 decoration: BoxDecoration(
-                   color: isSelected ? AppColors.primary : AppColors.white,
-                   borderRadius: BorderRadius.circular(20.r),
-                   border: Border.all(
-                     color: isSelected ? AppColors.primary : AppColors.gray.withOpacity(0.3),
-                     width: 1,
-                   ),
-                  boxShadow: isSelected ? [
-                    BoxShadow(
-                      color: AppColors.primary.withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ] : null,
+
+          return GestureDetector(
+            onTap: () => onFilterChanged(filter),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.primary : AppColors.white,
+                borderRadius: BorderRadius.circular(20.r),
+                border: Border.all(
+                  color: isSelected
+                      ? AppColors.primary
+                      : AppColors.gray.withOpacity(0.3),
+                  width: 1,
                 ),
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: AppColors.primary.withOpacity(0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Center(
                 child: Text(
                   filter,
                   style: AppTextStyles.secondaryS14W400.copyWith(

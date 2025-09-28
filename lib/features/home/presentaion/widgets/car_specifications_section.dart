@@ -23,9 +23,11 @@ class CarSpecificationsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(20.w),
-      color: AppColors.white,
+      color: isDark ? const Color(0xFF2A2A2A) : AppColors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,11 +35,11 @@ class CarSpecificationsSection extends StatelessWidget {
           Text(
             'Car Specifications',
             style: AppTextStyles.s18w700.copyWith(
-              color: AppColors.black,
+              color: isDark ? Colors.white : AppColors.black,
             ),
           ),
           SizedBox(height: 16.h),
-          
+
           // Specifications Grid
           GridView.count(
             shrinkWrap: true,
@@ -51,31 +53,37 @@ class CarSpecificationsSection extends StatelessWidget {
                 icon: Icons.calendar_today,
                 label: 'Year',
                 value: year.toString(),
+                isDark: isDark,
               ),
               _buildSpecificationCard(
                 icon: Icons.settings,
                 label: 'Transmission',
                 value: transmission,
+                isDark: isDark,
               ),
               _buildSpecificationCard(
                 icon: Icons.build,
                 label: 'Engine',
                 value: engine,
+                isDark: isDark,
               ),
               _buildSpecificationCard(
                 icon: Icons.local_gas_station,
                 label: 'Fuel Type',
                 value: fuelType,
+                isDark: isDark,
               ),
               _buildSpecificationCard(
                 icon: Icons.palette,
                 label: 'Color',
                 value: color,
+                isDark: isDark,
               ),
               _buildSpecificationCard(
                 icon: Icons.door_front_door,
                 label: 'Doors',
                 value: doors.toString(),
+                isDark: isDark,
               ),
             ],
           ),
@@ -88,19 +96,20 @@ class CarSpecificationsSection extends StatelessWidget {
     required IconData icon,
     required String label,
     required String value,
+    required bool isDark,
   }) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? const Color(0xFF3A3A3A) : AppColors.white,
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color: AppColors.gray.withOpacity(0.2),
+          color: isDark ? Colors.white12 : AppColors.gray.withOpacity(0.2),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: isDark ? Colors.black45 : Colors.black.withOpacity(0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -116,22 +125,22 @@ class CarSpecificationsSection extends StatelessWidget {
             color: AppColors.primary,
           ),
           SizedBox(height: 8.h),
-          
+
           // Label
           Text(
             label,
             style: AppTextStyles.s12w400.copyWith(
-              color: AppColors.gray,
+              color: isDark ? Colors.white70 : AppColors.gray,
             ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 4.h),
-          
+
           // Value
           Text(
             value,
             style: AppTextStyles.s14w500.copyWith(
-              color: AppColors.black,
+              color: isDark ? Colors.white : AppColors.black,
             ),
             textAlign: TextAlign.center,
           ),

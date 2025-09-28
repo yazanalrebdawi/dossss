@@ -8,6 +8,7 @@ import '../manager/reel_state.dart';
 import '../../data/models/reel_model.dart';
 import 'reel_card_player.dart';
 import '../manager/reels_cubit.dart';
+
 /// Horizontal reels section for home screen
 /// Keeps the card-like UI but uses ReelCardPlayer internally
 class HorizontalReelsSection extends StatefulWidget {
@@ -30,7 +31,7 @@ class _HorizontalReelsSectionState extends State<HorizontalReelsSection> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    
+
     // Load reels when widget initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ReelCubit>().loadReels();
@@ -38,16 +39,15 @@ class _HorizontalReelsSectionState extends State<HorizontalReelsSection> {
   }
 
   void _onScroll() {
-    // Determine which reel is currently in viewport
     final itemWidth = 216.w; // Card width + margin
     final scrollOffset = _scrollController.offset;
     final newVisibleIndex = (scrollOffset / itemWidth).round();
-    
+
     if (newVisibleIndex != _currentVisibleIndex && newVisibleIndex >= 0) {
       setState(() {
         _currentVisibleIndex = newVisibleIndex;
       });
-      
+
       // Update focused reel in cubit
       context.read<ReelsCubit>().setFocusedReel(newVisibleIndex);
     }
@@ -87,7 +87,7 @@ class _HorizontalReelsSectionState extends State<HorizontalReelsSection> {
           ),
         ),
         SizedBox(height: 16.h),
-        
+
         // Horizontal reels list
         SizedBox(
           height: 300.h,
@@ -126,7 +126,7 @@ class _HorizontalReelsSectionState extends State<HorizontalReelsSection> {
       itemBuilder: (context, index) {
         final reel = reels[index];
         final isInViewport = index == _currentVisibleIndex;
-        
+
         return Container(
           margin: EdgeInsets.only(right: 16.w),
           child: Column(
@@ -140,9 +140,9 @@ class _HorizontalReelsSectionState extends State<HorizontalReelsSection> {
                 isInViewport: isInViewport,
                 onTap: () => _onReelTap(context, reel, index),
               ),
-              
+
               SizedBox(height: 8.h),
-              
+
               // Reel info
               SizedBox(
                 width: 200.w,
@@ -258,13 +258,13 @@ class _HorizontalReelsSectionState extends State<HorizontalReelsSection> {
 
   void _onReelTap(BuildContext context, ReelModel reel, int index) {
     print('🎬 HorizontalReelsSection: Reel tapped - ${reel.title}');
-    
+
     // Update focused reel
     context.read<ReelsCubit>().setFocusedReel(reel.id);
-    
+
     // Enable auto-play for this reel
     context.read<ReelsCubit>().enableAutoPlay();
-    
+
     // TODO: Navigate to full-screen viewer if needed
     // context.push('/reels/${reel.id}');
   }

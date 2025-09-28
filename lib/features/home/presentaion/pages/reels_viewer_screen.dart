@@ -1,3 +1,4 @@
+import 'package:dooss_business_app/core/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,12 +6,8 @@ import '../../../../core/constants/colors.dart';
 import '../../data/models/reel_model.dart';
 import '../widgets/full_screen_reel_player.dart';
 
-//? هي الجزئية ريلززز
-
 /// Full-screen Instagram-style reels viewer
-/// Vertical PageView with proper video lifecycle
-///
-///
+/// Vertical PageView with proper video lifecycle management
 class ReelsViewerScreen extends StatefulWidget {
   final List<ReelModel> reelsList;
   final int initialIndex;
@@ -34,22 +31,20 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
     super.initState();
     _currentIndex = widget.initialIndex;
     _pageController = PageController(initialPage: widget.initialIndex);
-
+    
     // Set full-screen immersive mode
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-
-    print(
-      '🎬 ReelsViewerScreen: Initialized with ${widget.reelsList.length} reels, starting at index ${widget.initialIndex}',
-    );
+    
+    print('🎬 ReelsViewerScreen: Initialized with ${widget.reelsList.length} reels, starting at index ${widget.initialIndex}');
   }
 
   @override
   void dispose() {
     print('🗑️ ReelsViewerScreen: Disposing page controller and restoring UI');
-
+    
     // Restore system UI
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-
+    
     _pageController.dispose();
     super.dispose();
   }
@@ -63,8 +58,9 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
 
   @override
   Widget build(BuildContext context) {
+                      final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.black,
       body: Stack(
         children: [
           // Main vertical PageView
@@ -76,11 +72,9 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
             itemBuilder: (context, index) {
               final reel = widget.reelsList[index];
               final isCurrentReel = index == _currentIndex;
-
+              
               return FullScreenReelPlayer(
-                key: Key(
-                  'reel_${reel.id}',
-                ), // Important for disposal when scrolling
+                key: Key('reel_${reel.id}'), // Important for disposal when scrolling
                 reel: reel,
                 isCurrentReel: isCurrentReel,
                 onTap: () => print('Tapped reel ${reel.id}'),
@@ -98,12 +92,12 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
                 width: 40.w,
                 height: 40.h,
                 decoration: BoxDecoration(
-                  color: AppColors.black.withOpacity(0.5),
+                  color:isDark ? Colors.white : AppColors.black.withOpacity(0.5),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.arrow_back,
-                  color: AppColors.white,
+                  color:isDark? AppColors.white : Colors.black,
                   size: 24.sp,
                 ),
               ),
@@ -111,25 +105,24 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
           ),
 
           // Reel counter (top right)
-          // Positioned(
-          //   top: MediaQuery.of(context).padding.top + 16.h,
-          //   right: 16.w,
-          //   child: Container(
-          //     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-          //     decoration: BoxDecoration(
-          //       color: AppColors.black.withOpacity(0.5),
-          //       borderRadius: BorderRadius.circular(20.r),
-          //     ),
-          //     child: Text(
-          //       '${_currentIndex + 1} / ${widget.reelsList.length}',
-          //       style: TextStyle(
-          //         color: AppColors.white,
-          //         fontSize: 14.sp,
-          //         fontWeight: FontWeight.w500,
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 16.h,
+            right: 16.w,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color:isDark?Colors.white : AppColors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Text(
+                '${_currentIndex + 1} / ${widget.reelsList.length}',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                ).withThemeColor(context),
+              ),
+            ),
+          ),
 
           // Scroll indicator (right edge)
           Positioned(
@@ -144,20 +137,21 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
   }
 
   Widget _buildScrollIndicator() {
+                      final isDark = Theme.of(context).brightness == Brightness.dark;
+
     if (widget.reelsList.length <= 1) return const SizedBox.shrink();
 
     return Container(
       width: 4.w,
       decoration: BoxDecoration(
-        color: AppColors.white.withOpacity(0.3),
+        color:isDark ?  AppColors.white.withOpacity(0.3) : Colors.black,
         borderRadius: BorderRadius.circular(2.r),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final indicatorHeight =
-              constraints.maxHeight / widget.reelsList.length;
+          final indicatorHeight = constraints.maxHeight / widget.reelsList.length;
           final currentPosition = _currentIndex * indicatorHeight;
-
+          
           return Stack(
             children: [
               Positioned(

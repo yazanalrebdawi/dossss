@@ -19,19 +19,25 @@ class AvailableCarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
       child: Card(
         margin: EdgeInsets.zero,
-        shadowColor: AppColors.cardShadow,
+        shadowColor: isDark
+            ? Colors.black.withOpacity(0.4)
+            : AppColors.cardShadow,
         elevation: 2,
+        color: isDark ? const Color(0xFF2A2A2A) : AppColors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.defaultBorderRadius.r),
+          borderRadius:
+              BorderRadius.circular(AppDimensions.defaultBorderRadius.r),
         ),
         child: Column(
           children: [
             _buildImage(),
-            _buildContent(),
+            _buildContent(context, isDark),
           ],
         ),
       ),
@@ -59,19 +65,19 @@ class AvailableCarCard extends StatelessWidget {
                 },
               )
             : Image(
-          fit: BoxFit.cover,
-          image: AssetImage(AppAssets.bmwM3),
-        ),
+                fit: BoxFit.cover,
+                image: AssetImage(AppAssets.bmwM3),
+              ),
       ),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context, bool isDark) {
     return Container(
       width: AppDimensions.availableCardWidth.w,
       height: AppDimensions.availableCardContentHeight.h,
       padding: EdgeInsets.all(AppDimensions.defaultPadding.r),
-      color: AppColors.cardBackground,
+      color: isDark ? const Color(0xFF2A2A2A) : AppColors.cardBackground,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,14 +85,14 @@ class AvailableCarCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTitle(),
+              _buildTitle(context, isDark),
               SizedBox(height: AppDimensions.smallPadding.h),
               _buildPrice(),
               SizedBox(height: AppDimensions.smallPadding.h),
-              _buildRating(),
+              _buildRating(context, isDark),
             ],
           ),
-          _buildDetails(),
+          _buildDetails(context, isDark),
           SizedBox(height: AppDimensions.smallPadding.h),
           _buildViewDetailsButton(),
         ],
@@ -94,10 +100,10 @@ class AvailableCarCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle() {
+  Widget _buildTitle(BuildContext context, bool isDark) {
     return Text(
       '${car.brand} ${car.name}',
-      style: AppTextStyles.blackS14W500,
+      style: AppTextStyles.blackS14W500.withThemeColor(context),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
@@ -110,29 +116,33 @@ class AvailableCarCard extends StatelessWidget {
     );
   }
 
-  Widget _buildRating() {
+  Widget _buildRating(BuildContext context, bool isDark) {
     return Row(
       children: [
         Icon(
           Icons.star,
           color: AppColors.ratingStarColor,
-          size: AppDimensions.smallIconSize.r
+          size: AppDimensions.smallIconSize.r,
         ),
         SizedBox(width: AppDimensions.tinyPadding.w),
         Text(
           '4.5', // Default rating
-          style: AppTextStyles.ratingS12W400,
+          style: AppTextStyles.ratingS12W400.copyWith(
+            color: isDark ? Colors.white70 : AppColors.gray,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildDetails() {
+  Widget _buildDetails(BuildContext context, bool isDark) {
     return Row(
       children: [
         Text(
           '${car.mileage} • ${car.transmission}',
-          style: AppTextStyles.ratingS12W400,
+          style: AppTextStyles.ratingS12W400.copyWith(
+            color: isDark ? Colors.white70 : AppColors.gray,
+          ),
         ),
       ],
     );
@@ -154,4 +164,4 @@ class AvailableCarCard extends StatelessWidget {
       ),
     );
   }
-} 
+}

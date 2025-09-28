@@ -23,20 +23,31 @@ class ServicePhotoCardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Image Placeholder
           Expanded(
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(8.r)),
                 color: AppColors.gray.withOpacity(0.2),
               ),
-              child: Center(child: Icon(Icons.image, color: AppColors.gray, size: 32.sp)),
+              child: Center(
+                child: Icon(
+                  Icons.image,
+                  color: AppColors.gray,
+                  size: 32.sp,
+                ),
+              ),
             ),
           ),
+          // Title
           Padding(
             padding: EdgeInsets.all(8.w),
             child: Text(
               title,
-              style: AppTextStyles.secondaryS12W400.copyWith(color: AppColors.black, fontWeight: FontWeight.w500),
+              style: AppTextStyles.secondaryS12W400.copyWith(
+                color: AppColors.black,
+                fontWeight: FontWeight.w500,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

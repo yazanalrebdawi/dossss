@@ -23,7 +23,7 @@ class HeadOfCategoriesHomeScreen extends StatelessWidget {
           onPressed:onPressedActionText,
           child: Text(
             actionText,
-            style: AppTextStyles.headCategoriesTextStyleS16W500,
+            style: AppTextStyles.headCategoriesTextStyleS16W500.withThemeColor(context),
           ),
         ),
       ],

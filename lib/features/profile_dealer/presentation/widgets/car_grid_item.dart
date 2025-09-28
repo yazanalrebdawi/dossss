@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/constants/colors.dart';
-import '../../../../core/constants/text_styles.dart';
 import '../../../home/data/models/car_model.dart';
+import '../../../../core/constants/text_styles.dart';
 
 class CarGridItem extends StatelessWidget {
   final CarModel car;
@@ -15,17 +14,26 @@ class CarGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Dynamic colors
+    final backgroundColor = isDark ? Colors.grey[900] : Colors.white;
+    final cardShadowColor = isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05);
+    final textColor = isDark ? Colors.white : Colors.black;
+    final secondaryTextColor = isDark ? Colors.grey[400] : Colors.grey[600];
+    final priceColor = Colors.blueAccent; // keep primary or theme color
+
     return GestureDetector(
       onTap: () {
         context.push('/car-details/${car.id}');
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: cardShadowColor,
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -44,7 +52,7 @@ class CarGridItem extends StatelessWidget {
                     topLeft: Radius.circular(12.r),
                     topRight: Radius.circular(12.r),
                   ),
-                  color: AppColors.gray.withOpacity(0.1),
+                  color: isDark ? Colors.grey[800] : Colors.grey.withOpacity(0.1),
                 ),
                 child: car.imageUrl.isNotEmpty
                     ? ClipRRect(
@@ -59,7 +67,7 @@ class CarGridItem extends StatelessWidget {
                             return Icon(
                               Icons.directions_car,
                               size: 48.sp,
-                              color: AppColors.gray,
+                              color: secondaryTextColor,
                             );
                           },
                         ),
@@ -67,7 +75,7 @@ class CarGridItem extends StatelessWidget {
                     : Icon(
                         Icons.directions_car,
                         size: 48.sp,
-                        color: AppColors.gray,
+                        color: secondaryTextColor,
                       ),
               ),
             ),
@@ -83,7 +91,7 @@ class CarGridItem extends StatelessWidget {
                     Text(
                       car.name,
                       style: AppTextStyles.s14w500.copyWith(
-                        color: AppColors.black,
+                        color: textColor,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -92,27 +100,25 @@ class CarGridItem extends StatelessWidget {
                     // Price and Availability Row
                     Row(
                       children: [
-                        // Price
                         Text(
                           'AED ${car.price.toStringAsFixed(0)}',
                           style: AppTextStyles.s16w600.copyWith(
-                            color: AppColors.primary,
+                            color: priceColor,
                           ),
                         ),
                         const Spacer(),
-                        // Available Checkmark
                         Row(
                           children: [
                             Icon(
                               Icons.check_circle,
                               size: 16.sp,
-                              color: AppColors.primary,
+                              color: priceColor,
                             ),
                             SizedBox(width: 4.w),
                             Text(
                               'Available',
                               style: AppTextStyles.s12w400.copyWith(
-                                color: AppColors.primary,
+                                color: priceColor,
                               ),
                             ),
                           ],
@@ -126,7 +132,7 @@ class CarGridItem extends StatelessWidget {
                         Text(
                           '4.5',
                           style: AppTextStyles.s12w400.copyWith(
-                            color: AppColors.black,
+                            color: textColor,
                           ),
                         ),
                         SizedBox(width: 4.w),

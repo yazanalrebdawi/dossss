@@ -23,22 +23,29 @@ class LoginScreen2OptionsSection extends StatelessWidget {
                 context.read<AuthCubit>().toggleRememberMe();
               },
               activeColor: AppColors.primary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             Text(
-              AppLocalizations.of(context)?.translate('rememberMe') ?? 'Remember Me',
-              style: AppTextStyles.descriptionS18W400.copyWith(fontSize: 14),
+              AppLocalizations.of(context)?.translate('rememberMe') ??
+                  'Remember Me',
+              style: AppTextStyles.descriptionS18W400
+                  .copyWith(fontSize: 14)
+                  .withThemeColor(context),
             ),
             const Spacer(),
             TextButton(
               onPressed: () {
                 context.go(RouteNames.forgetPasswordPage);
               },
-              style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
+              style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
               child: Text(
-                AppLocalizations.of(context)?.translate('ForgotPassword') ?? 'Forgot Password?',
-                style: AppTextStyles.descriptionS18W400.copyWith(fontSize: 14, color: AppColors.primary),
+                AppLocalizations.of(context)?.translate('ForgotPassword') ??
+                    'Forgot Password?',
+                style: AppTextStyles.descriptionS18W400
+                    .copyWith(fontSize: 14, color: AppColors.primary),
               ),
             ),
           ],
@@ -46,4 +53,4 @@ class LoginScreen2OptionsSection extends StatelessWidget {
       },
     );
   }
-} 
+}

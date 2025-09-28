@@ -14,15 +14,20 @@ class ProductInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(16.w),
+      color: isDark ? AppColors.darkCard : Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Product Name
           Text(
             product.name,
-            style: AppTextStyles.s20w500,
+            style: AppTextStyles.s20w500.copyWith(
+              color: isDark ? AppColors.white : AppColors.black,
+            ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -33,7 +38,9 @@ class ProductInfoSection extends StatelessWidget {
             children: [
               Text(
                 '\$${product.price.toStringAsFixed(2)}',
-                style: AppTextStyles.s22w500.copyWith(color: AppColors.primary),
+                style: AppTextStyles.s22w500.copyWith(
+                  color: AppColors.primary,
+                ),
               ),
               SizedBox(width: 12.w),
               Container(
@@ -65,7 +72,9 @@ class ProductInfoSection extends StatelessWidget {
                     SizedBox(width: 8.w),
                     Text(
                       '5 units available',
-                      style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+                      style: AppTextStyles.s14w400.copyWith(
+                        color: isDark ? AppColors.gray.withOpacity(0.8) : AppColors.gray,
+                      ),
                     ),
                   ],
                 ),
@@ -81,7 +90,9 @@ class ProductInfoSection extends StatelessWidget {
                     SizedBox(width: 8.w),
                     Text(
                       'Spare Parts',
-                      style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+                      style: AppTextStyles.s14w400.copyWith(
+                        color: isDark ? AppColors.gray.withOpacity(0.8) : AppColors.gray,
+                      ),
                     ),
                   ],
                 ),

@@ -8,7 +8,7 @@ class ChatsTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       'Chats',
-      style: AppTextStyles.s18w700,
+      style: AppTextStyles.s18w700.withThemeColor(context),
     );
   }
 }

@@ -15,15 +15,18 @@ class ReelGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgGray = isDark ? Colors.grey[800]! : AppColors.gray.withOpacity(0.1);
+    final iconGray = isDark ? Colors.white70 : AppColors.gray;
+
     return GestureDetector(
       onTap: () {
-        // الانتقال للريلز مع تحديد الريل المحدد
         context.go('${RouteNames.reelsWithId.replaceAll(':id', reel.id.toString())}');
       },
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.r),
-          color: AppColors.gray.withOpacity(0.1),
+          color: bgGray,
         ),
         child: Stack(
           children: [
@@ -38,21 +41,21 @@ class ReelGridItem extends StatelessWidget {
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
-                          color: AppColors.gray.withOpacity(0.1),
+                          color: bgGray,
                           child: Icon(
                             Icons.play_circle_outline,
                             size: 32.sp,
-                            color: AppColors.gray,
+                            color: iconGray,
                           ),
                         );
                       },
                     )
                   : Container(
-                      color: AppColors.gray.withOpacity(0.1),
+                      color: bgGray,
                       child: Icon(
                         Icons.play_circle_outline,
                         size: 32.sp,
-                        color: AppColors.gray,
+                        color: iconGray,
                       ),
                     ),
             ),

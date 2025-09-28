@@ -28,21 +28,18 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChatCubit, ChatState>(
-      buildWhen: (previous, current) {
-        return previous.chats != current.chats ||
-            previous.isLoading != current.isLoading ||
-            previous.error != current.error;
-      },
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    return BlocBuilder<ChatCubit, ChatState>(
       builder: (context, state) {
         print(
-          'ChatsListScreen - State: isLoading=${state.isLoading}, chatsCount=${state.chats.length}, error=${state.error}',
-        );
+            'ChatsListScreen - State: isLoading=${state.isLoading}, chatsCount=${state.chats.length}, error=${state.error}');
 
         if (state.isLoading) {
           print('ChatsListScreen - Showing loading indicator');
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
         if (state.error != null) {
@@ -67,12 +64,14 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                 SizedBox(height: 16.h),
                 Text(
                   'Error loading chats',
-                  style: AppTextStyles.s16w500.copyWith(color: AppColors.gray),
+                  style: AppTextStyles.s16w500
+                      .copyWith(color: isDark ? Colors.white : AppColors.gray),
                 ),
                 SizedBox(height: 8.h),
                 Text(
                   state.error!,
-                  style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+                  style: AppTextStyles.s14w400
+                      .copyWith(color: isDark ? Colors.white : AppColors.gray),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 16.h),
@@ -110,12 +109,14 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                 SizedBox(height: 16.h),
                 Text(
                   'No chats yet',
-                  style: AppTextStyles.s16w500.copyWith(color: AppColors.gray),
+                  style: AppTextStyles.s16w500
+                      .copyWith(color: isDark ? Colors.white : AppColors.gray),
                 ),
                 SizedBox(height: 8.h),
                 Text(
                   'Start a conversation',
-                  style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+                  style: AppTextStyles.s14w400
+                      .copyWith(color: isDark ? Colors.white : AppColors.gray),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 16.h),
@@ -124,7 +125,11 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                     print('ChatsListScreen - Manually loading chats');
                     context.read<ChatCubit>().loadChats();
                   },
-                  child: const Text('Refresh'),
+                  child: Text(
+                    'Refresh',
+                    style: AppTextStyles.blackS14W700.copyWith(
+                        color: isDark ? Colors.white : AppColors.gray),
+                  ),
                 ),
               ],
             ),
@@ -141,7 +146,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
               chat: chat,
               onTap: () {
                 print('ChatsListScreen - Tapped on chat: ${chat.dealer}');
-                context.go('/chat/${chat.id}');
+                context.push('/chat/${chat.id}', extra: chat.dealer);
               },
             );
           },

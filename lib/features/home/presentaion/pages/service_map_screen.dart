@@ -270,18 +270,18 @@ class _ServiceMapScreenState extends State<ServiceMapScreen> {
 
   @override
   Widget build(BuildContext context) {
+                      final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.black, size: 24.sp),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.black, size: 24.sp),
           onPressed: () => context.pop(),
         ),
         title: Text(
           'المسار إلى ${widget.service.name}',
-          style: AppTextStyles.blackS18W700,
+          style: AppTextStyles.blackS18W700.withThemeColor(context),
         ),
         centerTitle: true,
         actions: [
@@ -311,7 +311,7 @@ class _ServiceMapScreenState extends State<ServiceMapScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
-                        color: AppColors.gray.withOpacity(0.2),
+                        color: isDark?Colors.white : AppColors.gray.withOpacity(0.2),
                         width: 1,
                       ),
                     ),
@@ -353,7 +353,7 @@ class _ServiceMapScreenState extends State<ServiceMapScreen> {
                   margin: EdgeInsets.all(16.w),
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color:isDark ?  AppColors.white : Colors.black,
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
                       color: AppColors.gray.withOpacity(0.2),

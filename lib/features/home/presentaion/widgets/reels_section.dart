@@ -19,6 +19,8 @@ class ReelsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
@@ -29,13 +31,17 @@ class ReelsSection extends StatelessWidget {
             children: [
               Text(
                 'Market Reels',
-                style: AppTextStyles.blackS18W700,
+                style: AppTextStyles.blackS18W700.copyWith(
+                  color: isDark ? Colors.white : Colors.black,
+                ),
               ),
               GestureDetector(
                 onTap: onViewAllPressed,
                 child: Text(
                   'View All',
-                  style: AppTextStyles.primaryS16W600,
+                  style: AppTextStyles.primaryS16W600.copyWith(
+                    color: isDark ? Colors.blueAccent : Colors.blue,
+                  ),
                 ),
               ),
             ],
