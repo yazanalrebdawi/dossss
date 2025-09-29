@@ -34,7 +34,7 @@ class WebSocketService {
     _accessToken = accessToken;
     _isConnecting = true;
     
-    final wsUrl = 'ws://192.168.1.129:8020/ws/chats/$chatId/?token=$accessToken';
+    final wsUrl = '${ApiUrls.wsBaseUrl}/ws/chats/$chatId/?token=$accessToken';
     print('🔌 WebSocket: Connecting to $wsUrl');
     
     try {
@@ -87,6 +87,7 @@ class WebSocketService {
     }
 
     final message = {
+      'action': 'send',
       'text': text,
     };
 
@@ -101,25 +102,21 @@ class WebSocketService {
     }
   }
 
-void _handleMessage(dynamic message) {
-  try {
-    if (message is String) {
-      // ✅ Forward raw JSON to cubit
-      onMessageReceived?.call(message);
-
-      // Optional: keep parsed logging
-      final data = jsonDecode(message);
-      print('📨 WebSocket: Parsed message: $data');
-    } else {
-      // handle non-string
-      onMessageReceived?.call(jsonEncode(message));
+  void _handleMessage(dynamic message) {
+    try {
+      if (message is String) {
+        final data = jsonDecode(message);
+        print('📨 WebSocket: Parsed message: $data');
+        onMessageReceived?.call(data.toString());
+      } else {
+        print('📨 WebSocket: Raw message: $message');
+        onMessageReceived?.call(message.toString());
+      }
+    } catch (e) {
+      print('❌ WebSocket: Error parsing message: $e');
+      onError?.call('Error parsing message: $e');
     }
-  } catch (e) {
-    print('❌ WebSocket: Error parsing message: $e');
-    onError?.call('Error parsing message: $e');
   }
-}
-
 
   void dispose() {
     disconnect();
@@ -156,6 +153,4 @@ void _handleMessage(dynamic message) {
       'hasAccessToken': _accessToken != null && _accessToken!.isNotEmpty,
     };
   }
-// bool get isSocketActive => _channel != null;
-
 }
