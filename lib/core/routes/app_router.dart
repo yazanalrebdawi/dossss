@@ -1,4 +1,5 @@
 import 'package:dooss_business_app/core/routes/route_names.dart';
+import 'package:dooss_business_app/core/widgets/base/splash_screen_page.dart';
 import 'package:dooss_business_app/features/auth/presentation/pages/forget_password_screen.dart';
 import 'package:dooss_business_app/features/auth/presentation/pages/create_new_password_screen.dart';
 import 'package:dooss_business_app/features/auth/presentation/pages/login_screen.dart';
@@ -13,6 +14,15 @@ import 'package:dooss_business_app/features/home/presentaion/pages/all_cars_scre
 import 'package:dooss_business_app/features/home/presentaion/pages/all_products_screen.dart';
 import 'package:dooss_business_app/features/home/presentaion/pages/product_details_screen.dart';
 import 'package:dooss_business_app/features/home/presentaion/pages/car_details_screen.dart';
+import 'package:dooss_business_app/features/my_profile/presentation/manager/my_profile_cubit.dart';
+import 'package:dooss_business_app/features/my_profile/presentation/pages/change_language_screen.dart';
+import 'package:dooss_business_app/features/my_profile/presentation/pages/change_password_screen.dart';
+import 'package:dooss_business_app/features/my_profile/presentation/pages/edit_profile_screen.dart';
+import 'package:dooss_business_app/features/my_profile/presentation/pages/otp_verification_screen.dart';
+import 'package:dooss_business_app/features/my_profile/presentation/pages/profile_screen.dart';
+import 'package:dooss_business_app/features/my_profile/presentation/pages/saved_items_screen.dart';
+import 'package:dooss_business_app/features/my_profile/presentation/pages/settings_notifications_screen.dart';
+import 'package:dooss_business_app/features/my_profile/presentation/pages/theme_settings_screen.dart';
 import 'package:dooss_business_app/features/profile_dealer/presentation/pages/dealer_profile_screen.dart';
 import 'package:dooss_business_app/features/profile_dealer/presentation/manager/dealer_profile_cubit.dart';
 import 'package:dooss_business_app/features/chat/presentation/pages/chats_list_screen.dart';
@@ -40,19 +50,23 @@ import 'package:flutter/material.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: RouteNames.onBoardingScreen,
+    initialLocation: RouteNames.splashScreen,
     routes: routes,
   );
 
   static GoRouter createRouterWithObserver(NavigatorObserver observer) {
     return GoRouter(
-      initialLocation: RouteNames.onBoardingScreen,
+      initialLocation: RouteNames.splashScreen,
       observers: [observer],
       routes: routes,
     );
   }
 
   static final List<RouteBase> routes = [
+    GoRoute(
+      path: RouteNames.splashScreen,
+      builder: (context, state) => const SplashScreen(),
+    ),
     GoRoute(
       path: RouteNames.onBoardingScreen,
       builder: (context, state) => const OnBoardingScreen(),
@@ -97,9 +111,7 @@ class AppRouter {
       path: RouteNames.createNewPasswordPage,
       builder: (context, state) {
         String phoneNumber = state.extra as String? ?? '';
-        return CreateNewPasswordPage(
-          phoneNumber: phoneNumber,
-        );
+        return CreateNewPasswordPage(phoneNumber: phoneNumber);
       },
     ),
     GoRoute(
@@ -113,7 +125,6 @@ class AppRouter {
         return ChatConversationScreen(
           chatId: chat.id,
           participantName: chat.dealer,
-          dealerName: chat.dealer,
         );
       },
     ),
@@ -142,18 +153,27 @@ class AppRouter {
     ),
     GoRoute(
       path: '/car-details/:id',
+      name: 'carDetailsScreen',
       builder: (context, state) {
         final carId = int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
         return CarDetailsScreen(carId: carId);
       },
     ),
+
+    // GoRoute(
+    //   path: '/car-details/:id',
+    //   builder: (context, state) {
+    //     final carId = int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
+    //     return CarDetailsScreen(carId: carId);
+    //   },
+    // ),
     GoRoute(
       path: '/dealer-profile/:id',
       builder: (context, state) {
         final dealerId = state.pathParameters['id']!;
         final dealerHandle = state.uri.queryParameters['handle'] ?? '@dealer';
         return BlocProvider(
-          create: (context) => di.sl<DealerProfileCubit>(),
+          create: (context) => di.appLocator<DealerProfileCubit>(),
           child: DealerProfileScreen(
             dealerId: dealerId,
             dealerHandle: dealerHandle,
@@ -169,14 +189,13 @@ class AppRouter {
       path: '${RouteNames.chatConversationScreen}/:id',
       builder: (context, state) {
         final chatId = int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
-        final productId = state.extra.toString();
+        final productId = state.extra as int?;
         return BlocProvider(
-          create: (_) => di.sl<ChatCubit>(),
+          create: (_) => di.appLocator<ChatCubit>(),
           child: ChatConversationScreen(
-            dealerName: state.extra as String,
             chatId: chatId,
             participantName: 'Chat $chatId',
-            productId: int.tryParse(productId ?? '0'),
+            productId: productId,
           ),
         );
       },
@@ -188,11 +207,8 @@ class AppRouter {
         final dealerId = args?['dealerId'] as int? ?? 0;
         final dealerName = args?['dealerName'] as String? ?? 'Dealer';
         return BlocProvider(
-          create: (_) => di.sl<ChatCubit>(),
-          child: CreateChatScreen(
-            dealerId: dealerId,
-            dealerName: dealerName,
-          ),
+          create: (_) => di.appLocator<ChatCubit>(),
+          child: CreateChatScreen(dealerId: dealerId, dealerName: dealerName),
         );
       },
     ),
@@ -224,10 +240,11 @@ class AppRouter {
     ),
     GoRoute(
       path: RouteNames.nearbyServicesScreen,
-      builder: (context, state) => BlocProvider(
-        create: (context) => di.sl<ServiceCubit>(),
-        child: const NearbyServicesScreen(),
-      ),
+      builder:
+          (context, state) => BlocProvider(
+            create: (context) => di.appLocator<ServiceCubit>(),
+            child: const NearbyServicesScreen(),
+          ),
     ),
     GoRoute(
       path: '/service-map',
@@ -275,10 +292,12 @@ class AppRouter {
         final service = state.extra as ServiceModel?;
         print('🔍 AppRouter: Service Details route accessed');
         print(
-            '🔍 AppRouter: Service extra parameter: ${service?.name ?? 'null'}');
+          '🔍 AppRouter: Service extra parameter: ${service?.name ?? 'null'}',
+        );
         if (service != null) {
           print(
-              '✅ AppRouter: Creating ServiceDetailsScreen with service: ${service.name}');
+            '✅ AppRouter: Creating ServiceDetailsScreen with service: ${service.name}',
+          );
           return ServiceDetailsScreen(service: service);
         }
         // Fallback: create a placeholder service
@@ -311,7 +330,7 @@ class AppRouter {
               'Engine Check',
               'Oil Change',
               'Brake Inspection',
-              'AC Service'
+              'AC Service',
             ],
           ),
         );
@@ -328,7 +347,7 @@ class AppRouter {
       builder: (context, state) {
         final reelId = int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
         return BlocProvider(
-          create: (context) => di.sl<ReelCubit>(),
+          create: (context) => di.appLocator<ReelCubit>(),
           child: ReelsScreen(initialReelId: reelId),
         );
       },
@@ -340,11 +359,72 @@ class AppRouter {
       builder: (context, state) {
         final dealerId = state.pathParameters['id'] ?? '0';
         return BlocProvider(
-          create: (context) => di.sl<DealerProfileCubit>(),
+          create: (context) => di.appLocator<DealerProfileCubit>(),
           child: DealerProfileScreen(
             dealerId: dealerId,
             dealerHandle: '@cardealer_uae', // Default handle
           ),
+        );
+      },
+    ),
+
+    //?------------------------------------------------------------------
+    //* My Profile
+    GoRoute(
+      path: RouteNames.changeLanguageScreen,
+      builder: (context, state) => ChangeLanguageScreen(),
+    ),
+
+    GoRoute(
+      path: RouteNames.changePasswordScreen,
+      builder:
+          (context, state) => BlocProvider.value(
+            value: BlocProvider.of<MyProfileCubit>(context),
+            child: ChangePasswordScreen(),
+          ),
+    ),
+
+    GoRoute(
+      path: RouteNames.editProfileScreen,
+      builder:
+          (context, state) => BlocProvider.value(
+            value: BlocProvider.of<MyProfileCubit>(context),
+            child: EditProfileScreen(),
+          ),
+    ),
+
+    GoRoute(
+      path: RouteNames.profileScreen,
+      builder: (context, state) => ProfileScreen(),
+    ),
+
+    GoRoute(
+      path: RouteNames.savedItemsScreen,
+      builder:
+          (context, state) => BlocProvider.value(
+            value: BlocProvider.of<MyProfileCubit>(context),
+            child: SavedItemsScreen(),
+          ),
+    ),
+
+    GoRoute(
+      path: RouteNames.settingsNotificationsScreen,
+      builder: (context, state) => SettingsNotificationsScreen(),
+    ),
+
+    GoRoute(
+      path: RouteNames.themeSettingsScreen,
+      builder: (context, state) => ThemeSettingsScreen(),
+    ),
+
+    GoRoute(
+      path: '/otp-verification',
+      name: RouteNames.otpVerificationPhoneScreen,
+      builder: (context, state) {
+        final phone = state.extra as String;
+        return BlocProvider.value(
+          value: BlocProvider.of<MyProfileCubit>(context),
+          child: OtpVerificationScreen(phoneNumber: phone),
         );
       },
     ),

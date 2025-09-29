@@ -1,10 +1,15 @@
+import 'dart:developer';
+
+import 'package:dooss_business_app/features/profile_dealer/presentation/pages/dealer_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:video_player/video_player.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/text_styles.dart';
 import '../../data/models/reel_model.dart';
 
+//? هي محتوى الجزئية
 /// Proper StatefulWidget ReelPlayer for full-screen Instagram-style experience
 /// Handles video initialization, playback, pause, dispose, and lifecycle
 class FullScreenReelPlayer extends StatefulWidget {
@@ -23,7 +28,8 @@ class FullScreenReelPlayer extends StatefulWidget {
   State<FullScreenReelPlayer> createState() => _FullScreenReelPlayerState();
 }
 
-class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with WidgetsBindingObserver {
+class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
+    with WidgetsBindingObserver {
   VideoPlayerController? _controller;
   bool _isInitialized = false;
   bool _isPlaying = false;
@@ -36,7 +42,8 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with Widget
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    if (widget.isCurrentReel && widget.reel.video.isNotEmpty) {
+    
+    if (widget.isCurrentReel && widget.reel.video.isNotEmpty) {  
       _initializeVideo();
     }
   }
@@ -44,15 +51,18 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with Widget
   @override
   void didUpdateWidget(FullScreenReelPlayer oldWidget) {
     super.didUpdateWidget(oldWidget);
-
+    
+    // If this reel becomes current, initialize video
     if (!oldWidget.isCurrentReel && widget.isCurrentReel && _controller == null) {
       _initializeVideo();
     }
-
+    
+    // If this reel is no longer current, dispose video
     if (oldWidget.isCurrentReel && !widget.isCurrentReel) {
       _disposeController();
     }
-
+    
+    // Handle play/pause based on current reel status
     if (widget.isCurrentReel && _isInitialized) {
       if (!_isPlaying) _playVideo();
     } else {
@@ -83,8 +93,11 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with Widget
     if (widget.reel.video.isEmpty) return;
 
     try {
+      print('🎬 FullScreenReelPlayer: Initializing video for reel ${widget.reel.id}');
+      
       _controller = VideoPlayerController.networkUrl(Uri.parse(widget.reel.video));
       _controller!.addListener(_onVideoEvent);
+      
       await _controller!.initialize();
       await _controller!.setVolume(_isMuted ? 0.0 : 1.0);
       await _controller!.setLooping(true);
@@ -95,8 +108,14 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with Widget
           _hasError = false;
           _errorMessage = null;
         });
-        if (widget.isCurrentReel) _playVideo();
+        
+        // Auto-play if this is the current reel
+        if (widget.isCurrentReel) {
+          _playVideo();
+        }
       }
+      
+      print('✅ FullScreenReelPlayer: Video initialized for reel ${widget.reel.id}');
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -111,7 +130,8 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with Widget
   void _onVideoEvent() {
     if (_controller == null || !mounted) return;
     final value = _controller!.value;
-
+    
+    // Handle errors
     if (value.hasError) {
       setState(() {
         _hasError = true;
@@ -144,6 +164,7 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with Widget
       _isMuted = !_isMuted;
       _controller!.setVolume(_isMuted ? 0.0 : 1.0);
       setState(() {});
+      print('${_isMuted ? '🔇' : '🔊'} FullScreenReelPlayer: ${_isMuted ? 'Muted' : 'Unmuted'} reel ${widget.reel.id}');
     }
   }
 
@@ -158,6 +179,7 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with Widget
 
   void _disposeController() {
     if (_controller != null) {
+      print('🗑️ FullScreenReelPlayer: Disposing controller for reel ${widget.reel.id}');
       _controller!.removeListener(_onVideoEvent);
       _controller!.dispose();
       _controller = null;
@@ -168,6 +190,7 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with Widget
 
   @override
   void dispose() {
+    print('🗑️ FullScreenReelPlayer: Disposing widget for reel ${widget.reel.id}');
     WidgetsBinding.instance.removeObserver(this);
     _disposeController();
     super.dispose();
@@ -190,8 +213,14 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with Widget
         child: Stack(
           children: [
             _buildVideoContent(),
-            _buildReelInfoOverlay(context),
+            
+            // Reel info overlay
+            _buildReelInfoOverlay(),
+            
+            // Controls overlay (show/hide on tap)
             if (_showControls) _buildControlsOverlay(),
+            
+            // Actions overlay (right side)
             _buildActionsOverlay(),
           ],
         ),
@@ -216,15 +245,9 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with Widget
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
-            color: AppColors.white,
-            strokeWidth: 3,
-          ),
+          CircularProgressIndicator(color: AppColors.white, strokeWidth: 3),
           SizedBox(height: 16.h),
-          Text(
-            'Loading reel...',
-            style: AppTextStyles.whiteS16W400,
-          ),
+          Text('Loading reel...', style: AppTextStyles.whiteS16W400),
         ],
       ),
     );
@@ -273,6 +296,7 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with Widget
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Dealer info
           Row(
             children: [
               CircleAvatar(

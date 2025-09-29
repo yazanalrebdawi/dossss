@@ -1,6 +1,7 @@
+import 'dart:developer';
+
 import 'package:dooss_business_app/core/cubits/optimized_cubit.dart';
 import '../../data/data_source/reel_remote_data_source.dart';
-import '../../data/models/reel_model.dart';
 import 'reel_state.dart';
 
 class ReelCubit extends OptimizedCubit<ReelState> {
@@ -10,7 +11,7 @@ class ReelCubit extends OptimizedCubit<ReelState> {
 
   void loadReels({int page = 1, int pageSize = 20}) async {
     safeEmit(state.copyWith(isLoading: true, error: null));
-    
+
     final result = await dataSource.fetchReels(
       page: page,
       pageSize: pageSize,
@@ -20,36 +21,38 @@ class ReelCubit extends OptimizedCubit<ReelState> {
     result.fold(
       (failure) {
         print('❌ ReelCubit: Error loading reels: ${failure.message}');
-        safeEmit(state.copyWith(
-          error: failure.message,
-          isLoading: false,
-        ));
+        safeEmit(state.copyWith(error: failure.message, isLoading: false));
       },
       (reelsResponse) {
-        print('✅ ReelCubit: Successfully loaded ${reelsResponse.results.length} reels');
-        
+        print(
+          '✅ ReelCubit: Successfully loaded ${reelsResponse.results.length} reels',
+        );
+
         // If it's the first page, replace the list, otherwise append
-        final updatedReels = page == 1 
-            ? reelsResponse.results 
-            : [...state.reels, ...reelsResponse.results];
-        
-        safeEmit(state.copyWith(
-          reels: updatedReels,
-          isLoading: false,
-          hasNextPage: reelsResponse.next != null,
-          currentPage: page,
-          totalCount: reelsResponse.count,
-        ));
+        final updatedReels =
+            page == 1
+                ? reelsResponse.results
+                : [...state.reels, ...reelsResponse.results];
+        log("😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂");
+        safeEmit(
+          state.copyWith(
+            reels: updatedReels,
+            isLoading: false,
+            hasNextPage: reelsResponse.next != null,
+            currentPage: page,
+            totalCount: reelsResponse.count,
+          ),
+        );
       },
     );
   }
 
   void loadMoreReels() async {
     if (state.isLoading || !state.hasNextPage) return;
-    
+
     final nextPage = state.currentPage + 1;
     print('🔄 ReelCubit: Loading more reels (page: $nextPage)...');
-    
+
     final result = await dataSource.fetchReels(
       page: nextPage,
       pageSize: 20,
@@ -62,14 +65,18 @@ class ReelCubit extends OptimizedCubit<ReelState> {
         safeEmit(state.copyWith(error: failure.message));
       },
       (reelsResponse) {
-        print('✅ ReelCubit: Successfully loaded ${reelsResponse.results.length} more reels');
-        
-        safeEmit(state.copyWith(
-          reels: [...state.reels, ...reelsResponse.results],
-          hasNextPage: reelsResponse.next != null,
-          currentPage: nextPage,
-          error: null,
-        ));
+        print(
+          '✅ ReelCubit: Successfully loaded ${reelsResponse.results.length} more reels',
+        );
+
+        safeEmit(
+          state.copyWith(
+            reels: [...state.reels, ...reelsResponse.results],
+            hasNextPage: reelsResponse.next != null,
+            currentPage: nextPage,
+            error: null,
+          ),
+        );
       },
     );
   }
@@ -95,7 +102,7 @@ class ReelCubit extends OptimizedCubit<ReelState> {
   }
 
   void clearError() {
-          safeEmit(state.copyWith(error: null));
+    safeEmit(state.copyWith(error: null));
   }
 
   void resetState() {
