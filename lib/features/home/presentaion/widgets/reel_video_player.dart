@@ -16,10 +16,12 @@ class ReelVideoPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       height: double.infinity,
-      color: AppColors.black,
+      color: isDark ? AppColors.black : AppColors.white,
       child: isCurrentReel && reel.video.isNotEmpty
           ? NativeVideoWidget(
               videoUrl: reel.video,
@@ -28,11 +30,11 @@ class ReelVideoPlayer extends StatelessWidget {
               muted: false,
               loop: true,
             )
-          : _buildPlaceholder(),
+          : _buildPlaceholder(isDark),
     );
   }
 
-  Widget _buildPlaceholder() {
+  Widget _buildPlaceholder(bool isDark) {
     return Container(
       color: AppColors.gray.withOpacity(0.2),
       child: Center(
@@ -41,14 +43,14 @@ class ReelVideoPlayer extends StatelessWidget {
           children: [
             Icon(
               Icons.video_library,
-              color: AppColors.white,
+              color: isDark ? AppColors.white : AppColors.black,
               size: 64.sp,
             ),
             SizedBox(height: 16.h),
             Text(
               reel.title,
               style: TextStyle(
-                color: AppColors.white,
+                color: isDark ? AppColors.white : AppColors.black,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
               ),

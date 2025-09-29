@@ -18,24 +18,26 @@ class DealerProfileAppBar extends StatelessWidget implements PreferredSizeWidget
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocBuilder<DealerProfileCubit, DealerProfileState>(
       builder: (context, state) {
         final dealerName = state.dealer?.name ?? dealerHandle;
-        
+
         return AppBar(
-          backgroundColor: AppColors.white,
+          backgroundColor: isDark ? Colors.black : AppColors.white,
           elevation: 0,
           title: Text(
             dealerName,
             style: AppTextStyles.s16w600.copyWith(
-              color: AppColors.black,
+              color: isDark ? Colors.white : AppColors.black,
             ),
           ),
           centerTitle: true,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
-              color: AppColors.primary,
+              color: isDark ? Colors.white : AppColors.primary,
               size: 24.sp,
             ),
             onPressed: () {

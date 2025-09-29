@@ -7,17 +7,19 @@ class ChatsActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Row(
       children: [
         Icon(
           Icons.search,
-          color: AppColors.gray,
+          color: isDark ? Colors.white : AppColors.gray,
           size: 24.sp,
         ),
         SizedBox(width: 16.w),
         Icon(
           Icons.more_vert,
-          color: AppColors.gray,
+          color: isDark ? Colors.white : AppColors.gray,
           size: 24.sp,
         ),
       ],

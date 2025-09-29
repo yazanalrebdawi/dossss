@@ -17,11 +17,15 @@ class DealerProfileTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = AppColors.primary;
+    final unselectedColor = isDark ? Colors.grey[400]! : AppColors.gray;
+
     return Container(
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: AppColors.gray.withOpacity(0.2),
+            color: unselectedColor.withOpacity(0.2),
             width: 1,
           ),
         ),
@@ -29,10 +33,10 @@ class DealerProfileTabs extends StatelessWidget {
       child: TabBar(
         controller: tabController,
         onTap: onTabChanged,
-        indicatorColor: AppColors.primary,
+        indicatorColor: primaryColor,
         indicatorWeight: 2,
-        labelColor: AppColors.primary,
-        unselectedLabelColor: AppColors.gray,
+        labelColor: primaryColor,
+        unselectedLabelColor: unselectedColor,
         labelStyle: AppTextStyles.s14w500,
         unselectedLabelStyle: AppTextStyles.s14w400,
         tabs: [
@@ -44,7 +48,7 @@ class DealerProfileTabs extends StatelessWidget {
                 Icon(
                   Icons.play_circle_outline,
                   size: 20.sp,
-                  color: currentIndex == 0 ? AppColors.primary : AppColors.gray,
+                  color: currentIndex == 0 ? primaryColor : unselectedColor,
                 ),
                 SizedBox(width: 8.w),
                 Text('Reels'),
@@ -59,7 +63,7 @@ class DealerProfileTabs extends StatelessWidget {
                 Icon(
                   Icons.directions_car_outlined,
                   size: 20.sp,
-                  color: currentIndex == 1 ? AppColors.primary : AppColors.gray,
+                  color: currentIndex == 1 ? primaryColor : unselectedColor,
                 ),
                 SizedBox(width: 8.w),
                 Text('Cars'),
@@ -74,7 +78,7 @@ class DealerProfileTabs extends StatelessWidget {
                 Icon(
                   Icons.build_outlined,
                   size: 20.sp,
-                  color: currentIndex == 2 ? AppColors.primary : AppColors.gray,
+                  color: currentIndex == 2 ? primaryColor : unselectedColor,
                 ),
                 SizedBox(width: 8.w),
                 Text('Services'),

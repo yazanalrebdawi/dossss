@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/text_styles.dart';
 import '../../data/models/reel_model.dart';
@@ -10,10 +7,15 @@ import '../../data/models/reel_model.dart';
 class ReelInfoOverlay extends StatelessWidget {
   final ReelModel reel;
 
-  const ReelInfoOverlay({super.key, required this.reel});
+  const ReelInfoOverlay({
+    super.key,
+    required this.reel,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Positioned(
       left: 16.w,
       right: 80.w, // Leave space for actions
@@ -24,33 +26,20 @@ class ReelInfoOverlay extends StatelessWidget {
           // Dealer info
           Row(
             children: [
-              InkWell(
-                onTap: () {
-                  //todo Navigate to dealer profile
-                  log("😂😂😂😂😂😂😂");
-                  context.push(
-                    '/dealer-profile/${reel.dealer.toString()}?handle=${reel.dealerName ?? ''}',
-                  );
-                },
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 16.r,
-                      backgroundColor: AppColors.primary,
-                      child: Text(
-                        (reel.dealerName != null && reel.dealerName!.isNotEmpty)
-                            ? reel.dealerName![0].toUpperCase()
-                            : 'U',
-                        style: AppTextStyles.whiteS14W600,
-                      ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      reel.dealerName ?? 'Unknown User',
-                      style: AppTextStyles.whiteS14W600,
-                    ),
-                  ],
+              CircleAvatar(
+                radius: 16.r,
+                backgroundColor: AppColors.primary,
+                child: Text(
+                  (reel.dealerUsername?.isNotEmpty == true)
+                      ? reel.dealerUsername![0].toUpperCase()
+                      : 'U',
+                  style: AppTextStyles.whiteS14W600,
                 ),
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                reel.dealerUsername ?? 'Unknown User',
+                style: AppTextStyles.whiteS14W600,
               ),
               SizedBox(width: 8.w),
               Container(
@@ -59,7 +48,10 @@ class ReelInfoOverlay extends StatelessWidget {
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(4.r),
                 ),
-                child: Text('Follow', style: AppTextStyles.whiteS12W600),
+                child: Text(
+                  'Follow',
+                  style: AppTextStyles.whiteS12W600,
+                ),
               ),
             ],
           ),
@@ -86,27 +78,35 @@ class ReelInfoOverlay extends StatelessWidget {
             children: [
               Icon(
                 Icons.visibility,
-                color: AppColors.white.withOpacity(0.7),
+                color: isDark
+                    ? AppColors.white.withOpacity(0.7)
+                    : AppColors.black.withOpacity(0.7),
                 size: 16.sp,
               ),
               SizedBox(width: 4.w),
               Text(
                 _formatCount(reel.viewsCount),
                 style: AppTextStyles.whiteS12W400.copyWith(
-                  color: AppColors.white.withOpacity(0.7),
+                  color: isDark
+                      ? AppColors.white.withOpacity(0.7)
+                      : AppColors.black.withOpacity(0.7),
                 ),
               ),
               SizedBox(width: 16.w),
               Icon(
                 Icons.schedule,
-                color: AppColors.white.withOpacity(0.7),
+                color: isDark
+                    ? AppColors.white.withOpacity(0.7)
+                    : AppColors.black.withOpacity(0.7),
                 size: 16.sp,
               ),
               SizedBox(width: 4.w),
               Text(
                 _formatDate(reel.createdAt),
                 style: AppTextStyles.whiteS12W400.copyWith(
-                  color: AppColors.white.withOpacity(0.7),
+                  color: isDark
+                      ? AppColors.white.withOpacity(0.7)
+                      : AppColors.black.withOpacity(0.7),
                 ),
               ),
             ],

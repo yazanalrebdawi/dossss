@@ -35,13 +35,8 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => appLocator<AuthCubit>(),
+      create: (context) => sl<AuthCubit>(),
       child: BlocConsumer<AuthCubit, AuthState>(
-        listenWhen:
-            (previous, current) =>
-                previous.checkAuthState != current.checkAuthState ||
-                previous.error != current.error ||
-                previous.success != current.success,
         listener: (context, state) {
           print('🔍 Forget Password - Auth State: ${state.checkAuthState}');
           print('🔍 Forget Password - Loading: ${state.isLoading}');
@@ -50,12 +45,11 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
 
           if (state.checkAuthState == CheckAuthState.success) {
             print('✅ Forget Password Success - Navigating to OTP page');
-            ScaffoldMessenger.of(context).showSnackBar(
-              customAppSnackBar(
-                AppLocalizations.of(context)?.translate('otpSent') ??
-                    "Verification code sent!",
-                context,
-              ),
+
+            sl<ToastNotification>().showSuccessMessage(
+              context,
+              AppLocalizations.of(context)?.translate('otpSent') ??
+                  "Verification code sent!",
             );
 
             // تأخير قصير ثم الانتقال
@@ -63,35 +57,24 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
               print('📱 Phone Number: ${_params.fullPhoneNumber}');
               print('🚀 Navigating to: ${RouteNames.verifyForgetPasswordPage}');
 
-              context.go(
-                RouteNames.verifyForgetPasswordPage,
-                extra: _params.fullPhoneNumber,
-              );
+              context.go(RouteNames.verifyForgetPasswordPage,
+                  extra: _params.fullPhoneNumber);
             });
           }
           if (state.checkAuthState == CheckAuthState.error) {
             print('❌ Forget Password Error: ${state.error}');
-            ScaffoldMessenger.of(context).showSnackBar(
-              customAppSnackBar(
-                state.error ??
-                    AppLocalizations.of(
-                      context,
-                    )?.translate('operationFailed') ??
-                    "Operation failed",
-                context,
-              ),
+
+            sl<ToastNotification>().showErrorMessage(
+              context,
+              state.error ??
+                  state.error ??
+                  AppLocalizations.of(context)?.translate('operationFailed') ??
+                  "Operation failed",
             );
           }
         },
-        buildWhen:
-            (previous, current) =>
-                previous.isLoading != current.isLoading ||
-                previous.checkAuthState != current.checkAuthState ||
-                previous.error != current.error ||
-                previous.success != current.success,
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: AppColors.background,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -138,7 +121,8 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
         Text(
           AppLocalizations.of(context)?.translate('phoneNumber') ??
               'Phone Number',
-          style: AppTextStyles.lableTextStyleBlackS22W500,
+          style:
+              AppTextStyles.lableTextStyleBlackS22W500.withThemeColor(context),
         ),
         SizedBox(height: 8.h),
         PhoneNumberField(
@@ -159,34 +143,29 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
       width: double.infinity,
       height: 54.h,
       child: ElevatedButton(
-        onPressed:
-            state.isLoading
-                ? null
-                : () {
-                  print('🔘 Forget Password Button Pressed');
-                  print('📱 Phone Number: ${_params.fullPhoneNumber}');
-                  print(
-                    '📱 Phone Number length: ${_params.fullPhoneNumber.length}',
-                  );
-                  print(
-                    '📱 Phone Number starts with +: ${_params.fullPhoneNumber.startsWith('+')}',
-                  );
-                  print(
-                    '📱 Phone Number is empty: ${_params.fullPhoneNumber.isEmpty}',
-                  );
+        onPressed: state.isLoading
+            ? null
+            : () {
+                print('🔘 Forget Password Button Pressed');
+                print('📱 Phone Number: ${_params.fullPhoneNumber}');
+                print(
+                    '📱 Phone Number length: ${_params.fullPhoneNumber.length}');
+                print(
+                    '📱 Phone Number starts with +: ${_params.fullPhoneNumber.startsWith('+')}');
+                print(
+                    '📱 Phone Number is empty: ${_params.fullPhoneNumber.isEmpty}');
 
-                  if (_params.formState.currentState!.validate()) {
-                    print('✅ Form validation passed, calling resetPassword');
-                    print(
-                      '✅ Form validation passed, phone: "${_params.fullPhoneNumber}"',
-                    );
-                    context.read<AuthCubit>().resetPassword(
-                      _params.fullPhoneNumber,
-                    );
-                  } else {
-                    print('❌ Form validation failed');
-                  }
-                },
+                if (_params.formState.currentState!.validate()) {
+                  print('✅ Form validation passed, calling resetPassword');
+                  print(
+                      '✅ Form validation passed, phone: "${_params.fullPhoneNumber}"');
+                  context
+                      .read<AuthCubit>()
+                      .resetPassword(_params.fullPhoneNumber);
+                } else {
+                  print('❌ Form validation failed');
+                }
+              },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           shape: RoundedRectangleBorder(
@@ -196,21 +175,20 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
           padding: EdgeInsets.zero,
         ),
         child: Center(
-          child:
-              state.isLoading
-                  ? SizedBox(
-                    width: 24.w,
-                    height: 24.h,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2.w,
-                    ),
-                  )
-                  : Text(
-                    AppLocalizations.of(context)?.translate('sendOtp') ??
-                        'Send OTP',
-                    style: AppTextStyles.buttonTextStyleWhiteS22W700,
+          child: state.isLoading
+              ? SizedBox(
+                  width: 24.w,
+                  height: 24.h,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2.w,
                   ),
+                )
+              : Text(
+                  AppLocalizations.of(context)?.translate('sendOtp') ??
+                      'Send OTP',
+                  style: AppTextStyles.buttonTextStyleWhiteS22W700,
+                ),
         ),
       ),
     );

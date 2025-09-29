@@ -14,24 +14,24 @@ class EmptySection extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(24.r),
       decoration: BoxDecoration(
-        color: AppColors.gray.withOpacity(0.1),
+        color: AppColors.gray.withOpacity(0.1), // Static gray background
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
         children: [
           Icon(
             Icons.inbox_outlined,
-            color: AppColors.gray,
+            color: AppColors.gray, // Static gray icon
             size: 48.sp,
           ),
           SizedBox(height: 16.h),
           Text(
             message,
-            style: AppTextStyles.s16w400.copyWith(color: AppColors.gray),
+            style: AppTextStyles.s16w400.copyWith(color: AppColors.gray), // Static gray, no theme toggle
             textAlign: TextAlign.center,
           ),
         ],
       ),
     );
   }
-} 
+}

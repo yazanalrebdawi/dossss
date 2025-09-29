@@ -1,15 +1,10 @@
-import 'dart:developer';
-
-import 'package:dooss_business_app/features/profile_dealer/presentation/pages/dealer_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:video_player/video_player.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/text_styles.dart';
 import '../../data/models/reel_model.dart';
 
-//? هي محتوى الجزئية
 /// Proper StatefulWidget ReelPlayer for full-screen Instagram-style experience
 /// Handles video initialization, playback, pause, dispose, and lifecycle
 class FullScreenReelPlayer extends StatefulWidget {
@@ -28,8 +23,7 @@ class FullScreenReelPlayer extends StatefulWidget {
   State<FullScreenReelPlayer> createState() => _FullScreenReelPlayerState();
 }
 
-class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
-    with WidgetsBindingObserver {
+class _FullScreenReelPlayerState extends State<FullScreenReelPlayer> with WidgetsBindingObserver {
   VideoPlayerController? _controller;
   bool _isInitialized = false;
   bool _isPlaying = false;
@@ -42,7 +36,6 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
     if (widget.isCurrentReel && widget.reel.video.isNotEmpty) {
       _initializeVideo();
     }
@@ -52,27 +45,18 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
   void didUpdateWidget(FullScreenReelPlayer oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // If this reel becomes current, initialize video
-    if (!oldWidget.isCurrentReel &&
-        widget.isCurrentReel &&
-        _controller == null) {
+    if (!oldWidget.isCurrentReel && widget.isCurrentReel && _controller == null) {
       _initializeVideo();
     }
 
-    // If this reel is no longer current, dispose video
     if (oldWidget.isCurrentReel && !widget.isCurrentReel) {
       _disposeController();
     }
 
-    // Handle play/pause based on current reel status
     if (widget.isCurrentReel && _isInitialized) {
-      if (!_isPlaying) {
-        _playVideo();
-      }
+      if (!_isPlaying) _playVideo();
     } else {
-      if (_isPlaying) {
-        _pauseVideo();
-      }
+      if (_isPlaying) _pauseVideo();
     }
   }
 
@@ -86,9 +70,7 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
         _pauseVideo();
         break;
       case AppLifecycleState.resumed:
-        if (widget.isCurrentReel && _isInitialized) {
-          _playVideo();
-        }
+        if (widget.isCurrentReel && _isInitialized) _playVideo();
         break;
       case AppLifecycleState.detached:
       case AppLifecycleState.hidden:
@@ -101,15 +83,8 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
     if (widget.reel.video.isEmpty) return;
 
     try {
-      print(
-        '🎬 FullScreenReelPlayer: Initializing video for reel ${widget.reel.id}',
-      );
-
-      _controller = VideoPlayerController.networkUrl(
-        Uri.parse(widget.reel.video),
-      );
+      _controller = VideoPlayerController.networkUrl(Uri.parse(widget.reel.video));
       _controller!.addListener(_onVideoEvent);
-
       await _controller!.initialize();
       await _controller!.setVolume(_isMuted ? 0.0 : 1.0);
       await _controller!.setLooping(true);
@@ -120,18 +95,9 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
           _hasError = false;
           _errorMessage = null;
         });
-
-        // Auto-play if this is the current reel
-        if (widget.isCurrentReel) {
-          _playVideo();
-        }
+        if (widget.isCurrentReel) _playVideo();
       }
-
-      print(
-        '✅ FullScreenReelPlayer: Video initialized for reel ${widget.reel.id}',
-      );
     } catch (e) {
-      print('❌ FullScreenReelPlayer: Error initializing video: $e');
       if (mounted) {
         setState(() {
           _hasError = true;
@@ -144,12 +110,9 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
 
   void _onVideoEvent() {
     if (_controller == null || !mounted) return;
-
     final value = _controller!.value;
 
-    // Handle errors
     if (value.hasError) {
-      print('❌ FullScreenReelPlayer: Video error: ${value.errorDescription}');
       setState(() {
         _hasError = true;
         _errorMessage = value.errorDescription;
@@ -160,7 +123,6 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
 
   void _playVideo() {
     if (_controller?.value.isInitialized == true && !_isPlaying) {
-      print('▶️ FullScreenReelPlayer: Playing video ${widget.reel.id}');
       _controller!.play();
       setState(() => _isPlaying = true);
     }
@@ -168,18 +130,13 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
 
   void _pauseVideo() {
     if (_controller?.value.isInitialized == true && _isPlaying) {
-      print('⏸️ FullScreenReelPlayer: Pausing video ${widget.reel.id}');
       _controller!.pause();
       setState(() => _isPlaying = false);
     }
   }
 
   void _togglePlayPause() {
-    if (_isPlaying) {
-      _pauseVideo();
-    } else {
-      _playVideo();
-    }
+    _isPlaying ? _pauseVideo() : _playVideo();
   }
 
   void _toggleMute() {
@@ -187,34 +144,20 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
       _isMuted = !_isMuted;
       _controller!.setVolume(_isMuted ? 0.0 : 1.0);
       setState(() {});
-      print(
-        '${_isMuted ? '🔇' : '🔊'} FullScreenReelPlayer: ${_isMuted ? 'Muted' : 'Unmuted'} reel ${widget.reel.id}',
-      );
     }
   }
 
   void _toggleControls() {
-    setState(() {
-      _showControls = !_showControls;
-    });
-
-    // Auto-hide controls after 3 seconds
+    setState(() => _showControls = !_showControls);
     if (_showControls) {
       Future.delayed(const Duration(seconds: 3), () {
-        if (mounted) {
-          setState(() {
-            _showControls = false;
-          });
-        }
+        if (mounted) setState(() => _showControls = false);
       });
     }
   }
 
   void _disposeController() {
     if (_controller != null) {
-      print(
-        '🗑️ FullScreenReelPlayer: Disposing controller for reel ${widget.reel.id}',
-      );
       _controller!.removeListener(_onVideoEvent);
       _controller!.dispose();
       _controller = null;
@@ -225,9 +168,6 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
 
   @override
   void dispose() {
-    print(
-      '🗑️ FullScreenReelPlayer: Disposing widget for reel ${widget.reel.id}',
-    );
     WidgetsBinding.instance.removeObserver(this);
     _disposeController();
     super.dispose();
@@ -235,6 +175,8 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () {
         _toggleControls();
@@ -244,19 +186,12 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        color: AppColors.black,
+        color: isDark ? Colors.black : AppColors.black,
         child: Stack(
           children: [
-            // Video player or error/loading state
             _buildVideoContent(),
-
-            // Reel info overlay
-            _buildReelInfoOverlay(),
-
-            // Controls overlay (show/hide on tap)
+            _buildReelInfoOverlay(context),
             if (_showControls) _buildControlsOverlay(),
-
-            // Actions overlay (right side)
             _buildActionsOverlay(),
           ],
         ),
@@ -265,13 +200,8 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
   }
 
   Widget _buildVideoContent() {
-    if (_hasError) {
-      return _buildErrorState();
-    }
-
-    if (!_isInitialized || _controller == null) {
-      return _buildLoadingState();
-    }
+    if (_hasError) return _buildErrorState();
+    if (!_isInitialized || _controller == null) return _buildLoadingState();
 
     return Center(
       child: AspectRatio(
@@ -286,9 +216,15 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(color: AppColors.white, strokeWidth: 3),
+          CircularProgressIndicator(
+            color: AppColors.white,
+            strokeWidth: 3,
+          ),
           SizedBox(height: 16.h),
-          Text('Loading reel...', style: AppTextStyles.whiteS16W400),
+          Text(
+            'Loading reel...',
+            style: AppTextStyles.whiteS16W400,
+          ),
         ],
       ),
     );
@@ -326,46 +262,37 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
     );
   }
 
-  Widget _buildReelInfoOverlay() {
+  Widget _buildReelInfoOverlay(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.white;
+
     return Positioned(
       left: 16.w,
-      right: 80.w, // Leave space for actions
+      right: 80.w,
       bottom: 100.h,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Dealer info
-          InkWell(
-            onTap: () {
-              //todo Navigate to dealer profile
-              context.push(
-                '/dealer-profile/${widget.reel.dealer.toString()}?handle=${widget.reel.dealerName ?? ''}',
-              );
-
-              log("😂😂😂😂😂😂😂");
-            },
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 16.r,
-                  backgroundColor: AppColors.primary,
-                  child: Text(
-                    (widget.reel.dealerName?.isNotEmpty == true)
-                        ? widget.reel.dealerName![0].toUpperCase()
-                        : 'U',
-                    style: AppTextStyles.whiteS14W600,
-                  ),
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  widget.reel.dealerName ?? 'Unknown User',
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 16.r,
+                backgroundColor: AppColors.primary,
+                child: Text(
+                  (widget.reel.dealerUsername?.isNotEmpty == true)
+                      ? widget.reel.dealerUsername![0].toUpperCase()
+                      : 'U',
                   style: AppTextStyles.whiteS14W600,
                 ),
-              ],
-            ),
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                widget.reel.dealerUsername ?? 'Unknown User',
+                style: AppTextStyles.whiteS14W600,
+              ),
+            ],
           ),
           SizedBox(height: 12.h),
-          // Reel title and description
           Text(
             widget.reel.title,
             style: AppTextStyles.whiteS16W600,
@@ -441,11 +368,7 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
             child: Icon(icon, color: iconColor, size: 24.sp),
           ),
           SizedBox(height: 4.h),
-          Text(
-            label,
-            style: AppTextStyles.whiteS12W400,
-            textAlign: TextAlign.center,
-          ),
+          Text(label, style: AppTextStyles.whiteS12W400, textAlign: TextAlign.center),
         ],
       ),
     );
@@ -475,12 +398,8 @@ class _FullScreenReelPlayerState extends State<FullScreenReelPlayer>
   }
 
   String _formatCount(int count) {
-    if (count >= 1000000) {
-      return '${(count / 1000000).toStringAsFixed(1)}M';
-    } else if (count >= 1000) {
-      return '${(count / 1000).toStringAsFixed(1)}K';
-    } else {
-      return count.toString();
-    }
+    if (count >= 1000000) return '${(count / 1000000).toStringAsFixed(1)}M';
+    if (count >= 1000) return '${(count / 1000).toStringAsFixed(1)}K';
+    return count.toString();
   }
 }

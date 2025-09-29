@@ -19,12 +19,25 @@ class FilterButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isSelected
+        ? AppColors.primary
+        : isDark
+            ? Colors.grey[800]
+            : AppColors.gray.withOpacity(0.1);
+    final iconColor = isSelected
+        ? AppColors.white
+        : isDark
+            ? Colors.grey[400]
+            : AppColors.gray;
+    final textColor = iconColor;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : AppColors.gray.withOpacity(0.1),
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(20.r),
         ),
         child: Row(
@@ -33,13 +46,13 @@ class FilterButtonWidget extends StatelessWidget {
             Icon(
               icon,
               size: 16.sp,
-              color: isSelected ? AppColors.white : AppColors.gray,
+              color: iconColor,
             ),
             SizedBox(width: 8.w),
             Text(
               text,
               style: AppTextStyles.s12w400.copyWith(
-                color: isSelected ? AppColors.white : AppColors.gray,
+                color: textColor,
               ),
             ),
           ],

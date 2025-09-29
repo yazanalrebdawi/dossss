@@ -20,6 +20,8 @@ class ReelActionsOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Positioned(
       right: 16.w,
       bottom: 100.h,
@@ -29,19 +31,24 @@ class ReelActionsOverlay extends StatelessWidget {
             icon: reel.liked ? Icons.favorite : Icons.favorite_border,  
             label: _formatCount(reel.likesCount),
             onTap: onLike,
-            iconColor: reel.liked ? Colors.red : AppColors.white,
+            iconColor: reel.liked ? Colors.red : (isDark ? AppColors.white : AppColors.black),
+            isDark: isDark,
           ),
           SizedBox(height: 24.h),
           _buildActionButton(
             icon: Icons.comment,
             label: _formatCount(reel.likesCount),
             onTap: onComment,
+            iconColor: isDark ? AppColors.white : AppColors.black,
+            isDark: isDark,
           ),
           SizedBox(height: 24.h),
           _buildActionButton(
             icon: Icons.share,
             label: 'Share',
             onTap: onShare,
+            iconColor: isDark ? AppColors.white : AppColors.black,
+            isDark: isDark,
           ),
         ],
       ),
@@ -53,6 +60,7 @@ class ReelActionsOverlay extends StatelessWidget {
     required String label,
     VoidCallback? onTap,
     Color iconColor = Colors.white,
+    required bool isDark,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -62,7 +70,7 @@ class ReelActionsOverlay extends StatelessWidget {
             width: 48.w,
             height: 48.h,
             decoration: BoxDecoration(
-              color: AppColors.black.withOpacity(0.3),
+              color: isDark ? AppColors.darkCard.withOpacity(0.3) : AppColors.white.withOpacity(0.3),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -74,7 +82,9 @@ class ReelActionsOverlay extends StatelessWidget {
           SizedBox(height: 4.h),
           Text(
             label,
-            style: AppTextStyles.whiteS12W400,
+            style: isDark
+                ? AppTextStyles.whiteS12W400
+                : AppTextStyles.blackS12W400,
             textAlign: TextAlign.center,
           ),
         ],

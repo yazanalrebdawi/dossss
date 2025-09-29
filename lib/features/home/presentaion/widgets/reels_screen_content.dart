@@ -1,11 +1,6 @@
-import 'dart:developer';
-
-import 'package:dooss_business_app/core/routes/route_names.dart';
-import 'package:dooss_business_app/features/home/presentaion/manager/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/text_styles.dart';
 import '../../../../core/services/native_video_service.dart';
@@ -16,7 +11,6 @@ import 'reel_video_player.dart';
 import 'reel_actions_overlay.dart';
 import 'reel_info_overlay.dart';
 
-//? هي الكاملة ريلززززز
 class ReelsScreenContent extends StatelessWidget {
   final PageController pageController;
   final int? initialReelId;
@@ -29,24 +23,25 @@ class ReelsScreenContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocBuilder<ReelCubit, ReelState>(
-      buildWhen:
-          (previous, current) =>
-              previous.reels != current.reels ||
-              previous.isLoading != current.isLoading ||
-              previous.error != current.error ||
-              previous.currentReelIndex != current.currentReelIndex,
+      buildWhen: (previous, current) =>
+          previous.reels != current.reels ||
+          previous.isLoading != current.isLoading ||
+          previous.error != current.error ||
+          previous.currentReelIndex != current.currentReelIndex,
       builder: (context, state) {
         if (state.isLoading && state.reels.isEmpty) {
-          return _buildLoadingState();
+          return _buildLoadingState(isDark);
         }
 
         if (state.error != null && state.reels.isEmpty) {
-          return _buildErrorState(context, state.error!);
+          return _buildErrorState(context, state.error!, isDark);
         }
 
         if (state.reels.isEmpty) {
-          return _buildEmptyState();
+          return _buildEmptyState(isDark);
         }
 
         // Jump to initial reel if provided
@@ -59,34 +54,47 @@ class ReelsScreenContent extends StatelessWidget {
           });
         }
 
-        return _buildReelsView(context, state);
+        return _buildReelsView(context, state, isDark);
       },
     );
   }
 
-  Widget _buildLoadingState() {
+  Widget _buildLoadingState(bool isDark) {
     return Container(
-      color: AppColors.black,
+      color: isDark ? AppColors.black : AppColors.white,
       child: const Center(
-        child: CircularProgressIndicator(color: AppColors.primary),
+        child: CircularProgressIndicator(
+          color: AppColors.primary,
+        ),
       ),
     );
   }
 
-  Widget _buildErrorState(BuildContext context, String error) {
+  Widget _buildErrorState(BuildContext context, String error, bool isDark) {
     return Container(
-      color: AppColors.black,
+      color: isDark ? AppColors.black : AppColors.white,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, color: AppColors.white, size: 64.sp),
+            Icon(
+              Icons.error_outline,
+              color: isDark ? AppColors.white : AppColors.black,
+              size: 64.sp,
+            ),
             SizedBox(height: 16.h),
-            Text('Failed to load reels', style: AppTextStyles.whiteS18W600),
+            Text(
+              'Failed to load reels',
+              style: AppTextStyles.whiteS18W600.copyWith(
+                color: isDark ? AppColors.white : AppColors.black,
+              ),
+            ),
             SizedBox(height: 8.h),
             Text(
               error,
-              style: AppTextStyles.whiteS14W400,
+              style: AppTextStyles.whiteS14W400.copyWith(
+                color: isDark ? AppColors.white.withOpacity(0.7) : AppColors.black.withOpacity(0.7),
+              ),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 24.h),
@@ -104,24 +112,31 @@ class ReelsScreenContent extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(bool isDark) {
     return Container(
-      color: AppColors.black,
+      color: isDark ? AppColors.black : AppColors.white,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.video_library_outlined,
-              color: AppColors.white,
+              color: isDark ? AppColors.white : AppColors.black,
               size: 64.sp,
             ),
             SizedBox(height: 16.h),
-            Text('No reels available', style: AppTextStyles.whiteS18W600),
+            Text(
+              'No reels available',
+              style: AppTextStyles.whiteS18W600.copyWith(
+                color: isDark ? AppColors.white : AppColors.black,
+              ),
+            ),
             SizedBox(height: 8.h),
             Text(
               'Check back later for new content',
-              style: AppTextStyles.whiteS14W400,
+              style: AppTextStyles.whiteS14W400.copyWith(
+                color: isDark ? AppColors.white.withOpacity(0.7) : AppColors.black.withOpacity(0.7),
+              ),
             ),
           ],
         ),
@@ -129,21 +144,20 @@ class ReelsScreenContent extends StatelessWidget {
     );
   }
 
-  Widget _buildReelsView(BuildContext context, ReelState state) {
+  Widget _buildReelsView(BuildContext context, ReelState state, bool isDark) {
     return PageView.builder(
       controller: pageController,
       scrollDirection: Axis.vertical,
       itemCount: state.reels.length,
       onPageChanged: (index) {
         context.read<ReelCubit>().changeReelIndex(index);
-        // Dispose previous video and load new one
         NativeVideoService.dispose();
       },
       itemBuilder: (context, index) {
         final reel = state.reels[index];
         final isCurrentReel = index == state.currentReelIndex;
 
-        return _buildReelItem(context, reel, isCurrentReel, index, state);
+        return _buildReelItem(context, reel, isCurrentReel, index, state, isDark);
       },
     );
   }
@@ -154,13 +168,17 @@ class ReelsScreenContent extends StatelessWidget {
     bool isCurrentReel,
     int index,
     ReelState state,
+    bool isDark,
   ) {
     return Stack(
       children: [
         // Video player
-        ReelVideoPlayer(reel: reel, isCurrentReel: isCurrentReel),
+        ReelVideoPlayer(
+          reel: reel,
+          isCurrentReel: isCurrentReel,
+        ),
 
-        // Gradient overlay for better text readability
+        // Gradient overlay
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
@@ -170,8 +188,8 @@ class ReelsScreenContent extends StatelessWidget {
                 colors: [
                   Colors.transparent,
                   Colors.transparent,
-                  AppColors.black.withOpacity(0.3),
-                  AppColors.black.withOpacity(0.7),
+                  (isDark ? AppColors.black : AppColors.gray).withOpacity(0.3),
+                  (isDark ? AppColors.black : AppColors.gray).withOpacity(0.7),
                 ],
                 stops: const [0.0, 0.5, 0.8, 1.0],
               ),
@@ -184,28 +202,17 @@ class ReelsScreenContent extends StatelessWidget {
           top: MediaQuery.of(context).padding.top + 16.h,
           left: 16.w,
           child: GestureDetector(
-            onTap: () {
-              // 1️⃣ أول شي تنتقل لـ HomeScreen
-              context.go(RouteNames.homeScreen);
-
-              // 2️⃣ بعدها تغيّر التاب المطلوب
-              context.read<HomeCubit>().updateCurrentIndex(
-                0,
-              ); // غيّر الرقم حسب التاب المطلوب
-
-              log("🔥🔥🔥");
-              //todo يمكن الانتقال بدو عن طريق كيوبت
-            },
+            onTap: () => Navigator.of(context).pop(),
             child: Container(
               width: 40.w,
               height: 40.h,
               decoration: BoxDecoration(
-                color: AppColors.black.withOpacity(0.5),
+                color: (isDark ? AppColors.black : AppColors.white).withOpacity(0.5),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.arrow_back,
-                color: AppColors.white,
+                color: isDark ? AppColors.white : AppColors.black,
                 size: 24.sp,
               ),
             ),
@@ -224,16 +231,14 @@ class ReelsScreenContent extends StatelessWidget {
         ),
 
         // Loading more indicator
-        if (index == state.reels.length - 3 &&
-            state.hasNextPage &&
-            !state.isLoading)
+        if (index == state.reels.length - 3 && state.hasNextPage && !state.isLoading)
           Positioned(
             bottom: 16.h,
             left: 16.w,
             child: Container(
               padding: EdgeInsets.all(8.r),
               decoration: BoxDecoration(
-                color: AppColors.black.withOpacity(0.5),
+                color: (isDark ? AppColors.black : AppColors.white).withOpacity(0.5),
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: Row(
@@ -244,11 +249,16 @@ class ReelsScreenContent extends StatelessWidget {
                     height: 16.h,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      color: AppColors.white,
+                      color: isDark ? AppColors.white : AppColors.black,
                     ),
                   ),
                   SizedBox(width: 8.w),
-                  Text('Loading more...', style: AppTextStyles.whiteS12W400),
+                  Text(
+                    'Loading more...',
+                    style: AppTextStyles.whiteS12W400.copyWith(
+                      color: isDark ? AppColors.white : AppColors.black,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -258,17 +268,14 @@ class ReelsScreenContent extends StatelessWidget {
   }
 
   void _handleLike(BuildContext context, ReelModel reel) {
-    // TODO: Implement like functionality
     print('🤍 Like reel: ${reel.id}');
   }
 
   void _handleShare(BuildContext context, ReelModel reel) {
-    // TODO: Implement share functionality
     print('📤 Share reel: ${reel.id}');
   }
 
   void _handleComment(BuildContext context, ReelModel reel) {
-    // TODO: Implement comment functionality
     print('💬 Comment on reel: ${reel.id}');
   }
 }

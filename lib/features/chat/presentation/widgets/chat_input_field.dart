@@ -15,10 +15,12 @@ class ChatInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? Color(0xFF2A2A2A) : AppColors.white,
         border: Border(
           top: BorderSide(
             color: AppColors.gray.withOpacity(0.1),
@@ -30,17 +32,17 @@ class ChatInputField extends StatelessWidget {
         child: Row(
           children: [
             // Attachment Button
-            IconButton(
-              onPressed: () {
-                // TODO: Implement attachment functionality
-              },
-              icon: Icon(
-                Icons.attach_file,
-                color: AppColors.gray,
-                size: 24.sp,
-              ),
-            ),
-            
+            // IconButton(
+            //   onPressed: () {
+            //     // TODO: Implement attachment functionality
+            //   },
+            //   icon: Icon(
+            //     Icons.attach_file,
+            //     color: isDark ? Colors.white : AppColors.gray,
+            //     size: 24.sp,
+            //   ),
+            // ),
+
             // Text Field
             Expanded(
               child: Container(
@@ -51,9 +53,10 @@ class ChatInputField extends StatelessWidget {
                 child: TextField(
                   controller: controller,
                   decoration: InputDecoration(
+                    fillColor: Colors.transparent,
                     hintText: 'Type a message...',
                     hintStyle: AppTextStyles.s14w400.copyWith(
-                      color: AppColors.gray,
+                      color: isDark ? Colors.white : AppColors.gray,
                     ),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(
@@ -72,23 +75,23 @@ class ChatInputField extends StatelessWidget {
                 ),
               ),
             ),
-            
+
+            // SizedBox(width: 8.w),
+
+            // // Voice Button
+            // IconButton(
+            //   onPressed: () {
+            //     // TODO: Implement voice message functionality
+            //   },
+            //   icon: Icon(
+            //     Icons.mic,
+            //     color: isDark ? Colors.white : AppColors.gray,
+            //     size: 24.sp,
+            //   ),
+            // ),
+
             SizedBox(width: 8.w),
-            
-            // Voice Button
-            IconButton(
-              onPressed: () {
-                // TODO: Implement voice message functionality
-              },
-              icon: Icon(
-                Icons.mic,
-                color: AppColors.gray,
-                size: 24.sp,
-              ),
-            ),
-            
-            SizedBox(width: 8.w),
-            
+
             // Send Button
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: controller,
@@ -98,7 +101,9 @@ class ChatInputField extends StatelessWidget {
                   width: 40.w,
                   height: 40.w,
                   decoration: BoxDecoration(
-                    color: hasText ? AppColors.primary : AppColors.gray.withOpacity(0.3),
+                    color: hasText
+                        ? AppColors.primary
+                        : AppColors.gray.withOpacity(0.3),
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(

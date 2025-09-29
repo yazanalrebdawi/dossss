@@ -22,10 +22,12 @@ class ServiceCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.darkCard : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
@@ -40,30 +42,26 @@ class ServiceCardWidget extends StatelessWidget {
         children: [
           // Service Image
           ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16.r),
-              topRight: Radius.circular(16.r),
-            ),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
             child: service.image != null && service.image!.isNotEmpty
                 ? Image.network(
                     service.image!,
                     width: double.infinity,
                     height: 200.h,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const ServicePlaceholderImageWidget();
-                    },
+                    errorBuilder: (context, error, stackTrace) =>
+                        const ServicePlaceholderImageWidget(),
                   )
                 : const ServicePlaceholderImageWidget(),
           ),
-          
+
           // Service Details
           Padding(
             padding: EdgeInsets.all(16.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Service Name and Status
+                // Name & Status
                 Row(
                   children: [
                     Expanded(
@@ -78,17 +76,13 @@ class ServiceCardWidget extends StatelessWidget {
                     ServiceStatusIndicatorWidget(isOpen: service.openNow),
                   ],
                 ),
-                
+
                 SizedBox(height: 8.h),
-                
+
                 // Location
                 Row(
                   children: [
-                    Icon(
-                      Icons.location_on,
-                      color: AppColors.gray,
-                      size: 16.sp,
-                    ),
+                    Icon(Icons.location_on, color: AppColors.gray, size: 16.sp),
                     SizedBox(width: 4.w),
                     Expanded(
                       child: Text(
@@ -100,17 +94,13 @@ class ServiceCardWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                
+
                 SizedBox(height: 4.h),
-                
+
                 // Operating Hours
                 Row(
                   children: [
-                    Icon(
-                      Icons.access_time,
-                      color: AppColors.gray,
-                      size: 16.sp,
-                    ),
+                    Icon(Icons.access_time, color: AppColors.gray, size: 16.sp),
                     SizedBox(width: 4.w),
                     Text(
                       service.openingText,
@@ -118,13 +108,13 @@ class ServiceCardWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                
+
                 SizedBox(height: 16.h),
-                
+
                 // Action Buttons
                 Row(
                   children: [
-                    // View Details Button
+                    // View Details
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: onViewDetails,
@@ -140,10 +130,10 @@ class ServiceCardWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    
+
                     SizedBox(width: 8.w),
-                    
-                    // Maps Button
+
+                    // Maps
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: onMaps,
@@ -159,9 +149,9 @@ class ServiceCardWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    
+
                     SizedBox(width: 8.w),
-                    
+
                     // Call Button
                     Container(
                       width: 48.w,
@@ -172,11 +162,8 @@ class ServiceCardWidget extends StatelessWidget {
                       ),
                       child: IconButton(
                         onPressed: onCall,
-                        icon: Icon(
-                          Icons.phone,
-                          color: AppColors.gray,
-                          size: 20.sp,
-                        ),
+                        icon: Icon(Icons.phone,
+                            color: AppColors.gray, size: 20.sp),
                       ),
                     ),
                   ],
@@ -188,6 +175,4 @@ class ServiceCardWidget extends StatelessWidget {
       ),
     );
   }
-
-
 }

@@ -31,17 +31,11 @@ class _NearbyServicesScreenState extends State<NearbyServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: _buildAppBar(),
-      body: BlocBuilder<ServiceCubit, ServiceState>(
-        buildWhen: (previous, current) {
-          return previous.services != current.services ||
-              previous.isLoading != current.isLoading ||
-              previous.error != current.error ||
-              previous.selectedFilter != current.selectedFilter;
-        },
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    return Scaffold(
+      appBar: _buildAppBar(context),
+      body: BlocBuilder<ServiceCubit, ServiceState>(
         builder: (context, state) {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -51,14 +45,20 @@ class _NearbyServicesScreenState extends State<NearbyServicesScreen> {
             // Check if error is related to location permission
             if (state.error!.contains('location') ||
                 state.error!.contains('permission')) {
-              return Center(child: _buildLocationPermissionWidget(context));
+              return Center(
+                child: _buildLocationPermissionWidget(context),
+              );
             }
 
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, color: AppColors.gray, size: 48.sp),
+                  Icon(
+                    Icons.error_outline,
+                    color: isDark ? AppColors.gray : Colors.black,
+                    size: 48.sp,
+                  ),
                   SizedBox(height: 16.h),
                   Text(
                     'Error: ${state.error}',
@@ -70,9 +70,8 @@ class _NearbyServicesScreenState extends State<NearbyServicesScreen> {
                     onPressed: () {
                       context.read<ServiceCubit>().loadServices(limit: 10);
                     },
-                    child: Text(
-                      AppLocalizations.of(context)!.translate('retry'),
-                    ),
+                    child:
+                        Text(AppLocalizations.of(context)!.translate('retry')),
                   ),
                 ],
               ),
@@ -84,18 +83,22 @@ class _NearbyServicesScreenState extends State<NearbyServicesScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.location_off, color: AppColors.gray, size: 64.sp),
+                  Icon(
+                    Icons.location_off,
+                    color: isDark ? AppColors.gray : Colors.black,
+                    size: 64.sp,
+                  ),
                   SizedBox(height: 16.h),
                   Text(
                     AppLocalizations.of(context)!.translate('noNearbyServices'),
-                    style: AppTextStyles.blackS16W600,
+                    style: AppTextStyles.blackS16W600.withThemeColor(context),
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    AppLocalizations.of(
-                      context,
-                    )!.translate('noNearbyServicesMessage'),
-                    style: AppTextStyles.secondaryS14W400,
+                    AppLocalizations.of(context)!
+                        .translate('noNearbyServicesMessage'),
+                    style:
+                        AppTextStyles.secondaryS14W400.withThemeColor(context),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 16.h),
@@ -103,9 +106,8 @@ class _NearbyServicesScreenState extends State<NearbyServicesScreen> {
                     onPressed: () {
                       context.read<ServiceCubit>().loadServices();
                     },
-                    child: Text(
-                      AppLocalizations.of(context)!.translate('retry'),
-                    ),
+                    child:
+                        Text(AppLocalizations.of(context)!.translate('retry')),
                   ),
                 ],
               ),
@@ -129,10 +131,8 @@ class _NearbyServicesScreenState extends State<NearbyServicesScreen> {
               // Services List
               Expanded(
                 child: ListView.builder(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 8.h,
-                  ),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   itemCount: state.services.length,
                   itemBuilder: (context, index) {
                     final service = state.services[index];
@@ -158,23 +158,32 @@ class _NearbyServicesScreenState extends State<NearbyServicesScreen> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AppBar(
-      backgroundColor: AppColors.white,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: AppColors.black, size: 24.sp),
+        icon: Icon(
+          Icons.arrow_back,
+          color: isDark ? Colors.white : Colors.black,
+          size: 24.sp,
+        ),
         onPressed: () => context.pop(),
       ),
       title: Text(
         AppLocalizations.of(context)!.translate('nearbyServices'),
-        style: AppTextStyles.blackS18W700,
+        style: AppTextStyles.blackS18W700.withThemeColor(context),
       ),
       centerTitle: true,
       actions: [
         // Location Icon
         IconButton(
-          icon: Icon(Icons.my_location, color: AppColors.primary, size: 24.sp),
+          icon: Icon(
+            Icons.my_location,
+            color: AppColors.primary,
+            size: 24.sp,
+          ),
           onPressed: () {
             // Refresh location and services
             context.read<ServiceCubit>().loadServices();
@@ -182,11 +191,15 @@ class _NearbyServicesScreenState extends State<NearbyServicesScreen> {
         ),
         // Filter Icon
         IconButton(
-          icon: Icon(Icons.filter_list, color: AppColors.black, size: 24.sp),
+          icon: Icon(
+            Icons.filter_list,
+            color: isDark ? Colors.white : AppColors.black,
+            size: 24.sp,
+          ),
           onPressed: () {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('Filter options')));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Filter options')),
+            );
           },
         ),
         SizedBox(width: 8.w),
@@ -195,26 +208,30 @@ class _NearbyServicesScreenState extends State<NearbyServicesScreen> {
   }
 
   Widget _buildLocationPermissionWidget(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(24.w),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.location_off, color: AppColors.gray, size: 64.sp),
+          Icon(
+            Icons.location_off,
+            color: isDark ? AppColors.gray : Colors.black,
+            size: 64.sp,
+          ),
           SizedBox(height: 16.h),
           Text(
-            AppLocalizations.of(
-              context,
-            )!.translate('locationPermissionRequired'),
-            style: AppTextStyles.blackS18W700,
+            AppLocalizations.of(context)!
+                .translate('locationPermissionRequired'),
+            style: AppTextStyles.blackS18W700.withThemeColor(context),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 8.h),
           Text(
-            AppLocalizations.of(
-              context,
-            )!.translate('locationPermissionMessage'),
-            style: AppTextStyles.secondaryS14W400,
+            AppLocalizations.of(context)!
+                .translate('locationPermissionMessage'),
+            style: AppTextStyles.secondaryS14W400.withThemeColor(context),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 24.h),
@@ -228,11 +245,8 @@ class _NearbyServicesScreenState extends State<NearbyServicesScreen> {
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.translate('locationPermissionMessage'),
-                    ),
+                    content: Text(AppLocalizations.of(context)!
+                        .translate('locationPermissionMessage')),
                     backgroundColor: Colors.orange,
                   ),
                 );
@@ -247,10 +261,11 @@ class _NearbyServicesScreenState extends State<NearbyServicesScreen> {
             ),
             child: Text(
               AppLocalizations.of(context)!.translate('allowLocationAccess'),
-              style: AppTextStyles.secondaryS14W400.copyWith(
-                color: AppColors.white,
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppTextStyles.secondaryS14W400
+                  .copyWith(
+                    fontWeight: FontWeight.w600,
+                  )
+                  .withThemeColor(context),
             ),
           ),
         ],

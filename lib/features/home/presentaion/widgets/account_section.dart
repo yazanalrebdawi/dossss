@@ -8,26 +8,33 @@ class AccountSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.person,
-            size: 64.sp,
-            color: AppColors.gray,
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            'Account',
-            style: AppTextStyles.blackS18W700,
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            'Profile settings',
-            style: AppTextStyles.s16w400.copyWith(color: AppColors.gray),
-          ),
-        ],
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.person,
+              size: 64.sp,
+              color: isDark ? Colors.white : AppColors.gray,
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'Account',
+              style: AppTextStyles.blackS18W700.withThemeColor(context),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'Profile settings',
+              style: AppTextStyles.s16w400.copyWith(
+                color: isDark ? Colors.white70 : AppColors.gray,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

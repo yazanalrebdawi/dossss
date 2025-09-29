@@ -15,6 +15,8 @@ class BrowseByTypeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -23,7 +25,7 @@ class BrowseByTypeSection extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
             'Browse by Type',
-            style: AppTextStyles.blackS18W700,
+            style: AppTextStyles.blackS18W700.withThemeColor(context),
           ),
         ),
         SizedBox(height: 16.h),
@@ -32,11 +34,17 @@ class BrowseByTypeSection extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Row(
             children: [
-              Expanded(child: _buildTypeButton('Cars', Icons.directions_car, 0)),
+              Expanded(
+                  child: _buildTypeButton(
+                      context, 'Cars', Icons.directions_car, 0, isDark)),
               SizedBox(width: 12.w),
-              Expanded(child: _buildTypeButton('Products', Icons.shopping_bag, 1)),
+              Expanded(
+                  child: _buildTypeButton(
+                      context, 'Products', Icons.shopping_bag, 1, isDark)),
               SizedBox(width: 12.w),
-              Expanded(child: _buildTypeButton('Services', Icons.build, 2)),
+              Expanded(
+                  child: _buildTypeButton(
+                      context, 'Services', Icons.build, 2, isDark)),
             ],
           ),
         ),
@@ -44,16 +52,21 @@ class BrowseByTypeSection extends StatelessWidget {
     );
   }
 
-  Widget _buildTypeButton(String title, IconData icon, int index) {
+  Widget _buildTypeButton(BuildContext context, String title, IconData icon,
+      int index, bool isDark) {
     final isSelected = selectedIndex == index;
-    
+
     return GestureDetector(
       onTap: () => onTap(index),
       child: Container(
         height: 84.h,
         width: 100.w,
         decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.1),
+          color: isSelected
+              ? AppColors.primary.withOpacity(0.2)
+              : (isDark
+                  ? const Color(0xFF2A2A2A)
+                  : AppColors.primary.withOpacity(0.1)),
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: isSelected ? AppColors.primary : Colors.transparent,
@@ -65,14 +78,18 @@ class BrowseByTypeSection extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: AppColors.primary,
+              color: isSelected
+                  ? AppColors.primary
+                  : (isDark ? Colors.white70 : AppColors.primary),
               size: 24.sp,
             ),
             SizedBox(height: 8.h),
             Text(
               title,
               style: AppTextStyles.s14w700.copyWith(
-                color: AppColors.primary,
+                color: isSelected
+                    ? AppColors.primary
+                    : (isDark ? Colors.white70 : AppColors.primary),
               ),
               textAlign: TextAlign.center,
             ),
@@ -81,4 +98,4 @@ class BrowseByTypeSection extends StatelessWidget {
       ),
     );
   }
-} 
+}

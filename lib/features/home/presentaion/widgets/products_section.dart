@@ -19,6 +19,8 @@ class ProductsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -30,7 +32,9 @@ class ProductsSection extends StatelessWidget {
             children: [
               Text(
                 'Car Products',
-                style: AppTextStyles.blackS18W700,
+                style: AppTextStyles.blackS18W700.copyWith(
+                  color: isDark ? AppColors.white : AppColors.black,
+                ),
               ),
               GestureDetector(
                 onTap: () {
@@ -38,7 +42,9 @@ class ProductsSection extends StatelessWidget {
                 },
                 child: Text(
                   'View All',
-                  style: AppTextStyles.primaryS16W600,
+                  style: AppTextStyles.primaryS16W600.copyWith(
+                    color: isDark ? AppColors.primary : AppColors.primary,
+                  ),
                 ),
               ),
             ],
@@ -64,7 +70,7 @@ class ProductsSection extends StatelessWidget {
         SizedBox(height: 16.h),
         // Products List
         products.isEmpty 
-          ? _buildEmptySection()
+          ? _buildEmptySection(isDark)
           : ListView.separated(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               shrinkWrap: true,
@@ -77,25 +83,29 @@ class ProductsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptySection() {
+  Widget _buildEmptySection(bool isDark) {
     return Center(
       child: Column(
         children: [
           SizedBox(height: 40.h),
           Icon(
             Icons.inventory_2_outlined,
-            color: AppColors.gray,
+            color: isDark ? AppColors.gray.withOpacity(0.7) : AppColors.gray,
             size: 64.sp,
           ),
           SizedBox(height: 16.h),
           Text(
             'No products available',
-            style: AppTextStyles.blackS16W600,
+            style: AppTextStyles.blackS16W600.copyWith(
+              color: isDark ? AppColors.white : AppColors.black,
+            ),
           ),
           SizedBox(height: 8.h),
           Text(
             'Check back later for new products',
-            style: AppTextStyles.secondaryS14W400,
+            style: AppTextStyles.secondaryS14W400.copyWith(
+              color: isDark ? AppColors.gray.withOpacity(0.7) : AppColors.gray,
+            ),
             textAlign: TextAlign.center,
           ),
         ],

@@ -6,10 +6,14 @@ import '../../data/models/message_model.dart';
 
 class MessageBubble extends StatelessWidget {
   final MessageModel message;
+  final bool isMine;
+  final VoidCallback? onRetry; // Callback for retrying pending messages
 
   const MessageBubble({
     super.key,
     required this.message,
+    required this.isMine,
+    this.onRetry,
   });
 
   @override
@@ -17,13 +21,12 @@ class MessageBubble extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       child: Row(
-        mainAxisAlignment: message.isFromMe 
-            ? MainAxisAlignment.end 
-            : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // Avatar for received messages (left side)
-          if (!message.isFromMe) ...[
+          // Avatar for received messages
+          if (!isMine) ...[
             Container(
               width: 32.w,
               height: 32.w,
@@ -39,8 +42,8 @@ class MessageBubble extends StatelessWidget {
             ),
             SizedBox(width: 8.w),
           ],
-          
-          // Message Content
+
+          // Message bubble
           Flexible(
             child: Container(
               constraints: BoxConstraints(
@@ -48,12 +51,14 @@ class MessageBubble extends StatelessWidget {
               ),
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
               decoration: BoxDecoration(
-                color: message.isFromMe 
-                    ? AppColors.primary 
+                color: isMine
+                    ? AppColors.primary
                     : AppColors.gray.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20.r).copyWith(
-                  bottomLeft: message.isFromMe ? Radius.circular(20.r) : Radius.circular(4.r),
-                  bottomRight: message.isFromMe ? Radius.circular(4.r) : Radius.circular(20.r),
+                  bottomLeft:
+                      isMine ? Radius.circular(20.r) : Radius.circular(4.r),
+                  bottomRight:
+                      isMine ? Radius.circular(4.r) : Radius.circular(20.r),
                 ),
               ),
               child: Column(
@@ -61,10 +66,9 @@ class MessageBubble extends StatelessWidget {
                 children: [
                   Text(
                     message.text,
-                    style: AppTextStyles.s14w400.copyWith(
-                      color: message.isFromMe ? AppColors.white : AppColors.black,
-                      height: 1.4,
-                    ),
+                    style: AppTextStyles.s14w400
+                        .copyWith(height: 1.4)
+                        .withThemeColor(context),
                   ),
                   SizedBox(height: 4.h),
                   Row(
@@ -73,18 +77,30 @@ class MessageBubble extends StatelessWidget {
                       Text(
                         _formatTimestamp(message.timestamp),
                         style: AppTextStyles.s12w400.copyWith(
-                          color: message.isFromMe 
-                              ? AppColors.white.withOpacity(0.7) 
+                          color: isMine
+                              ? AppColors.white.withOpacity(0.7)
                               : AppColors.gray,
                         ),
                       ),
-                      if (message.isFromMe) ...[
+                      if (isMine) ...[
                         SizedBox(width: 4.w),
-                        Icon(
-                          _getStatusIcon(message.status),
-                          size: 14.sp,
-                          color: AppColors.white.withOpacity(0.7),
-                        ),
+                        // Show IconButton if pending, otherwise normal Icon
+                        message.status.toLowerCase() == 'pending'
+                            ? IconButton(
+                                icon: Icon(
+                                  Icons.refresh, // reload icon
+                                  size: 14.sp,
+                                  color: AppColors.white.withOpacity(0.7),
+                                ),
+                                onPressed: onRetry,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                              )
+                            : Icon(
+                                _getStatusIcon(message.status),
+                                size: 14.sp,
+                                color: AppColors.white.withOpacity(0.7),
+                              ),
                       ],
                     ],
                   ),
@@ -92,9 +108,9 @@ class MessageBubble extends StatelessWidget {
               ),
             ),
           ),
-          
-          // Avatar for sent messages (right side)
-          if (message.isFromMe) ...[
+
+          // Avatar for sent messages
+          if (isMine) ...[
             SizedBox(width: 8.w),
             Container(
               width: 32.w,
@@ -123,10 +139,6 @@ class MessageBubble extends StatelessWidget {
 
       if (difference.inDays > 0) {
         return '${date.day}/${date.month} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-      } else if (difference.inHours > 0) {
-        return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-      } else if (difference.inMinutes > 0) {
-        return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
       } else {
         return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
       }

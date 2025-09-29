@@ -20,6 +20,8 @@ class CarsAvailableSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -31,13 +33,17 @@ class CarsAvailableSection extends StatelessWidget {
             children: [
               Text(
                 'Cars Available Now',
-                style: AppTextStyles.blackS18W700,
+                style: AppTextStyles.blackS18W700.copyWith(
+                  color: isDark ? Colors.white : AppColors.black,
+                ),
               ),
               GestureDetector(
                 onTap: onViewAllPressed,
                 child: Text(
                   'View All',
-                  style: AppTextStyles.primaryS16W600,
+                  style: AppTextStyles.primaryS16W600.copyWith(
+                    color: isDark ? AppColors.primary.withOpacity(0.8) : AppColors.primary,
+                  ),
                 ),
               ),
             ],
@@ -61,5 +67,4 @@ class CarsAvailableSection extends StatelessWidget {
       ],
     );
   }
-
-} 
+}

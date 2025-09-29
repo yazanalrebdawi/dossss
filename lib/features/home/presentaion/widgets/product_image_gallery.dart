@@ -21,6 +21,7 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final allImages = [widget.mainImage, ...widget.images];
     
     return Column(
@@ -29,7 +30,9 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
         Container(
           width: double.infinity,
           height: 300.h,
-          color: AppColors.gray.withOpacity(0.1),
+          color: isDark
+              ? AppColors.darkCard.withOpacity(0.2)
+              : AppColors.gray.withOpacity(0.1),
           child: allImages.isNotEmpty
               ? Image.network(
                   allImages[selectedImageIndex],
@@ -84,7 +87,9 @@ class _ProductImageGalleryState extends State<ProductImageGallery> {
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
-                            color: AppColors.gray.withOpacity(0.2),
+                            color: isDark
+                                ? AppColors.darkCard.withOpacity(0.2)
+                                : AppColors.gray.withOpacity(0.2),
                             child: Icon(
                               Icons.image,
                               color: AppColors.gray,

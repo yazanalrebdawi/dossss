@@ -11,15 +11,19 @@ class AllProductsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: 173.w,
       height: 240.h,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: isDark
+                ? Colors.black.withOpacity(0.4)
+                : Colors.black.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -28,23 +32,25 @@ class AllProductsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildImage(),
-          _buildContent(),
+          _buildImage(isDark),
+          _buildContent(context, isDark),
         ],
       ),
     );
   }
 
-  Widget _buildImage() {
+  Widget _buildImage(bool isDark) {
     return ClipRRect(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(12.r),
         topRight: Radius.circular(12.r),
       ),
-             child: Container(
-         width: 173.w,
-         height: 128.h,
-        color: AppColors.gray.withOpacity(0.2),
+      child: Container(
+        width: 173.w,
+        height: 128.h,
+        color: isDark
+            ? Colors.white.withOpacity(0.08)
+            : AppColors.gray.withOpacity(0.2),
         child: product.imageUrl.isNotEmpty
             ? Image.network(
                 product.imageUrl,
@@ -52,50 +58,54 @@ class AllProductsCard extends StatelessWidget {
                 errorBuilder: (context, error, stackTrace) {
                   return Icon(
                     Icons.image,
-                    color: AppColors.gray,
+                    color: isDark ? Colors.white70 : AppColors.gray,
                     size: 48.sp,
                   );
                 },
               )
             : Icon(
                 Icons.image,
-                color: AppColors.gray,
+                color: isDark ? Colors.white70 : AppColors.gray,
                 size: 48.sp,
               ),
       ),
     );
   }
 
-  Widget _buildContent() {
-         return Container(
-       width: 173.w,
-       height: 112.h, // 240 - 128 = 112
+  Widget _buildContent(BuildContext context, bool isDark) {
+    return Container(
+      width: 173.w,
+      height: 112.h, // 240 - 128 = 112
       padding: EdgeInsets.all(12.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildTitle(),
+          _buildTitle(context, isDark),
           _buildPrice(),
         ],
       ),
     );
   }
 
-  Widget _buildTitle() {
+  Widget _buildTitle(BuildContext context, bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           product.name,
-          style: AppTextStyles.blackS16W600,
+          style: AppTextStyles.blackS16W600.withThemeColor(context),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
         SizedBox(height: 4.h),
         Text(
-          product.description.isNotEmpty ? product.description : 'Premium Quality',
-          style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+          product.description.isNotEmpty
+              ? product.description
+              : 'Premium Quality',
+          style: AppTextStyles.s14w400.copyWith(
+            color: isDark ? Colors.white70 : AppColors.gray,
+          ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),

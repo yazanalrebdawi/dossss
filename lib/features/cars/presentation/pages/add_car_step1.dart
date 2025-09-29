@@ -1,3 +1,4 @@
+import 'package:dooss_business_app/core/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/localization/app_localizations.dart';
@@ -17,10 +18,10 @@ class AddCarStep1 extends StatelessWidget {
           SizedBox(height: 8.h),
           Text(
             AppLocalizations.of(context)?.translate('addCar') ?? 'Add Car',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp).withThemeColor(context),
           ),
           SizedBox(height: 32.h),
-          Text(AppLocalizations.of(context)?.translate('yourName') ?? 'Your Name', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500)),
+          Text(AppLocalizations.of(context)?.translate('yourName') ?? 'Your Name', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500).withThemeColor(context)),
           SizedBox(height: 8.h),
           TextFormField(
             decoration: InputDecoration(
@@ -30,7 +31,7 @@ class AddCarStep1 extends StatelessWidget {
             ),
           ),
           SizedBox(height: 18.h),
-          Text(AppLocalizations.of(context)?.translate('yourAddressLine') ?? 'Your Address Line', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500)),
+          Text(AppLocalizations.of(context)?.translate('yourAddressLine') ?? 'Your Address Line', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500).withThemeColor(context)),
           SizedBox(height: 8.h),
           TextFormField(
             maxLines: 2,
@@ -41,7 +42,7 @@ class AddCarStep1 extends StatelessWidget {
             ),
           ),
           SizedBox(height: 18.h),
-          Text(AppLocalizations.of(context)?.translate('yourPostcode') ?? 'Your Postcode', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500)),
+          Text(AppLocalizations.of(context)?.translate('yourPostcode') ?? 'Your Postcode', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500).withThemeColor(context)),
           SizedBox(height: 8.h),
           TextFormField(
             decoration: InputDecoration(

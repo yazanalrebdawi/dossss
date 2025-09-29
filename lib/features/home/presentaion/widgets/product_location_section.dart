@@ -13,14 +13,19 @@ class ProductLocationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(16.w),
+      color: isDark ? AppColors.darkCard : Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Location',
-            style: AppTextStyles.s18w700,
+            style: AppTextStyles.s18w700.copyWith(
+              color: isDark ? AppColors.white : AppColors.black,
+            ),
           ),
           SizedBox(height: 12.h),
           
@@ -34,7 +39,9 @@ class ProductLocationSection extends StatelessWidget {
               SizedBox(width: 8.w),
               Text(
                 location.isNotEmpty ? location : 'Sharjah, UAE',
-                style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+                style: AppTextStyles.s14w400.copyWith(
+                  color: isDark ? AppColors.gray.withOpacity(0.8) : AppColors.gray,
+                ),
               ),
             ],
           ),
@@ -45,13 +52,15 @@ class ProductLocationSection extends StatelessWidget {
             width: double.infinity,
             height: 120.h,
             decoration: BoxDecoration(
-              color: AppColors.gray.withOpacity(0.1),
+              color: isDark
+                  ? AppColors.darkCard.withOpacity(0.5)
+                  : AppColors.gray.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: Center(
               child: Icon(
                 Icons.map,
-                color: AppColors.gray,
+                color: isDark ? AppColors.gray.withOpacity(0.7) : AppColors.gray,
                 size: 48.sp,
               ),
             ),

@@ -8,24 +8,29 @@ class ForgetPasswordHeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       children: [
         SizedBox(height: 20.h),
         Text(
-          AppLocalizations.of(context)?.translate('Verify your phone number') ?? 'Verify your phone number',
+          AppLocalizations.of(context)?.translate('Verify your phone number') ??
+              'Verify your phone number',
           style: AppTextStyles.blackS24W600.copyWith(
             fontSize: 24.sp,
             fontWeight: FontWeight.bold,
-            color: Colors.grey[800],
+            color: isDark ? Colors.white : Colors.grey[800],
           ),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 8.h),
         Text(
-          AppLocalizations.of(context)?.translate('We have sent you an SMS with a code to number') ?? 'We have sent you an SMS with a code to number',
+          AppLocalizations.of(context)?.translate(
+                  'We have sent you an SMS with a code to number') ??
+              'We have sent you an SMS with a code to number',
           style: AppTextStyles.descriptionS14W400.copyWith(
             fontSize: 16.sp,
-            color: Colors.grey[600],
+            color: isDark ? Colors.white : Colors.grey[600],
           ),
           textAlign: TextAlign.center,
         ),
@@ -33,4 +38,4 @@ class ForgetPasswordHeaderSection extends StatelessWidget {
       ],
     );
   }
-} 
+}

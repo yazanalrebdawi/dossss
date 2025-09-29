@@ -45,8 +45,6 @@ class _ReelCardPlayerState extends State<ReelCardPlayer> {
   @override
   void didUpdateWidget(ReelCardPlayer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
-    // If URL changed, reinitialize
     if (oldWidget.reelUrl != widget.reelUrl) {
       print('🔄 ReelCardPlayer: URL changed, reinitializing video');
       _disposeController();
@@ -63,15 +61,10 @@ class _ReelCardPlayerState extends State<ReelCardPlayer> {
     try {
       print('🎬 ReelCardPlayer: Creating controller for ${widget.reelUrl}');
       _controller = VideoPlayerController.networkUrl(Uri.parse(widget.reelUrl));
-      
-      // Add listener for video events
       _controller!.addListener(_onVideoEvent);
-      
       await _controller!.initialize();
-      
-      // Set volume to 0 initially for background playback
       await _controller!.setVolume(0.0);
-      
+
       if (mounted) {
         setState(() {
           _isInitialized = true;
@@ -94,19 +87,14 @@ class _ReelCardPlayerState extends State<ReelCardPlayer> {
 
   void _onVideoEvent() {
     if (_controller == null || !mounted) return;
-
     final value = _controller!.value;
-    
-    // Handle video completion
+
     if (value.position >= value.duration && value.duration.inMilliseconds > 0) {
       print('🔄 ReelCardPlayer: Video completed, restarting');
       _controller!.seekTo(Duration.zero);
-      if (_isPlaying) {
-        _controller!.play();
-      }
+      if (_isPlaying) _controller!.play();
     }
 
-    // Handle errors
     if (value.hasError) {
       print('❌ ReelCardPlayer: Video error: ${value.errorDescription}');
       setState(() {
@@ -116,7 +104,6 @@ class _ReelCardPlayerState extends State<ReelCardPlayer> {
     }
   }
 
-  /// Called from parent or via Cubit listener to pause video
   void pauseVideo() {
     if (_controller?.value.isInitialized == true) {
       print('⏸️ ReelCardPlayer: Pausing video ${widget.reelId}');
@@ -125,7 +112,6 @@ class _ReelCardPlayerState extends State<ReelCardPlayer> {
     }
   }
 
-  /// Called from parent or via Cubit listener to play video
   void playVideo({bool withSound = false}) {
     if (_controller?.value.isInitialized == true) {
       print('▶️ ReelCardPlayer: Playing video ${widget.reelId} ${withSound ? 'with sound' : 'muted'}');
@@ -135,7 +121,6 @@ class _ReelCardPlayerState extends State<ReelCardPlayer> {
     }
   }
 
-  /// Toggle play/pause
   void togglePlayPause({bool withSound = false}) {
     if (_isPlaying) {
       pauseVideo();
@@ -162,22 +147,18 @@ class _ReelCardPlayerState extends State<ReelCardPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocListener<ReelsCubit, ReelsState>(
       listener: (context, state) {
-        print('🔄 ReelCardPlayer: State changed - backgroundPaused: ${state.isBackgroundPlaybackPaused}');
-        
         if (state.isBackgroundPlaybackPaused) {
           pauseVideo();
-        } else {
-          // Only auto-play if this card is in viewport and should auto-play
-          if (widget.isInViewport && state.shouldAutoPlay) {
-            playVideo(withSound: false);
-          }
+        } else if (widget.isInViewport && state.shouldAutoPlay) {
+          playVideo(withSound: false);
         }
       },
       child: GestureDetector(
         onTap: () {
-          // Toggle play/pause on tap
           togglePlayPause(withSound: true);
           widget.onTap?.call();
         },
@@ -185,30 +166,24 @@ class _ReelCardPlayerState extends State<ReelCardPlayer> {
           width: 200.w,
           height: 300.h,
           decoration: BoxDecoration(
-            color: AppColors.black,
+            color: isDark ? AppColors.darkCard : AppColors.black,
             borderRadius: BorderRadius.circular(16.r),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16.r),
-            child: _buildVideoContent(),
+            child: _buildVideoContent(isDark),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildVideoContent() {
-    if (_hasError) {
-      return _buildErrorState();
-    }
-
-    if (!_isInitialized || _controller == null) {
-      return _buildLoadingState();
-    }
+  Widget _buildVideoContent(bool isDark) {
+    if (_hasError) return _buildErrorState(isDark);
+    if (!_isInitialized || _controller == null) return _buildLoadingState(isDark);
 
     return Stack(
       children: [
-        // Video player
         Positioned.fill(
           child: FittedBox(
             fit: BoxFit.cover,
@@ -219,26 +194,22 @@ class _ReelCardPlayerState extends State<ReelCardPlayer> {
             ),
           ),
         ),
-        
-        // Play/pause overlay
         if (!_isPlaying)
           Center(
             child: Container(
               width: 60.w,
               height: 60.h,
               decoration: BoxDecoration(
-                color: AppColors.black.withOpacity(0.6),
+                color: isDark ? AppColors.darkCard.withOpacity(0.6) : AppColors.black.withOpacity(0.6),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.play_arrow,
-                color: AppColors.white,
+                color: isDark ? AppColors.white : AppColors.white,
                 size: 30.sp,
               ),
             ),
           ),
-        
-        // Gradient overlay for better contrast
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
@@ -248,7 +219,7 @@ class _ReelCardPlayerState extends State<ReelCardPlayer> {
                 colors: [
                   Colors.transparent,
                   Colors.transparent,
-                  AppColors.black.withOpacity(0.3),
+                  isDark ? AppColors.darkCard.withOpacity(0.3) : AppColors.black.withOpacity(0.3),
                 ],
                 stops: const [0.0, 0.7, 1.0],
               ),
@@ -259,35 +230,35 @@ class _ReelCardPlayerState extends State<ReelCardPlayer> {
     );
   }
 
-  Widget _buildLoadingState() {
+  Widget _buildLoadingState(bool isDark) {
     return Container(
-      color: AppColors.gray.withOpacity(0.2),
-      child: const Center(
+      color: isDark ? AppColors.darkCard.withOpacity(0.2) : AppColors.gray.withOpacity(0.2),
+      child: Center(
         child: CircularProgressIndicator(
-          color: AppColors.white,
+          color: isDark ? AppColors.white : AppColors.white,
           strokeWidth: 2,
         ),
       ),
     );
   }
 
-  Widget _buildErrorState() {
+  Widget _buildErrorState(bool isDark) {
     return Container(
-      color: AppColors.gray.withOpacity(0.2),
+      color: isDark ? AppColors.darkCard.withOpacity(0.2) : AppColors.gray.withOpacity(0.2),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.error_outline,
-              color: AppColors.white,
+              color: isDark ? AppColors.white : AppColors.white,
               size: 32.sp,
             ),
             SizedBox(height: 8.h),
             Text(
               'Video Error',
               style: TextStyle(
-                color: AppColors.white,
+                color: isDark ? AppColors.white : AppColors.white,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
               ),
@@ -297,7 +268,7 @@ class _ReelCardPlayerState extends State<ReelCardPlayer> {
               Text(
                 _errorMessage!,
                 style: TextStyle(
-                  color: AppColors.white.withOpacity(0.7),
+                  color: isDark ? AppColors.white.withOpacity(0.7) : AppColors.white.withOpacity(0.7),
                   fontSize: 10.sp,
                 ),
                 textAlign: TextAlign.center,

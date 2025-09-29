@@ -14,11 +14,13 @@ class CarImageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       height: 300.h,
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5), // Light grey background
+        color: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF5F5F5),
       ),
       child: Stack(
         children: [
@@ -30,11 +32,11 @@ class CarImageSection extends StatelessWidget {
                   height: 300.h,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return _buildPlaceholderImage();
+                    return _buildPlaceholderImage(isDark);
                   },
                 )
-              : _buildPlaceholderImage(),
-          
+              : _buildPlaceholderImage(isDark),
+
           // Car Name Overlay
           Positioned(
             bottom: 20.h,
@@ -60,12 +62,12 @@ class CarImageSection extends StatelessWidget {
     );
   }
 
-  Widget _buildPlaceholderImage() {
+  Widget _buildPlaceholderImage(bool isDark) {
     return Container(
       width: double.infinity,
       height: 300.h,
       decoration: BoxDecoration(
-        color: AppColors.gray.withOpacity(0.1),
+        color: isDark ? Colors.white12 : AppColors.gray.withOpacity(0.1),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -81,7 +83,7 @@ class CarImageSection extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
-              color: AppColors.gray,
+              color: isDark ? Colors.white70 : AppColors.gray,
             ),
             textAlign: TextAlign.center,
           ),

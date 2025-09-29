@@ -14,6 +14,8 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () {
         context.push('${RouteNames.productDetailsScreen}/${product.id}');
@@ -22,8 +24,9 @@ class ProductCard extends StatelessWidget {
         width: AppDimensions.productCardWidth.w,
         height: AppDimensions.productCardHeight.h, // Fixed height
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(AppDimensions.defaultBorderRadius.r),
+          color: isDark ? AppColors.black : AppColors.white,
+          borderRadius:
+              BorderRadius.circular(AppDimensions.defaultBorderRadius.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -35,15 +38,15 @@ class ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildImage(),
-            _buildContent(),
+            _buildImage(isDark),
+            _buildContent(isDark),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildImage() {
+  Widget _buildImage(bool isDark) {
     return ClipRRect(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(AppDimensions.defaultBorderRadius.r),
@@ -52,7 +55,9 @@ class ProductCard extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: AppDimensions.productCardImageHeight.h,
-        color: AppColors.gray.withOpacity(0.2),
+        color: isDark
+            ? AppColors.gray.withOpacity(0.3)
+            : AppColors.gray.withOpacity(0.2),
         child: product.imageUrl.isNotEmpty
             ? Image.network(
                 product.imageUrl,
@@ -74,12 +79,12 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-    Widget _buildContent() {
+  Widget _buildContent(bool isDark) {
     return Container(
       width: AppDimensions.productCardWidth.w,
       height: AppDimensions.productCardContentHeight.h,
       padding: EdgeInsets.all(AppDimensions.defaultPadding.r),
-      color: AppColors.cardBackground,
+      color: isDark ? AppColors.black : AppColors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,17 +92,17 @@ class ProductCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTitle(),
+              _buildTitle(isDark),
               SizedBox(height: AppDimensions.smallPadding.h),
-              _buildDescription(),
+              _buildDescription(isDark),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildPriceAndLocation(),
+              _buildPriceAndLocation(isDark),
               SizedBox(height: AppDimensions.defaultPadding2.h),
-              _buildActionButtons(),
+              _buildActionButtons(isDark),
             ],
           ),
         ],
@@ -105,31 +110,37 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle() {
+  Widget _buildTitle(bool isDark) {
     return Text(
       product.name,
-      style: AppTextStyles.blackS16W600,
+      style: AppTextStyles.blackS16W600.copyWith(
+        color: isDark ? AppColors.white : AppColors.black,
+      ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  Widget _buildDescription() {
+  Widget _buildDescription(bool isDark) {
     return Text(
       product.description,
-      style: AppTextStyles.s14w400.copyWith(color: AppColors.gray),
+      style: AppTextStyles.s14w400.copyWith(
+        color: AppColors.gray,
+      ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  Widget _buildPriceAndLocation() {
+  Widget _buildPriceAndLocation(bool isDark) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           '\$${product.price}',
-          style: AppTextStyles.blackS18W700,
+          style: AppTextStyles.blackS18W700.copyWith(
+            color: isDark ? AppColors.white : AppColors.black,
+          ),
         ),
         Text(
           product.location.isNotEmpty ? product.location : 'Dubai',
@@ -139,7 +150,7 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(bool isDark) {
     return Row(
       children: [
         Expanded(
@@ -168,7 +179,9 @@ class ProductCard extends StatelessWidget {
             child: Center(
               child: Text(
                 'Contact Seller',
-                style: AppTextStyles.s14w500.copyWith(color: Colors.white),
+                style: AppTextStyles.s14w500.copyWith(
+                  color: isDark ? AppColors.black : AppColors.white,
+                ),
               ),
             ),
           ),
@@ -176,6 +189,4 @@ class ProductCard extends StatelessWidget {
       ],
     );
   }
-
-
-} 
+}

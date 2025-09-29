@@ -15,17 +15,21 @@ class CarSpecItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Row(
       children: [
         Icon(
           icon,
-          color: AppColors.gray,
+          color: isDark ? Colors.white70 : AppColors.gray,
           size: 14.sp,
         ),
         SizedBox(width: 4.w),
         Text(
           text,
-          style: AppTextStyles.secondaryS12W400,
+          style: AppTextStyles.secondaryS12W400.copyWith(
+            color: isDark ? Colors.white70 : AppColors.gray,
+          ),
         ),
       ],
     );

@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import '../../../../core/network/app_dio.dart';
 import '../../../../core/network/api_urls.dart';
 import '../../../../core/network/failure.dart';
@@ -44,7 +43,7 @@ class DealerProfileRemoteDataSourceImpl implements DealerProfileRemoteDataSource
         return Left(Failure(message: 'Authentication credentials were not provided.'));
       }
       
-      return Left(Failure.handleError(e as DioException));
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -119,7 +118,7 @@ class DealerProfileRemoteDataSourceImpl implements DealerProfileRemoteDataSource
         return Left(Failure(message: 'Authentication credentials were not provided.'));
       }
       
-      return Left(Failure.handleError(e as DioException));
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -212,7 +211,7 @@ class DealerProfileRemoteDataSourceImpl implements DealerProfileRemoteDataSource
         return Left(Failure(message: 'Authentication credentials were not provided.'));
       }
       
-      return Left(Failure.handleError(e as DioException));
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -291,7 +290,7 @@ class DealerProfileRemoteDataSourceImpl implements DealerProfileRemoteDataSource
         return Left(Failure(message: 'Authentication credentials were not provided.'));
       }
       
-      return Left(Failure.handleError(e as DioException));
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -317,7 +316,7 @@ class DealerProfileRemoteDataSourceImpl implements DealerProfileRemoteDataSource
         return Left(Failure(message: 'Authentication credentials were not provided.'));
       }
       
-      return Left(Failure.handleError(e as DioException));
+      return Left(Failure(message: e.toString()));
     }
   }
 }

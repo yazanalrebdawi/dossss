@@ -1,3 +1,4 @@
+import 'package:dooss_business_app/core/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/localization/app_localizations.dart';
@@ -9,6 +10,8 @@ class AddCarStep3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+              final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       child: Column(
@@ -17,10 +20,10 @@ class AddCarStep3 extends StatelessWidget {
           SizedBox(height: 8.h),
           Text(
             AppLocalizations.of(context)?.translate('carImages') ?? 'Car Images',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp).withThemeColor(context),
           ),
           SizedBox(height: 32.h),
-          Text(AppLocalizations.of(context)?.translate('uploadCarImages') ?? 'Upload Car Images', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500)),
+          Text(AppLocalizations.of(context)?.translate('uploadCarImages') ?? 'Upload Car Images', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500).withThemeColor(context)),
           SizedBox(height: 8.h),
           Container(
             height: 120.h,
@@ -30,11 +33,11 @@ class AddCarStep3 extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: Center(
-              child: Icon(Icons.add_a_photo, size: 40.sp, color: Colors.grey[400]),
+              child: Icon(Icons.add_a_photo, size: 40.sp, color: isDark?Colors.white : Colors.grey[400]),
             ),
           ),
           SizedBox(height: 18.h),
-          Text(AppLocalizations.of(context)?.translate('additionalNotes') ?? 'Additional Notes', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500)),
+          Text(AppLocalizations.of(context)?.translate('additionalNotes') ?? 'Additional Notes', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500).withThemeColor(context)),
           SizedBox(height: 8.h),
           TextFormField(
             maxLines: 3,

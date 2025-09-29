@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/constants/colors.dart';
 
 class HomeActionsWidget extends StatelessWidget {
@@ -8,6 +7,9 @@ class HomeActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final iconColor = isDark ? Colors.white : AppColors.gray;
+
     return Row(
       children: [
         // Notification Icon
@@ -15,7 +17,7 @@ class HomeActionsWidget extends StatelessWidget {
           children: [
             Icon(
               Icons.notifications,
-              color: AppColors.gray,
+              color: iconColor,
               size: 24.sp,
             ),
             Positioned(
@@ -36,7 +38,7 @@ class HomeActionsWidget extends StatelessWidget {
         // Search Icon
         Icon(
           Icons.search,
-          color: AppColors.gray,
+          color: iconColor,
           size: 24.sp,
         ),
       ],

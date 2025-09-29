@@ -18,12 +18,14 @@ class ChatProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+              final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocProvider(
-      create: (context) => di.appLocator<ProductCubit>()..loadProductDetails(productId),
+      create: (context) => di.sl<ProductCubit>()..loadProductDetails(productId),
       child: BlocBuilder<ProductCubit, ProductState>(
         builder: (context, productState) {
           final product = productState.selectedProduct;
-          
+
           if (product == null) {
             return Container(
               margin: EdgeInsets.all(16.w),
@@ -57,7 +59,7 @@ class ChatProductCard extends StatelessWidget {
                     child: Text(
                       'Loading product details...',
                       style: AppTextStyles.s14w500.copyWith(
-                        color: AppColors.gray,
+                          color:isDark ?Colors.white : AppColors.gray,
                       ),
                     ),
                   ),
@@ -119,9 +121,7 @@ class ChatProductCard extends StatelessWidget {
                     children: [
                       Text(
                         product.name,
-                        style: AppTextStyles.s14w500.copyWith(
-                          color: AppColors.black,
-                        ),
+                        style: AppTextStyles.s14w500.withThemeColor(context),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -136,7 +136,7 @@ class ChatProductCard extends StatelessWidget {
                       Text(
                         'Location: ${product.locationText.isNotEmpty ? product.locationText : 'Unknown'}',
                         style: AppTextStyles.s12w400.copyWith(
-                          color: AppColors.gray,
+                          color:isDark ?Colors.white : AppColors.gray,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -153,7 +153,8 @@ class ChatProductCard extends StatelessWidget {
                         context.push('/product-details/${product.id}');
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 12.w, vertical: 6.h),
                         decoration: BoxDecoration(
                           color: AppColors.primary,
                           borderRadius: BorderRadius.circular(16.r),
@@ -169,12 +170,11 @@ class ChatProductCard extends StatelessWidget {
                     SizedBox(height: 8.h),
                     IconButton(
                       onPressed: () {
-                        
                         print('Dismiss product card');
                       },
                       icon: Icon(
                         Icons.close,
-                        color: AppColors.gray,
+                          color:isDark ?Colors.white : AppColors.gray,
                         size: 16.sp,
                       ),
                       padding: EdgeInsets.zero,

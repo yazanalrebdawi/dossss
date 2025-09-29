@@ -11,6 +11,7 @@ import '../widgets/dealer_profile_app_bar.dart';
 import '../widgets/dealer_profile_header.dart';
 import '../widgets/dealer_profile_tabs.dart';
 import '../widgets/dealer_content_grid.dart';
+import '../widgets/tab_content_loader_widget.dart';
 import '../../data/models/content_type.dart';
 
 class DealerProfileScreen extends StatefulWidget {
@@ -46,7 +47,6 @@ class _DealerProfileScreenState extends State<DealerProfileScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<DealerProfileCubit>().loadDealerProfile(widget.dealerId);
-        // تحميل الريلز تلقائياً عند بداية التطبيق
         context.read<DealerProfileCubit>().loadReels(widget.dealerId);
       }
     });
@@ -61,7 +61,6 @@ class _DealerProfileScreenState extends State<DealerProfileScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
       appBar: DealerProfileAppBar(
         dealerHandle: widget.dealerHandle,
       ),
@@ -105,7 +104,10 @@ class _DealerProfileScreenState extends State<DealerProfileScreen>
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.white,
                       ),
-                      child: const Text('تسجيل الدخول'),
+                      child: Text(
+                        'تسجيل الدخول',
+                        style: AppTextStyles.s14w500.copyWith(color: AppColors.white),
+                      ),
                     ),
                   ],
                 ],
@@ -122,7 +124,6 @@ class _DealerProfileScreenState extends State<DealerProfileScreen>
                   context.read<DealerProfileCubit>().toggleFollow();
                 },
                 onMessagePressed: () {
-                  // Navigate to chat
                   context.push('/chat-conversation/${state.dealer?.id}');
                 },
               ),
@@ -133,7 +134,6 @@ class _DealerProfileScreenState extends State<DealerProfileScreen>
                 currentIndex: _currentTabIndex,
                 onTabChanged: (index) {
                   _tabController.animateTo(index);
-                  // تحميل البيانات الحقيقية حسب التاب المحدد
                   switch (index) {
                     case 0: // Reels
                       context.read<DealerProfileCubit>().loadReels(widget.dealerId);
@@ -153,19 +153,16 @@ class _DealerProfileScreenState extends State<DealerProfileScreen>
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    // Reels Tab
                     DealerContentGrid(
                       contentType: ContentType.reels,
                       content: state.reels,
                       isLoading: state.isLoadingReels,
                     ),
-                    // Cars Tab
                     DealerContentGrid(
                       contentType: ContentType.cars,
                       content: state.cars,
                       isLoading: state.isLoadingCars,
                     ),
-                    // Services Tab
                     DealerContentGrid(
                       contentType: ContentType.services,
                       content: state.services,
@@ -180,6 +177,4 @@ class _DealerProfileScreenState extends State<DealerProfileScreen>
       ),
     );
   }
-
-
 }

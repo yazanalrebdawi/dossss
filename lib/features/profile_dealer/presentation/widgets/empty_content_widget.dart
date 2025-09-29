@@ -14,6 +14,9 @@ class EmptyContentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final iconColor = isDark ? Colors.grey[400]! : AppColors.gray;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -21,12 +24,12 @@ class EmptyContentWidget extends StatelessWidget {
           Icon(
             _getEmptyIcon(),
             size: 64.sp,
-            color: AppColors.gray,
+            color: iconColor,
           ),
           SizedBox(height: 16.h),
           Text(
             _getEmptyMessage(),
-            style: AppTextStyles.s16w500.copyWith(color: AppColors.gray),
+            style: AppTextStyles.s16w500.copyWith(color: iconColor),
           ),
         ],
       ),

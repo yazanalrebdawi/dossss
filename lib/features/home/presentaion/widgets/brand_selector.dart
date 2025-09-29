@@ -15,6 +15,8 @@ class BrandSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final brands = [
       {'name': 'Toyota', 'logo': 'assets/images/toyota_logo.png'},
       {'name': 'BMW', 'logo': 'assets/images/bmw_logo.png'},
@@ -31,7 +33,7 @@ class BrandSelector extends StatelessWidget {
         itemBuilder: (context, index) {
           final brand = brands[index];
           final isSelected = selectedBrand == brand['name'];
-          
+
           return GestureDetector(
             onTap: () => onBrandSelected(brand['name']!),
             child: Container(
@@ -39,17 +41,30 @@ class BrandSelector extends StatelessWidget {
               margin: EdgeInsets.only(right: 12.w),
               child: Column(
                 children: [
-                                     Container(
-                     width: 64.w,
-                     height: 64.h,
-                     decoration: BoxDecoration(
-                       color: AppColors.white,
-                       borderRadius: BorderRadius.circular(12.r),
-                       border: Border.all(
-                         color: isSelected ? AppColors.primary : AppColors.borderBrand,
-                         width: 1,
-                       ),
-                     ),
+                  // Brand logo container
+                  Container(
+                    width: 64.w,
+                    height: 64.h,
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF2A2A2A) : AppColors.white,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColors.primary
+                            : (isDark
+                                ? Colors.white24
+                                : AppColors.borderBrand),
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        if (!isDark)
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                      ],
+                    ),
                     child: Center(
                       child: Image.asset(
                         brand['logo']!,
@@ -60,10 +75,13 @@ class BrandSelector extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8.h),
+                  // Brand name
                   Text(
                     brand['name']!,
                     style: AppTextStyles.s12w400.copyWith(
-                      color: AppColors.gray,
+                      color: isSelected
+                          ? AppColors.primary
+                          : (isDark ? Colors.white70 : AppColors.gray),
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 1,

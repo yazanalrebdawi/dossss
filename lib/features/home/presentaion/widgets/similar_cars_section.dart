@@ -29,9 +29,7 @@ class SimilarCarsSection extends StatelessWidget {
           // Section Title
           Text(
             'Similar Cars You Might Like',
-            style: AppTextStyles.s18w700.copyWith(
-              color: AppColors.black,
-            ),
+            style: AppTextStyles.s18w700.copyWith(color: AppColors.black),
           ),
           SizedBox(height: 16.h),
           
@@ -59,10 +57,7 @@ class SimilarCarsSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: AppColors.gray.withOpacity(0.2),
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.gray.withOpacity(0.2), width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -73,7 +68,6 @@ class SimilarCarsSection extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          // Navigate to car details
           context.push('/car-details/${car.id}');
         },
         borderRadius: BorderRadius.circular(12.r),
@@ -114,23 +108,16 @@ class SimilarCarsSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Car Name
                   Text(
                     car.name,
-                    style: AppTextStyles.s14w500.copyWith(
-                      color: AppColors.black,
-                    ),
+                    style: AppTextStyles.s14w500.copyWith(color: AppColors.black),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4.h),
-                  
-                  // Price
                   Text(
                     '${car.price.toStringAsFixed(0)} USD',
-                    style: AppTextStyles.s16w600.copyWith(
-                      color: AppColors.primary,
-                    ),
+                    style: AppTextStyles.s16w600.copyWith(color: AppColors.primary),
                   ),
                 ],
               ),

@@ -13,37 +13,42 @@ class SellerNotesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final backgroundColor = isDark ? Colors.grey[900]! : AppColors.white;
+    final cardColor = isDark ? Colors.grey[800]! : AppColors.gray.withOpacity(0.05);
+    final borderColor = isDark ? Colors.grey[700]! : AppColors.gray.withOpacity(0.1);
+    final textColor = isDark ? Colors.white : AppColors.black;
+
     return Container(
       padding: EdgeInsets.all(20.w),
-      color: AppColors.white,
+      color: backgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Section Title
           Text(
             'Seller Notes',
-            style: AppTextStyles.s18w700.copyWith(
-              color: AppColors.black,
-            ),
+            style: AppTextStyles.s18w700.copyWith(color: textColor),
           ),
           SizedBox(height: 12.h),
           
-          
+          // Notes Card
           Container(
             width: double.infinity,
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: AppColors.gray.withOpacity(0.05),
+              color: cardColor,
               borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
-                color: AppColors.gray.withOpacity(0.1),
+                color: borderColor,
                 width: 1,
               ),
             ),
             child: Text(
               notes.isNotEmpty ? notes : 'No seller notes available.',
               style: AppTextStyles.s14w400.copyWith(
-                color: AppColors.black,
+                color: textColor,
                 height: 1.5,
               ),
             ),

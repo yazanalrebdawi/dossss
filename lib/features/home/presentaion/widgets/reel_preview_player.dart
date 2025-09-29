@@ -66,27 +66,29 @@ class _ReelPreviewPlayerState extends State<ReelPreviewPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: 120.w,
       height: 156.h,
       decoration: BoxDecoration(
-        color: AppColors.black,
+        color: isDark ? AppColors.black : AppColors.white,
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.r),
-        child: _buildPreviewContent(),
+        child: _buildPreviewContent(isDark),
       ),
     );
   }
 
-  Widget _buildPreviewContent() {
+  Widget _buildPreviewContent(bool isDark) {
     if (_hasError) {
-      return _buildErrorState();
+      return _buildErrorState(isDark);
     }
 
     if (!_isInitialized || _controller == null) {
-      return _buildLoadingOrThumbnail();
+      return _buildLoadingOrThumbnail(isDark);
     }
 
     return Stack(
@@ -109,7 +111,7 @@ class _ReelPreviewPlayerState extends State<ReelPreviewPlayer> {
             width: 40.w,
             height: 40.h,
             decoration: BoxDecoration(
-              color: AppColors.black.withOpacity(0.6),
+              color: (isDark ? AppColors.black : AppColors.white).withOpacity(0.6),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -130,7 +132,7 @@ class _ReelPreviewPlayerState extends State<ReelPreviewPlayer> {
                 colors: [
                   Colors.transparent,
                   Colors.transparent,
-                  AppColors.black.withOpacity(0.3),
+                  (isDark ? AppColors.black : AppColors.white).withOpacity(0.3),
                 ],
                 stops: const [0.0, 0.7, 1.0],
               ),
@@ -141,7 +143,7 @@ class _ReelPreviewPlayerState extends State<ReelPreviewPlayer> {
     );
   }
 
-  Widget _buildLoadingOrThumbnail() {
+  Widget _buildLoadingOrThumbnail(bool isDark) {
     // If we have a thumbnail, show it while loading
     if (widget.thumbnailUrl?.isNotEmpty == true) {
       return Stack(
@@ -150,7 +152,7 @@ class _ReelPreviewPlayerState extends State<ReelPreviewPlayer> {
             child: Image.network(
               widget.thumbnailUrl!,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+              errorBuilder: (context, error, stackTrace) => _buildPlaceholder(isDark),
             ),
           ),
           Center(
@@ -158,7 +160,7 @@ class _ReelPreviewPlayerState extends State<ReelPreviewPlayer> {
               width: 40.w,
               height: 40.h,
               decoration: BoxDecoration(
-                color: AppColors.black.withOpacity(0.6),
+                color: (isDark ? AppColors.black : AppColors.white).withOpacity(0.6),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -173,10 +175,10 @@ class _ReelPreviewPlayerState extends State<ReelPreviewPlayer> {
     }
 
     // Otherwise show loading or placeholder
-    return _buildPlaceholder();
+    return _buildPlaceholder(isDark);
   }
 
-  Widget _buildPlaceholder() {
+  Widget _buildPlaceholder(bool isDark) {
     return Container(
       color: AppColors.gray.withOpacity(0.2),
       child: Center(
@@ -204,7 +206,7 @@ class _ReelPreviewPlayerState extends State<ReelPreviewPlayer> {
     );
   }
 
-  Widget _buildErrorState() {
+  Widget _buildErrorState(bool isDark) {
     return Container(
       color: AppColors.gray.withOpacity(0.2),
       child: Center(

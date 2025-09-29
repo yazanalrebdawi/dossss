@@ -16,13 +16,15 @@ class ReelCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: 200.w,
         margin: EdgeInsets.only(right: 16.w),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? AppColors.darkCard : Colors.white,
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
@@ -76,7 +78,9 @@ class ReelCard extends StatelessWidget {
                 children: [
                   Text(
                     reel.title,
-                    style: AppTextStyles.blackS16W600,
+                    style: isDark 
+                        ? AppTextStyles.whiteS16W600 
+                        : AppTextStyles.blackS16W600,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -121,4 +125,4 @@ class ReelCard extends StatelessWidget {
       ),
     );
   }
-} 
+}

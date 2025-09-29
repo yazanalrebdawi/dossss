@@ -3,8 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/routes/route_names.dart';
 import '../../../../core/constants/text_styles.dart';
-import 'package:dooss_business_app/core/app/manager/app_manager_cubit.dart';
-import 'package:dooss_business_app/core/app/manager/app_manager_state.dart';
+import '../../../../core/localization/language_cubit.dart';
 import '../../../../core/localization/app_localizations.dart';
 
 class DontHaveAnAccount extends StatelessWidget {
@@ -12,7 +11,7 @@ class DontHaveAnAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppManagerCubit, AppManagerState>(
+    return BlocBuilder<LanguageCubit, Locale>(
       builder: (context, locale) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -20,7 +19,7 @@ class DontHaveAnAccount extends StatelessWidget {
             Text(
               AppLocalizations.of(context)?.translate('dontHaveAccount') ??
                   "Don't have an account?",
-              style: AppTextStyles.descriptionS14W400,
+              style: AppTextStyles.descriptionS14W400.withThemeColor(context),
             ),
             const SizedBox(width: 3),
             InkWell(
